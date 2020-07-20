@@ -24,6 +24,10 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import Amplify from 'aws-amplify';
+import config from "./aws-exports";
+Amplify.configure(config);
+
 const App: () => React$Node = () => {
   return (
     <>
