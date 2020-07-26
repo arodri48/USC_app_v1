@@ -5,11 +5,8 @@ import WelcomeScreen from "USC_app_v1/Screens/WelcomeScreen";
 import SearchScreen from "USC_app_v1/Screens/SearchScreen";
 import StoreScreen from "USC_app_v1/Screens/StoreScreen";
 
-
 const MainStack = createStackNavigator();
 const RootStack = createStackNavigator();
-
-
 
 function Root(){
     return(
