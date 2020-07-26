@@ -4,9 +4,14 @@ import { NavigationContainer } from '@react-navigation/native';
 import WelcomeScreen from "USC_app_v1/Screens/WelcomeScreen";
 import SearchScreen from "USC_app_v1/Screens/SearchScreen";
 import StoreScreen from "USC_app_v1/Screens/StoreScreen";
+import
+import {AuthContext} from '../Provider/AuthProvider';
+
 
 const MainStack = createStackNavigator();
 const RootStack = createStackNavigator();
+
+const { state } = React.useContext(AuthContext);
 
 function Root(){
     return(
@@ -20,8 +25,16 @@ export default function AppStack(){
     return(
         <NavigationContainer>
             <MainStack.Navigator>
-                <MainStack.Screen name="WelcomeScreen" component={WelcomeScreen} />
-                <MainStack.Screen name="Root" component={Root} options={{headerShown: false}}/>
+                {state.isLoading ? (
+                    <MainStack.Screen name = "SplashScreen" component={SplashScreen}/>
+                ) : state.userToken == null ? (
+                    <MainStack.Screen
+                        name="WelcomeScreen"
+                        component={WelcomeScreen}
+                    />
+                ) : (
+                    <MainStack.Screen name = "Root" component={Root}/>
+                )}
             </MainStack.Navigator>
         </NavigationContainer>
     );
