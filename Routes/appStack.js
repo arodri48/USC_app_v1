@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import WelcomeScreen from "USC_app_v1/Screens/WelcomeScreen";
 import SearchScreen from "USC_app_v1/Screens/SearchScreen";
 import StoreScreen from "USC_app_v1/Screens/StoreScreen";
-import
+import SplashScreen from '../Screens/SplashScreen';
 import {AuthContext} from '../Provider/AuthProvider';
 
 
