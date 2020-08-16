@@ -4,20 +4,23 @@ import React, {useState, createContext} from 'react';
 export const InfoContext = createContext();
 
 // Create provider for components to consume and subscribe to changes
-export const InfoProvider = props => {
-	const [welcomeScreenSeen, setwelcomeScreeenSeen] = useState(false);
-	const [storeName, setStoreName] = useState('');
-	const [storeID, setStoreID] = useState('');
+export const InfoProvider = (props) => {
+  const [firstTimeOpen, setFirstTimeOpen] = useState(false);
+  const [storeName, setStoreName] = useState('');
+  const [storeID, setStoreID] = useState('');
+  // need to add much more information and filter settings!!!!S
 
-	return(
-		<InfoContext.Provider
-			value={{
-				welcomeScreenSeen, setwelcomeScreeenSeen,
-				storeName, setStoreName,
-				storeID, setStoreID
-			}}
-		>
-			{props.children}
-		</InfoContext.Provider>
-	);
+  return (
+    <InfoContext.Provider
+      value={{
+        firstTimeOpen,
+        setFirstTimeOpen,
+        storeName,
+        setStoreName,
+        storeID,
+        setStoreID,
+      }}>
+      {props.children}
+    </InfoContext.Provider>
+  );
 };

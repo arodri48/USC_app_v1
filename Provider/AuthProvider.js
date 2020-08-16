@@ -41,35 +41,8 @@ export const AuthProvider = (props) => {
     },
   );
 
-  useEffect(() => {
-    const bootstrapAsync = async () => {
-      let userToken;
-
-      try {
-        userToken = await AsyncStorage.getItem('userToken');
-      } catch (e) {
-        // restoring token failed
-      }
-      dispatch({type: 'RESTORE_TOKEN', token: userToken});
-    };
-    bootstrapAsync();
-  }, []);
-
-  const authContext = useMemo(
-    () => ({
-      signIn: () => {
-        dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'});
-      },
-      signOut: () => dispatch({type: 'SIGN_OUT'}),
-      signUp: () => {
-        dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'});
-      },
-    }),
-    [],
-  );
-
   return (
-    <AuthContext.Provider value={{state, authContext}}>
+    <AuthContext.Provider value={{state, dispatch}}>
       {props.children}
     </AuthContext.Provider>
   );
