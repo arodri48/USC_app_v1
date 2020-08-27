@@ -1,39 +1,42 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getBlog = /* GraphQL */ `
-  query GetBlog($id: ID!) {
-    getBlog(id: $id) {
+export const getStore = /* GraphQL */ `
+  query GetStore($id: ID!) {
+    getStore(id: $id) {
       id
-      name
-      posts {
-        items {
-          id
-          title
-          blogID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
+      goodsType
+      storeName
+      stateLocation
+      website
+      BLM
+      PricePoint
+      COVID
+      bio
+      image
       createdAt
       updatedAt
     }
   }
 `;
-export const listBlogs = /* GraphQL */ `
-  query ListBlogs(
-    $filter: ModelBlogFilterInput
+export const listStores = /* GraphQL */ `
+  query ListStores(
+    $filter: ModelStoreFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listBlogs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listStores(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        name
-        posts {
-          nextToken
-        }
+        goodsType
+        storeName
+        stateLocation
+        website
+        BLM
+        PricePoint
+        COVID
+        bio
+        image
         createdAt
         updatedAt
       }
@@ -41,108 +44,54 @@ export const listBlogs = /* GraphQL */ `
     }
   }
 `;
-export const getPost = /* GraphQL */ `
-  query GetPost($id: ID!) {
-    getPost(id: $id) {
+export const getUrlClicked = /* GraphQL */ `
+  query GetUrlClicked($id: ID!) {
+    getUrlClicked(id: $id) {
       id
-      title
-      blogID
-      blog {
+      storeID
+      store {
         id
-        name
-        posts {
-          nextToken
-        }
+        goodsType
+        storeName
+        stateLocation
+        website
+        BLM
+        PricePoint
+        COVID
+        bio
+        image
         createdAt
         updatedAt
-      }
-      comments {
-        items {
-          id
-          postID
-          content
-          createdAt
-          updatedAt
-        }
-        nextToken
       }
       createdAt
       updatedAt
     }
   }
 `;
-export const listPosts = /* GraphQL */ `
-  query ListPosts(
-    $filter: ModelPostFilterInput
+export const listUrlClickeds = /* GraphQL */ `
+  query ListUrlClickeds(
+    $filter: ModelurlClickedFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listPosts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listUrlClickeds(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        title
-        blogID
-        blog {
+        storeID
+        store {
           id
-          name
+          goodsType
+          storeName
+          stateLocation
+          website
+          BLM
+          PricePoint
+          COVID
+          bio
+          image
           createdAt
           updatedAt
         }
-        comments {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getComment = /* GraphQL */ `
-  query GetComment($id: ID!) {
-    getComment(id: $id) {
-      id
-      postID
-      post {
-        id
-        title
-        blogID
-        blog {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        comments {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      content
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listComments = /* GraphQL */ `
-  query ListComments(
-    $filter: ModelCommentFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listComments(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        postID
-        post {
-          id
-          title
-          blogID
-          createdAt
-          updatedAt
-        }
-        content
         createdAt
         updatedAt
       }
