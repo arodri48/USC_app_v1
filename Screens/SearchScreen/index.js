@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useReducer, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -13,7 +13,7 @@ import {listStores} from '../../src/graphql/queries';
 import {getNames, useQuery} from 'aws-amplify-react-hooks';
 
 export default function SearchScreen({navigation}) {
-  // These are the values that
+  // These are the hooks for store values, will be updated if a store is pressed
   const [
     storeName,
     setStoreName,
@@ -29,7 +29,65 @@ export default function SearchScreen({navigation}) {
     setWebsite,
   ] = useContext(InfoContext);
 
-  // TODO: Add hooks for when filter and sort options are selected (first one added)
+  // Hooks for toggling filter and sort menus
+  const [filterVisible, setFilterVisible] = useState(false);
+  const toggleFilterOverlay = () => {
+    setFilterVisible(!filterVisible);
+  };
+  const [sortVisible, setSortVisible] = useState(false);
+  const toggleSortOverlay = () => {
+    setSortVisible(!sortVisible);
+  };
+
+  // Hooks for filter options
+  const [food, setFood] = useState(false);
+  const [books, setBooks] = useState(false);
+  const [clothing_jewlery_hair, setClothingJewleryHair] = useState(false);
+  const [beauty_health, setBeautyHealth] = useState(false);
+  // Hooks for sort options
+  const [sortOption, dispatch] = useReducer(
+    (prevState, action) => {
+      switch (action.type) {
+        case 'HIGH_TO_LOW':
+          return {
+            high_to_low: true,
+            low_to_high: false,
+            new_releases: false,
+            featured: false,
+          };
+        case 'LOW_T0_HIGH':
+          return {
+            high_to_low: false,
+            low_to_high: true,
+            new_releases: false,
+            featured: false,
+          };
+        case 'NEW_RELEASES':
+          return {
+            high_to_low: false,
+            low_to_high: false,
+            new_releases: true,
+            featured: false,
+          };
+        case 'FEATURED':
+          return {
+            high_to_low: false,
+            low_to_high: false,
+            new_releases: false,
+            featured: true,
+          };
+      }
+    },
+    {
+      high_to_low: false,
+      low_to_high: false,
+      new_releases: false,
+      featured: false,
+    },
+  );
+
+  // Hook for determining whether to run update search, will be switched to true
+  // anytime a filter or sort option is changed
   const [refresh, setRefresh] = useState(false);
 
   // TODO: Write a useEffect function to do a new query once new options are selected (will run when a menu closes, since refresh will be set to true)
@@ -42,9 +100,9 @@ export default function SearchScreen({navigation}) {
 
   // This useQuery runs on first render
   const {data, loading, error, fetchMore} = useQuery(
-      {listStores},
-      {variables: {limit: 10}},
-      getNames({listStores}),
+    {listStores},
+    {variables: {limit: 10}},
+    getNames({listStores}),
   );
 
   const _renderStore = ({store}) => {
@@ -55,30 +113,30 @@ export default function SearchScreen({navigation}) {
 
   if (loading) {
     return (
-        <View>
-          <Text style={{alignSelf: 'center'}}>Loading Stores</Text>
-          <ActivityIndicator />
-        </View>
+      <View>
+        <Text style={{alignSelf: 'center'}}>Loading Stores</Text>
+        <ActivityIndicator />
+      </View>
     );
   }
   if (error) {
     return (
-        <View>
-          <Text style={{alignSelf: 'center'}}>Please relaunch app</Text>
-        </View>
+      <View>
+        <Text style={{alignSelf: 'center'}}>Please relaunch app</Text>
+      </View>
     );
   }
 
   return (
-      <View>
-        {/* TODO: Need to add title and filter selection menus, need to add filter state variables above*/}
-        <FlatList
-            data={data}
-            renderItem={_renderStore}
-            onEndReached={fetchMore}
-            onEndReachedThreshold={0.5}
-            keyExtractor={_keyExtractor}
-        />
-      </View>
+    <View>
+      {/* TODO: Need to add title and filter selection menus, need to add filter state variables above*/}
+      <FlatList
+        data={data}
+        renderItem={_renderStore}
+        onEndReached={fetchMore}
+        onEndReachedThreshold={0.5}
+        keyExtractor={_keyExtractor}
+      />
+    </View>
   );
 }
