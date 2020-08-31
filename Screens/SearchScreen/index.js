@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useReducer, useRef, useState} from 'react';
+import React, {useContext, useEffect, useReducer, useState} from 'react';
 import {
   View,
   Text,
@@ -9,8 +9,8 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {InfoContext} from '../../Provider/InfoProvider';
-import {listStores} from '../../src/graphql/queries';
-import {getNames, useQuery} from 'aws-amplify-react-hooks';
+
+
 
 export default function SearchScreen({navigation}) {
   // These are the hooks for store values, will be updated if a store is pressed
@@ -44,6 +44,7 @@ export default function SearchScreen({navigation}) {
   const [books, setBooks] = useState(false);
   const [clothing_jewlery_hair, setClothingJewleryHair] = useState(false);
   const [beauty_health, setBeautyHealth] = useState(false);
+
   // Hooks for sort options
   const [sortOption, dispatch] = useReducer(
     (prevState, action) => {
@@ -98,12 +99,9 @@ export default function SearchScreen({navigation}) {
     }
   }, [refresh]);
 
-  // This useQuery runs on first render
-  const {data, loading, error, fetchMore} = useQuery(
-    {listStores},
-    {variables: {limit: 10}},
-    getNames({listStores}),
-  );
+
+  //TODO: Figure out how to write query without hooks and place them into initial useEffect
+
 
   const _renderStore = ({store}) => {
     // TODO: Write render code for what each store will display and what happens when pressed
@@ -119,7 +117,7 @@ export default function SearchScreen({navigation}) {
       </View>
     );
   }
-  if (error) {
+  if (error_occured) {
     return (
       <View>
         <Text style={{alignSelf: 'center'}}>Please relaunch app</Text>
@@ -131,9 +129,9 @@ export default function SearchScreen({navigation}) {
     <View>
       {/* TODO: Need to add title and filter selection menus, need to add filter state variables above*/}
       <FlatList
-        data={data}
+        data={}
         renderItem={_renderStore}
-        onEndReached={fetchMore}
+        onEndReached={}
         onEndReachedThreshold={0.5}
         keyExtractor={_keyExtractor}
       />
