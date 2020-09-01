@@ -1,4 +1,10 @@
-import React, {useContext, useEffect, useReducer, useState} from 'react';
+import React, {
+  useContext,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
 import {
   View,
   Text,
@@ -9,8 +15,10 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {InfoContext} from '../../Provider/InfoProvider';
+import {API, graphqlOperation} from 'aws-amplify';
+import {listStores} from '../../src/graphql/queries';
 
-
+const {width, height} = Dimensions.get('window');
 
 export default function SearchScreen({navigation}) {
   // These are the hooks for store values, will be updated if a store is pressed
@@ -91,17 +99,98 @@ export default function SearchScreen({navigation}) {
   // anytime a filter or sort option is changed
   const [refresh, setRefresh] = useState(false);
 
-  // TODO: Write a useEffect function to do a new query once new options are selected (will run when a menu closes, since refresh will be set to true)
+  const [stores, setStores] = useState([]);
+  const [pageToken, setPageToken] = useState(null);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const pageTokenRef = useRef();
+  const storesRef = useRef();
+  //Initial useEffect to load in data
   useEffect(() => {
+    async function fetchStores() {
+      try {
+        const storeData = await API.graphql({
+          query: listStores,
+          variables: {
+            limit: 10,
+          },
+        });
+        const newStores = storeData.data.listStores.items;
+        const newPageToken = storeData.data.listStores.nextToken;
+
+        setPageToken(newPageToken);
+        setStores(newStores);
+        pageTokenRef.current = newStores;
+        storesRef.current = newPageToken;
+        setLoading(false);
+      } catch (err) {
+        console.log('error fetching stores');
+      }
+    }
+    fetchStores();
+  }, []);
+  // useEffect function to do a new query once new options are selected (will run when a menu closes, since refresh will be set to true)
+  useEffect(() => {
+    async function fetchStores() {
+      try {
+        const storeData = await API.graphql({
+          query: listStores,
+          variables: {
+            limit: 10,
+          },
+        });
+        const newStores = storeData.data.listStores.items;
+        const newPageToken = storeData.data.listStores.nextToken;
+
+        setPageToken(newPageToken);
+        setStores(newStores);
+        pageTokenRef.current = newStores;
+        storesRef.current = newPageToken;
+        setLoading(false);
+      } catch (err) {
+        console.log('error fetching stores');
+      }
+    }
     if (refresh) {
-      // TODO: call new querey here
+      setLoading(true);
+      setStores([]);
+      setPageToken(null);
+      fetchStores();
       setRefresh(false);
     }
-  }, [refresh]);
-
+  }, [refresh, pageTokenRef, storesRef]);
+  // useEffect for loading more
+  useEffect(
+    (pageToken, stores) => {
+      async function fetchStores() {
+        try {
+          const storeData = await API.graphql({
+            query: listStores,
+            variables: {
+              limit: 10,
+              nextToken: pageTokenRef.current,
+            },
+          });
+          const newStores = storeData.data.listStores.items;
+          const newPageToken = storeData.data.listStores.nextToken;
+          setPageToken(newPageToken);
+          pageTokenRef.current = newPageToken;
+          setStores([...storesRef.current, ...newStores]);
+          storesRef.current = [...storesRef.current, ...newStores];
+          setLoading(false);
+        } catch (err) {
+          console.log('error fetching stores');
+        }
+      }
+      if (loadingMore) {
+        fetchStores();
+        setLoadingMore(false);
+      }
+    },
+    [loadingMore, pageTokenRef, storesRef],
+  );
 
   //TODO: Figure out how to write query without hooks and place them into initial useEffect
-
 
   const _renderStore = ({store}) => {
     // TODO: Write render code for what each store will display and what happens when pressed
@@ -109,32 +198,50 @@ export default function SearchScreen({navigation}) {
 
   const _keyExtractor = (obj) => obj.id.toString();
 
-  if (loading) {
+  const _renderFooter = () => {
+    if (!loadingMore) {
+      return null;
+    }
     return (
-      <View>
-        <Text style={{alignSelf: 'center'}}>Loading Stores</Text>
-        <ActivityIndicator />
+      <View
+        style={{
+          position: 'relative',
+          width: width,
+          height: height,
+          paddingVertical: 20,
+          borderTopWidth: 1,
+          marginTop: 10,
+          marginBottom: 10,
+          borderColor: 'pink',
+        }}>
+        <ActivityIndicator animating size="large" />
       </View>
     );
-  }
-  if (error_occured) {
-    return (
-      <View>
-        <Text style={{alignSelf: 'center'}}>Please relaunch app</Text>
-      </View>
-    );
-  }
+  };
 
-  return (
+  const _handleLoadMore = () => {
+    pageTokenRef.current = pageToken;
+    storesRef.current = stores;
+    setLoadingMore(true);
+  };
+
+  return !loading ? (
     <View>
       {/* TODO: Need to add title and filter selection menus, need to add filter state variables above*/}
       <FlatList
-        data={}
+        data={stores}
         renderItem={_renderStore}
-        onEndReached={}
+        onEndReached={_handleLoadMore}
         onEndReachedThreshold={0.5}
         keyExtractor={_keyExtractor}
+        initialNumToRender={10}
+        ListFooterComponent={_renderFooter}
       />
+    </View>
+  ) : (
+    <View>
+      <Text style={{alignSelf: 'center'}}>Loading Stores</Text>
+      <ActivityIndicator />
     </View>
   );
 }
