@@ -17,6 +17,7 @@ import {
 import {InfoContext} from '../../Provider/InfoProvider';
 import {API, graphqlOperation} from 'aws-amplify';
 import {listStores} from '../../src/graphql/queries';
+import FastImage from 'react-native-fast-image';
 
 const {width, height} = Dimensions.get('window');
 
@@ -160,40 +161,54 @@ export default function SearchScreen({navigation}) {
     }
   }, [refresh, pageTokenRef, storesRef]);
   // useEffect for loading more
-  useEffect(
-    (pageToken, stores) => {
-      async function fetchStores() {
-        try {
-          const storeData = await API.graphql({
-            query: listStores,
-            variables: {
-              limit: 10,
-              nextToken: pageTokenRef.current,
-            },
-          });
-          const newStores = storeData.data.listStores.items;
-          const newPageToken = storeData.data.listStores.nextToken;
-          setPageToken(newPageToken);
-          pageTokenRef.current = newPageToken;
-          setStores([...storesRef.current, ...newStores]);
-          storesRef.current = [...storesRef.current, ...newStores];
-          setLoading(false);
-        } catch (err) {
-          console.log('error fetching stores');
-        }
+  useEffect(() => {
+    async function fetchStores() {
+      try {
+        const storeData = await API.graphql({
+          query: listStores,
+          variables: {
+            limit: 10,
+            nextToken: pageTokenRef.current,
+          },
+        });
+        const newStores = storeData.data.listStores.items;
+        const newPageToken = storeData.data.listStores.nextToken;
+        setPageToken(newPageToken);
+        pageTokenRef.current = newPageToken;
+        setStores([...storesRef.current, ...newStores]);
+        storesRef.current = [...storesRef.current, ...newStores];
+        setLoading(false);
+      } catch (err) {
+        console.log('error fetching stores');
       }
-      if (loadingMore) {
-        fetchStores();
-        setLoadingMore(false);
-      }
-    },
-    [loadingMore, pageTokenRef, storesRef],
-  );
-
-  //TODO: Figure out how to write query without hooks and place them into initial useEffect
+    }
+    if (loadingMore) {
+      fetchStores();
+      setLoadingMore(false);
+    }
+  }, [loadingMore, pageTokenRef, storesRef]);
 
   const _renderStore = ({store}) => {
-    // TODO: Write render code for what each store will display and what happens when pressed
+    return (
+      <TouchableOpacity style={{backgroundColor: 'pink'}} onPress={}>
+
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <Text>{store.storeName}</Text>
+            <Text>{store.PricePoint}</Text>
+          </View>
+          <View style={{flexDirection: 'row'}}>
+            <FastImage
+              style={{width: 100, height: 100}}
+              source={{
+                uri: store.image,
+              }}
+              resizeMode={FastImage.resizeMode.contain}
+            />
+            <Text>store.bio</Text>
+          </View>
+
+      </TouchableOpacity>
+    );
   };
 
   const _keyExtractor = (obj) => obj.id.toString();
