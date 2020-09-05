@@ -9,14 +9,14 @@ import ImageList from 'USC_app_v1/media/ImageStore';
 export default function WelcomeScreen({navigation}){
     const { dispatch } = useContext(AuthContext);
     return(
-        <View style = styles.MainContainer>
+        <View style = {styles.MainContainer}>
             <Text style={styles.sendASmile}>
                 Send A Smile
             </Text>
             <Text style = {styles.text}>
                 A UniSelfCare Program
             </Text>
-            <FastImage source={ImageList.Smile}
+            <FastImage source={ImageList.Smile} />
             <Text style={styles.text}>
                 Covid 19 has changed the way of{"\n"} life for many people. We have{"\n"}
                 suffered as a result and are still on{"\n"} our way to normalcy. Let's help{"\n"}
