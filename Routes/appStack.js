@@ -15,7 +15,7 @@ const RootStack = createStackNavigator();
 function Root() {
   return (
     <RootStack.Navigator>
-      <RootStack.Screen name="SearchScreen" component={SearchScreen} />
+    {/* <RootStack.Screen name="SearchScreen" component={SearchScreen} />   */}
       <RootStack.Screen name="StoreScreen" component={StoreScreen} />
     </RootStack.Navigator>
   );
