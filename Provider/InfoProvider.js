@@ -11,6 +11,8 @@ export const InfoProvider = (props) => {
   const [bio, setBio] = useState('');
   const [price, setPrice] = useState('');
   const [website, setWebsite] = useState('');
+  const [goodsType, setGoodsType] = useState('');
+  const [image, setImage] = useState('');
   // need to add much more information and filter settings!!!!S
 
   return (
@@ -27,7 +29,11 @@ export const InfoProvider = (props) => {
           price,
           setPrice,
           website,
-          setWebsite
+          setWebsite,
+          goodsType,
+          setGoodsType,
+          image,
+          setImage
       }}>
       {props.children}
     </InfoContext.Provider>

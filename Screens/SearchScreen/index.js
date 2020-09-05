@@ -8,7 +8,6 @@ import React, {
 import {
   View,
   Text,
-  Button,
   Dimensions,
   FlatList,
   TouchableOpacity,
@@ -24,18 +23,14 @@ const {width, height} = Dimensions.get('window');
 export default function SearchScreen({navigation}) {
   // These are the hooks for store values, will be updated if a store is pressed
   const [
-    storeName,
     setStoreName,
-    storeID,
     setStoreID,
-    stateLocation,
     setStateLocation,
-    bio,
     setBio,
-    price,
     setPrice,
-    website,
     setWebsite,
+      setGoodsType,
+      setImage
   ] = useContext(InfoContext);
 
   // Hooks for toggling filter and sort menus
@@ -188,9 +183,23 @@ export default function SearchScreen({navigation}) {
     }
   }, [loadingMore, pageTokenRef, storesRef]);
 
+
   const _renderStore = ({store}) => {
+    const storePressHandler = () => {
+      // set InfoProvider variables to equal the store's attributes
+      setStoreName(store.storeName);
+      setStoreID(store.id);
+      setStateLocation(store.stateLocation);
+      setBio(store.bio);
+      setPrice(store.PricePoint);
+      setWebsite(store.website);
+      setGoodsType(store.goodsType);
+      setImage(store.image);
+      // navigate to storescreen
+      navigation.navigate("StoreScreen");
+    }
     return (
-      <TouchableOpacity style={{backgroundColor: 'pink'}} onPress={}>
+      <TouchableOpacity style={{backgroundColor: 'pink'}} onPress={storePressHandler}>
 
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text>{store.storeName}</Text>
