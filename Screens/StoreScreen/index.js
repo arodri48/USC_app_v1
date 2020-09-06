@@ -25,7 +25,7 @@ export default function StoreScreen({navigation}){
 */}
 
     const openUrl = () =>{
-      let url = 'http://www.google.com';   //for test purpose
+      let url = 'https://effiespaper.com';    //for test purpose
       Linking.openURL(url)
     };
 
@@ -54,13 +54,11 @@ export default function StoreScreen({navigation}){
                 />
                 <Text style = {styles.ShopName}> Effie's Paper </Text>
 
-{/*
+                {/*need to pass the real url to make it really work*/}
                 <TouchableWithoutFeedback onPress={openUrl}>
-                    <Text style = {styles.ShopUrl}> http://www.google.com </Text>     {/*need to pass the real url to make it really work*/}
-{/*             </TouchableWithoutFeedback>
-*/}
+                    <Text style = {styles.ShopUrl}>  https://effiespaper.com </Text>
+                </TouchableWithoutFeedback>
 
-                <Text style = {{alignItems:'center', justifyContent:'center',color:'white'}}>  url, to be implemented today   </Text>
 
                 <Text style = {styles.ShopLoc}> Location City, State </Text>
 
@@ -108,14 +106,18 @@ const styles = StyleSheet.create({
       textAlign:'center',
     },
     ShopUrl:{
-      color:'white',
-
+      marginTop:5,
+      color:'#FFFFFF',
+      alignItems:'center',
+      justifyContent:'center',
+      fontSize:14,
     },
     ShopLoc:{
       marginTop:15,
       fontWeight:'bold',   //'700' Bold, '800' Heavy, '900' Black
       fontSize:15,
       marginBottom:5,
+      color:'black',
     },
     CancelButton: {
       position:'relative',
