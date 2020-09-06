@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View,Text,Dimensions,FlatList,TouchableOpacity,ActivityIndicator,StyleSheet} from 'react-native';
+import {View,Text,Dimensions,FlatList,TouchableOpacity,ActivityIndicator,StyleSheet,Button} from 'react-native';
 
 import {InfoContext} from '../../Provider/InfoProvider';
 import {API, graphqlOperation} from 'aws-amplify';
@@ -24,16 +24,30 @@ export default function StoreScreen({navigation}){
       ] = useContext(InfoContext);
 */}
 
+
     return(
         <View style={styles.MainContainer}>
 
             <View style={styles.info}>
+              <View style = {styles.CancelButton}>
+              {/*To do: change it to touchableOpacity instead of the current way? */}
+                  <Button
+                //      onPress={()=>navigation.navigate('SearchScreen')}    //Todo: edit onPress
+                    color = '#FFC0CB'
+                    borderColor = '#FFC0CB'
+                    backgroundColor = '#FFC0CB'
+                    title=" X "
+                  />
+              </View>
+
+              <View style={{alignItems:'center', justifyContent:'center'}}>
                 <FastImage
-                     style={{width: 100, height: 100}}
-                     source={ImageList.Test}
-                     resizeMode={FastImage.resizeMode.contain}
-                 />
-                <Text style = {{alignItems:'center', justifyContent:'center'}}>   the storeScreen, to be implemented tomorrow   </Text>
+                    style={{width: 100, height: 100}}
+                    source={ImageList.Test}
+                    resizeMode={FastImage.resizeMode.contain}
+                />
+                <Text style = {{alignItems:'center', justifyContent:'center'}}>   the storeScreen, to be implemented today   </Text>
+              </View>
             </View>
 
         </View>
@@ -52,8 +66,6 @@ const styles = StyleSheet.create({
     },
 
     info: {
-        justifyContent:'center',
-        alignItems:'center',
         backgroundColor:'#FFC0CB',
         borderColor:'#FFC0CB',
         paddingVertical: 5,
@@ -71,5 +83,18 @@ const styles = StyleSheet.create({
     },
     ShopLoc:{
     },
+    CancelButton: {
+      position:'relative',
+      backgroundColor:'#FFC0CB',
+      borderColor:'#FFC0CB',
+      color:'#FFC0CB',
+      width:40,
+      height:40,
+      borderTopWidth:10,
+      borderLeftWidth:10,
+      borderRadius:15,
+      alignItems:'center',
+      justifyContent:'center',
+    }
 
 });
