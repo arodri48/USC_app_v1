@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View,Text,Dimensions,FlatList,TouchableOpacity,ActivityIndicator,StyleSheet,Button} from 'react-native';
+import {View,Text,Dimensions,FlatList,TouchableOpacity,ActivityIndicator,StyleSheet,Button, Linking, TouchableWithoutFeedback} from 'react-native';
 
 import {InfoContext} from '../../Provider/InfoProvider';
 import {API, graphqlOperation} from 'aws-amplify';
@@ -24,11 +24,17 @@ export default function StoreScreen({navigation}){
       ] = useContext(InfoContext);
 */}
 
+    const openUrl = () =>{
+      let url = 'http://www.google.com';   //for test purpose
+      Linking.openURL(url)
+    };
+
+
 
     return(
         <View style={styles.MainContainer}>
-
             <View style={styles.info}>
+
               <View style = {styles.CancelButton}>
               {/*To do: change it to touchableOpacity instead of the current way? */}
                   <Button
@@ -46,12 +52,30 @@ export default function StoreScreen({navigation}){
                     source={ImageList.Test}
                     resizeMode={FastImage.resizeMode.contain}
                 />
-                <Text style = {{alignItems:'center', justifyContent:'center'}}>   the storeScreen, to be implemented today   </Text>
-              </View>
-            </View>
+                <Text style = {styles.ShopName}> Effie's Paper </Text>
 
+{/*
+                <TouchableWithoutFeedback onPress={openUrl}>
+                    <Text style = {styles.ShopUrl}> http://www.google.com </Text>     {/*need to pass the real url to make it really work*/}
+{/*             </TouchableWithoutFeedback>
+*/}
+
+                <Text style = {{alignItems:'center', justifyContent:'center',color:'white'}}>  url, to be implemented today   </Text>
+
+                <Text style = {styles.ShopLoc}> Location City, State </Text>
+
+                <Text style = {styles.origin}> ORIGINS:   test test test </Text>
+
+                <Text style = {styles.service}> SERVICES:  test test  test</Text>
+
+                <Text style = {styles.support}> SUPPORTS:  test  test  test</Text>
+
+
+              </View>
+
+            </View>
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
@@ -78,10 +102,20 @@ const styles = StyleSheet.create({
     },
     //To be implemeted later
     ShopName: {
+      fontWeight:'bold',   //'700' Bold, '800' Heavy, '900' Black
+      color:'black',
+      fontSize:35,
+      textAlign:'center',
     },
     ShopUrl:{
+      color:'white',
+
     },
     ShopLoc:{
+      marginTop:15,
+      fontWeight:'bold',   //'700' Bold, '800' Heavy, '900' Black
+      fontSize:15,
+      marginBottom:5,
     },
     CancelButton: {
       position:'relative',
@@ -95,6 +129,18 @@ const styles = StyleSheet.create({
       borderRadius:15,
       alignItems:'center',
       justifyContent:'center',
+    },
+    origin:{
+      marginTop:5,
+      marginBottom:5,
+    },
+    service:{
+      marginTop:5,
+      marginBottom:5,
+    },
+    support:{
+      marginTop:5,
+      marginBottom:5,
     }
 
 });
