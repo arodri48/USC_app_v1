@@ -29,8 +29,8 @@ export default function SearchScreen({navigation}) {
     setBio,
     setPrice,
     setWebsite,
-      setGoodsType,
-      setImage
+    setGoodsType,
+    setImage,
   ] = useContext(InfoContext);
 
   // Hooks for toggling filter and sort menus
@@ -183,7 +183,6 @@ export default function SearchScreen({navigation}) {
     }
   }, [loadingMore, pageTokenRef, storesRef]);
 
-
   const _renderStore = ({store}) => {
     const storePressHandler = () => {
       // set InfoProvider variables to equal the store's attributes
@@ -196,26 +195,26 @@ export default function SearchScreen({navigation}) {
       setGoodsType(store.goodsType);
       setImage(store.image);
       // navigate to storescreen
-      navigation.navigate("StoreScreen");
-    }
+      navigation.navigate('StoreScreen');
+    };
     return (
-      <TouchableOpacity style={{backgroundColor: 'pink'}} onPress={storePressHandler}>
-
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text>{store.storeName}</Text>
-            <Text>{store.PricePoint}</Text>
-          </View>
-          <View style={{flexDirection: 'row'}}>
-            <FastImage
-              style={{width: 100, height: 100}}
-              source={{
-                uri: store.image,
-              }}
-              resizeMode={FastImage.resizeMode.contain}
-            />
-            <Text>store.bio</Text>
-          </View>
-
+      <TouchableOpacity
+        style={{backgroundColor: 'pink'}}
+        onPress={storePressHandler}>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <Text>{store.storeName}</Text>
+          <Text>{store.PricePoint}</Text>
+        </View>
+        <View style={{flexDirection: 'row'}}>
+          <FastImage
+            style={{width: 100, height: 100}}
+            source={{
+              uri: store.image,
+            }}
+            resizeMode={FastImage.resizeMode.contain}
+          />
+          <Text>store.bio</Text>
+        </View>
       </TouchableOpacity>
     );
   };
