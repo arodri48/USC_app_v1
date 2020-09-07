@@ -18,6 +18,7 @@
     "aws-amplify": "^3.0.20",
     "aws-amplify-react-hooks": "^1.0.13",
     "aws-amplify-react-native": "^4.2.1",
+    "dooboo-ui": "0.0.15",
     "react": "16.13.1",
     "react-native": "0.63.1",
     "react-native-gesture-handler": "^1.7.0",

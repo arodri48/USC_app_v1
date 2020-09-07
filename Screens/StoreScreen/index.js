@@ -121,7 +121,6 @@ export default function StoreScreen({navigation}) {
           <Text style={styles.service}> Bio: {bio}</Text>
 
           <Text style={styles.support}>
-            {' '}
             Type of Product/Service: {goodsType}
           </Text>
         </View>

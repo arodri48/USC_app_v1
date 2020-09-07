@@ -12,11 +12,15 @@ import {
   FlatList,
   TouchableOpacity,
   ActivityIndicator,
+  StyleSheet,
 } from 'react-native';
 import {InfoContext} from '../../Provider/InfoProvider';
 import {API, graphqlOperation} from 'aws-amplify';
 import {listStores} from '../../src/graphql/queries';
 import FastImage from 'react-native-fast-image';
+import {Button, OverLay, CheckBox} from 'react-native-elements';
+import ImageList from 'USC_app_v1/media/ImageStore';
+import {Accordion} from 'dooboo-ui';
 
 const {width, height} = Dimensions.get('window');
 
@@ -37,20 +41,69 @@ export default function SearchScreen({navigation}) {
   const [filterVisible, setFilterVisible] = useState(false);
   const toggleFilterOverlay = () => {
     setFilterVisible(!filterVisible);
+    if (!filterVisible) {
+      setRefresh(true);
+    }
   };
   const [sortVisible, setSortVisible] = useState(false);
   const toggleSortOverlay = () => {
     setSortVisible(!sortVisible);
+    if (!sortVisible) {
+      setRefresh(true);
+    }
   };
 
   // Hooks for filter options
-  const [food, setFood] = useState(false);
-  const [books, setBooks] = useState(false);
-  const [clothing_jewlery_hair, setClothingJewleryHair] = useState(false);
-  const [beauty_health, setBeautyHealth] = useState(false);
+  const [filterOption, filterDispatch] = useReducer(
+    (prevState, action) => {
+      switch (action.type) {
+        case 'FOOD':
+          return {
+            food: true,
+            books: false,
+            clothing_jewlery_hair: false,
+            beauty_health: false,
+          };
+        case 'BOOKS':
+          return {
+            food: false,
+            books: true,
+            clothing_jewlery_hair: false,
+            beauty_health: false,
+          };
+        case 'CLOTHING':
+          return {
+            food: false,
+            books: false,
+            clothing_jewlery_hair: true,
+            beauty_health: false,
+          };
+        case 'BEAUTY_HEALTH':
+          return {
+            food: false,
+            books: false,
+            clothing_jewlery_hair: false,
+            beauty_health: true,
+          };
+      }
+    },
+    {
+      food: false,
+      books: false,
+      clothing_jewlery_hair: false,
+      beauty_health: false,
+    },
+  );
+
+  const filter_dict = {
+    'FOOD': {bool_val: filterOption.food, title: 'Food'},
+    'BOOKS': {bool_val: filterOption.books, title: 'Books'},
+    'CLOTHING': {bool_val: filterOption.clothing_jewlery_hair, title: 'Clothing'},
+    'BEAUTY_HEALTH': {bool_val: filterOption.beauty_health, title: 'Beauty and Health'},
+  };
 
   // Hooks for sort options
-  const [sortOption, dispatch] = useReducer(
+  const [sortOption, sortDispatch] = useReducer(
     (prevState, action) => {
       switch (action.type) {
         case 'HIGH_TO_LOW':
@@ -90,6 +143,13 @@ export default function SearchScreen({navigation}) {
       featured: false,
     },
   );
+
+  const sort_dict = {
+    'HIGH_TO_LOW': {bool_val: sortOption.high_to_low, title: 'High to Low'},
+    'LOW_T0_HIGH': {bool_val: sortOption.low_to_high, title: 'Low to High'},
+    'NEW_RELEASES': {bool_val: sortOption.new_releases, title: 'New Releases'},
+    'FEATURED': {bool_val: sortOption.featured, title: 'Featured'},
+  };
 
   // Hook for determining whether to run update search, will be switched to true
   // anytime a filter or sort option is changed
@@ -248,8 +308,54 @@ export default function SearchScreen({navigation}) {
     setLoadingMore(true);
   };
 
+  const filter_data = [
+    {
+      title: 'Shop by Category',
+      bodies: ['FOOD', 'BOOKS', 'CLOTHING', 'BEAUTY_HEALTH'],
+    },
+  ];
+
   return !loading ? (
-    <View>
+    <View style={styles.mainContatiner}>
+      <Text style={styles.sendASmile}>Send A Smile</Text>
+      <Text style={styles.text}>A UniSelfCare Program</Text>
+      <FastImage source={ImageList.Smile} />
+      <View style={styles.FilterSortMenuContainer}>
+        <Button title="Filter" onPress={toggleFilterOverlay} />
+
+        <Button title="Sort" onPress={toggleSortOverlay} />
+      </View>
+      <OverLay
+        isVisible={filterVisible}
+        fullscreen={false}
+        onBackdropPress={toggleFilterOverlay}
+        overlayStyle={styles.filterMenu}>
+        <Accordion
+          data={filter_data}
+          shouldAnimate={true}
+          collapseOnStart={true}
+          animDuration={300}
+          activeOpacity={1}
+          renderTitle={(item) => <Text style={{color: 'white'}}>{item}</Text>}
+          renderBody={(item) =>
+            <CheckBox
+              
+          }
+          titleContainerStyle={{
+            backgroundColor: 'gray',
+          }}
+          bodyContainerStyle={{
+            backgroundColor: 'lightgray',
+          }}
+        />
+      </OverLay>
+      <OverLay
+        isVisible={sortVisible}
+        fullscreen={false}
+        onBackdropPress={toggleSortOverlay}
+        overlayStyle={styles.sortMenu}>
+        <Text>Sort Menu</Text>
+      </OverLay>
       {/* TODO: Need to add title and filter selection menus, need to add filter state variables above*/}
       <FlatList
         data={stores}
@@ -268,3 +374,35 @@ export default function SearchScreen({navigation}) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  MainContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
+  },
+  FilterSortMenuContainer: {
+    flexDirection: 'row',
+  },
+  filterMenu: {
+    height: 400,
+    width: 400,
+  },
+  sortMenu: {
+    height: 400,
+    width: 400,
+  },
+  sendASmile: {
+    color: '#FCC6DF',
+    fontSize: 45,
+    fontWeight: 'bold',
+    paddingBottom: 45,
+    fontFamily: 'Raleway-SemiBold',
+  },
+  text: {
+    color: '#535358',
+    fontSize: 25,
+    paddingTop: 10,
+  },
+});
