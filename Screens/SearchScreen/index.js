@@ -39,25 +39,36 @@ export default function SearchScreen({navigation}) {
 
   // Hooks for toggling filter and sort menus
   const [filterVisible, setFilterVisible] = useState(false);
+  const [filterAltered, setFilterAltered] = useState(false);
   const toggleFilterOverlay = () => {
     setFilterVisible(!filterVisible);
-    if (!filterVisible) {
+    if (!filterVisible && filterAltered) {
       setRefresh(true);
     }
   };
   const [sortVisible, setSortVisible] = useState(false);
+  const [sortAltered, setSortAltered] = useState(false);
   const toggleSortOverlay = () => {
     setSortVisible(!sortVisible);
-    if (!sortVisible) {
+    if (!sortVisible && sortAltered) {
       setRefresh(true);
     }
   };
 
+  const foodRef = useRef(false);
+  const booksRef = useRef(false);
+  const clothingRef = useRef(false);
+  const beauty_healthRef = useRef(false);
   // Hooks for filter options
   const [filterOption, filterDispatch] = useReducer(
     (prevState, action) => {
       switch (action.type) {
         case 'FOOD':
+          foodRef.current = true;
+          booksRef.current = false;
+          clothingRef.current = false;
+          beauty_healthRef.current = false;
+          setFilterAltered(true);
           return {
             food: true,
             books: false,
@@ -65,6 +76,12 @@ export default function SearchScreen({navigation}) {
             beauty_health: false,
           };
         case 'BOOKS':
+          foodRef.current = false;
+          booksRef.current = true;
+          clothingRef.current = false;
+          beauty_healthRef.current = false;
+          setFilterAltered(true);
+
           return {
             food: false,
             books: true,
@@ -72,6 +89,12 @@ export default function SearchScreen({navigation}) {
             beauty_health: false,
           };
         case 'CLOTHING':
+          foodRef.current = false;
+          booksRef.current = false;
+          clothingRef.current = true;
+          beauty_healthRef.current = false;
+          setFilterAltered(true);
+
           return {
             food: false,
             books: false,
@@ -79,6 +102,12 @@ export default function SearchScreen({navigation}) {
             beauty_health: false,
           };
         case 'BEAUTY_HEALTH':
+          foodRef.current = false;
+          booksRef.current = false;
+          clothingRef.current = false;
+          beauty_healthRef.current = true;
+          setFilterAltered(true);
+
           return {
             food: false,
             books: false,
@@ -96,10 +125,10 @@ export default function SearchScreen({navigation}) {
   );
 
   const filter_dict = {
-    'FOOD': {bool_val: filterOption.food, title: 'Food'},
-    'BOOKS': {bool_val: filterOption.books, title: 'Books'},
-    'CLOTHING': {bool_val: filterOption.clothing_jewlery_hair, title: 'Clothing'},
-    'BEAUTY_HEALTH': {bool_val: filterOption.beauty_health, title: 'Beauty and Health'},
+    'FOOD': {bool_val: foodRef, title: 'Food'},
+    'BOOKS': {bool_val: booksRef, title: 'Books'},
+    'CLOTHING': {bool_val: clothingRef, title: 'Clothing'},
+    'BEAUTY_HEALTH': {bool_val: beauty_healthRef, title: 'Beauty and Health'},
   };
 
   // Hooks for sort options
@@ -107,6 +136,7 @@ export default function SearchScreen({navigation}) {
     (prevState, action) => {
       switch (action.type) {
         case 'HIGH_TO_LOW':
+          setSortAltered(true);
           return {
             high_to_low: true,
             low_to_high: false,
@@ -114,6 +144,7 @@ export default function SearchScreen({navigation}) {
             featured: false,
           };
         case 'LOW_T0_HIGH':
+          setSortAltered(true);
           return {
             high_to_low: false,
             low_to_high: true,
@@ -121,6 +152,7 @@ export default function SearchScreen({navigation}) {
             featured: false,
           };
         case 'NEW_RELEASES':
+          setSortAltered(true);
           return {
             high_to_low: false,
             low_to_high: false,
@@ -128,6 +160,7 @@ export default function SearchScreen({navigation}) {
             featured: false,
           };
         case 'FEATURED':
+          setSortAltered(true);
           return {
             high_to_low: false,
             low_to_high: false,
@@ -143,14 +176,14 @@ export default function SearchScreen({navigation}) {
       featured: false,
     },
   );
-
+ /*
   const sort_dict = {
     'HIGH_TO_LOW': {bool_val: sortOption.high_to_low, title: 'High to Low'},
     'LOW_T0_HIGH': {bool_val: sortOption.low_to_high, title: 'Low to High'},
     'NEW_RELEASES': {bool_val: sortOption.new_releases, title: 'New Releases'},
     'FEATURED': {bool_val: sortOption.featured, title: 'Featured'},
   };
-
+  */
   // Hook for determining whether to run update search, will be switched to true
   // anytime a filter or sort option is changed
   const [refresh, setRefresh] = useState(false);
@@ -160,7 +193,7 @@ export default function SearchScreen({navigation}) {
   const [loadingMore, setLoadingMore] = useState(false);
   const [loading, setLoading] = useState(true);
   const pageTokenRef = useRef();
-  const storesRef = useRef();
+
   //Initial useEffect to load in data
   useEffect(() => {
     async function fetchStores() {
@@ -213,6 +246,8 @@ export default function SearchScreen({navigation}) {
       setPageToken(null);
       fetchStores();
       setRefresh(false);
+      setSortAltered(false);
+      setFilterAltered(false);
     }
   }, [refresh, pageTokenRef, storesRef]);
   // useEffect for loading more
@@ -315,6 +350,7 @@ export default function SearchScreen({navigation}) {
     },
   ];
 
+
   return !loading ? (
     <View style={styles.mainContatiner}>
       <Text style={styles.sendASmile}>Send A Smile</Text>
@@ -338,8 +374,13 @@ export default function SearchScreen({navigation}) {
           activeOpacity={1}
           renderTitle={(item) => <Text style={{color: 'white'}}>{item}</Text>}
           renderBody={(item) =>
-            <CheckBox
-              
+              <CheckBox
+                  title={filter_dict[item].title}
+                  checkedIcon='dot-circle-o'
+                  uncheckedIcon='circle-o'
+                  checked={filter_dict[item].bool_val.current}
+                  onPress={() => filterDispatch({type: item})}
+              />
           }
           titleContainerStyle={{
             backgroundColor: 'gray',
@@ -354,7 +395,26 @@ export default function SearchScreen({navigation}) {
         fullscreen={false}
         onBackdropPress={toggleSortOverlay}
         overlayStyle={styles.sortMenu}>
-        <Text>Sort Menu</Text>
+        <Button
+            title="Prices High to Low"
+            containterStyle={{backgroundColor: sortOption.high_to_low ? 'green' : 'transparent'}}
+            onPress={() => sortDispatch('HIGH_TO_LOW')}
+        />
+        <Button
+          title='Prices Low to High'
+          containterStyle={{backgroundColor: sortOption.low_to_high ? 'green' : 'transparent'}}
+          onPress={() => sortDispatch('LOW_TO_HIGH')}
+        />
+        <Button
+          title='New Releases'
+          containterStyle={{backgroundColor: sortOption.new_releases ? 'green' : 'transparent'}}
+          onPress={() => sortDispatch('NEW_RELEASES')}
+        />
+        <Button
+          title='Featured'
+          containterStyle={{backgroundColor: sortOption.featured ? 'green' : 'transparent'}}
+          onPress={() => sortDispatch('FEATURED')}
+        />
       </OverLay>
       {/* TODO: Need to add title and filter selection menus, need to add filter state variables above*/}
       <FlatList
@@ -406,3 +466,4 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
 });
+// TODO: Position the overlays; then add filter and search to query 
