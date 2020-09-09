@@ -1,12 +1,18 @@
-type Store @model(subscriptions: null) {
+type Store
+  @model(subscriptions: null)
+  @key(
+    name: "ByCause"
+    fields: ["cause", "PricePoint"]
+    queryField: "storesByCause"
+  )
+{
   id: ID!
   goodsType: String
   storeName: String
   stateLocation: String
   website: String
-  BLM: Boolean
+  cause: String
   PricePoint: String
-  COVID: String
   bio: String
   image: String
 }

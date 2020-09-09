@@ -9,9 +9,8 @@ export const getStore = /* GraphQL */ `
       storeName
       stateLocation
       website
-      BLM
+      cause
       PricePoint
-      COVID
       bio
       image
       createdAt
@@ -32,9 +31,8 @@ export const listStores = /* GraphQL */ `
         storeName
         stateLocation
         website
-        BLM
+        cause
         PricePoint
-        COVID
         bio
         image
         createdAt
@@ -55,9 +53,8 @@ export const getUrlClicked = /* GraphQL */ `
         storeName
         stateLocation
         website
-        BLM
+        cause
         PricePoint
-        COVID
         bio
         image
         createdAt
@@ -84,14 +81,47 @@ export const listUrlClickeds = /* GraphQL */ `
           storeName
           stateLocation
           website
-          BLM
+          cause
           PricePoint
-          COVID
           bio
           image
           createdAt
           updatedAt
         }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const storesByCause = /* GraphQL */ `
+  query StoresByCause(
+    $cause: String
+    $PricePoint: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelStoreFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    storesByCause(
+      cause: $cause
+      PricePoint: $PricePoint
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        goodsType
+        storeName
+        stateLocation
+        website
+        cause
+        PricePoint
+        bio
+        image
         createdAt
         updatedAt
       }

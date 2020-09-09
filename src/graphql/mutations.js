@@ -12,9 +12,8 @@ export const createStore = /* GraphQL */ `
       storeName
       stateLocation
       website
-      BLM
+      cause
       PricePoint
-      COVID
       bio
       image
       createdAt
@@ -33,9 +32,8 @@ export const updateStore = /* GraphQL */ `
       storeName
       stateLocation
       website
-      BLM
+      cause
       PricePoint
-      COVID
       bio
       image
       createdAt
@@ -54,9 +52,8 @@ export const deleteStore = /* GraphQL */ `
       storeName
       stateLocation
       website
-      BLM
+      cause
       PricePoint
-      COVID
       bio
       image
       createdAt
@@ -78,9 +75,8 @@ export const createUrlClicked = /* GraphQL */ `
         storeName
         stateLocation
         website
-        BLM
+        cause
         PricePoint
-        COVID
         bio
         image
         createdAt
@@ -105,9 +101,8 @@ export const updateUrlClicked = /* GraphQL */ `
         storeName
         stateLocation
         website
-        BLM
+        cause
         PricePoint
-        COVID
         bio
         image
         createdAt
@@ -132,9 +127,8 @@ export const deleteUrlClicked = /* GraphQL */ `
         storeName
         stateLocation
         website
-        BLM
+        cause
         PricePoint
-        COVID
         bio
         image
         createdAt

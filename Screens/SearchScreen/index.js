@@ -15,7 +15,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import {InfoContext} from '../../Provider/InfoProvider';
-import {API, graphqlOperation} from 'aws-amplify';
+import {API} from 'aws-amplify';
 import {listStores} from '../../src/graphql/queries';
 import FastImage from 'react-native-fast-image';
 import {Button, OverLay, CheckBox} from 'react-native-elements';
@@ -24,8 +24,8 @@ import {Accordion} from 'dooboo-ui';
 
 const {width, height} = Dimensions.get('window');
 
-export default function SearchScreen({navigation}) {
-  // These are the hooks for store values, will be updated if a store is pressed
+export default function SearchScreen({navigation}){
+  // Hooks for store values
   const [
     setStoreName,
     setStoreID,
@@ -36,8 +36,7 @@ export default function SearchScreen({navigation}) {
     setGoodsType,
     setImage,
   ] = useContext(InfoContext);
-
-  // Hooks for toggling filter and sort menus
+  // Hooks for filter values
   const [filterVisible, setFilterVisible] = useState(false);
   const [filterAltered, setFilterAltered] = useState(false);
   const toggleFilterOverlay = () => {
@@ -46,6 +45,54 @@ export default function SearchScreen({navigation}) {
       setRefresh(true);
     }
   };
+// Hooks for filter options
+  const [filterOption, filterDispatch] = useReducer(
+      (prevState, action) => {
+        switch (action.type) {
+          case 'FOOD':
+            setFilterAltered(true);
+            return {
+              food: true,
+              books: false,
+              clothing_jewlery_hair: false,
+              beauty_health: false,
+            };
+          case 'BOOKS':
+            setFilterAltered(true);
+
+            return {
+              food: false,
+              books: true,
+              clothing_jewlery_hair: false,
+              beauty_health: false,
+            };
+          case 'CLOTHING':
+            setFilterAltered(true);
+
+            return {
+              food: false,
+              books: false,
+              clothing_jewlery_hair: true,
+              beauty_health: false,
+            };
+          case 'BEAUTY_HEALTH':
+            setFilterAltered(true);
+
+            return {
+              food: false,
+              books: false,
+              clothing_jewlery_hair: false,
+              beauty_health: true,
+            };
+        }
+      },
+      {
+        food: false,
+        books: false,
+        clothing_jewlery_hair: false,
+        beauty_health: false,
+      },
+  );    // Hooks for sort values
   const [sortVisible, setSortVisible] = useState(false);
   const [sortAltered, setSortAltered] = useState(false);
   const toggleSortOverlay = () => {
@@ -54,147 +101,61 @@ export default function SearchScreen({navigation}) {
       setRefresh(true);
     }
   };
-
-  const foodRef = useRef(false);
-  const booksRef = useRef(false);
-  const clothingRef = useRef(false);
-  const beauty_healthRef = useRef(false);
-  // Hooks for filter options
-  const [filterOption, filterDispatch] = useReducer(
-    (prevState, action) => {
-      switch (action.type) {
-        case 'FOOD':
-          foodRef.current = true;
-          booksRef.current = false;
-          clothingRef.current = false;
-          beauty_healthRef.current = false;
-          setFilterAltered(true);
-          return {
-            food: true,
-            books: false,
-            clothing_jewlery_hair: false,
-            beauty_health: false,
-          };
-        case 'BOOKS':
-          foodRef.current = false;
-          booksRef.current = true;
-          clothingRef.current = false;
-          beauty_healthRef.current = false;
-          setFilterAltered(true);
-
-          return {
-            food: false,
-            books: true,
-            clothing_jewlery_hair: false,
-            beauty_health: false,
-          };
-        case 'CLOTHING':
-          foodRef.current = false;
-          booksRef.current = false;
-          clothingRef.current = true;
-          beauty_healthRef.current = false;
-          setFilterAltered(true);
-
-          return {
-            food: false,
-            books: false,
-            clothing_jewlery_hair: true,
-            beauty_health: false,
-          };
-        case 'BEAUTY_HEALTH':
-          foodRef.current = false;
-          booksRef.current = false;
-          clothingRef.current = false;
-          beauty_healthRef.current = true;
-          setFilterAltered(true);
-
-          return {
-            food: false,
-            books: false,
-            clothing_jewlery_hair: false,
-            beauty_health: true,
-          };
-      }
-    },
-    {
-      food: false,
-      books: false,
-      clothing_jewlery_hair: false,
-      beauty_health: false,
-    },
-  );
-
-  const filter_dict = {
-    'FOOD': {bool_val: foodRef, title: 'Food'},
-    'BOOKS': {bool_val: booksRef, title: 'Books'},
-    'CLOTHING': {bool_val: clothingRef, title: 'Clothing'},
-    'BEAUTY_HEALTH': {bool_val: beauty_healthRef, title: 'Beauty and Health'},
-  };
-
-  // Hooks for sort options
   const [sortOption, sortDispatch] = useReducer(
-    (prevState, action) => {
-      switch (action.type) {
-        case 'HIGH_TO_LOW':
-          setSortAltered(true);
-          return {
-            high_to_low: true,
-            low_to_high: false,
-            new_releases: false,
-            featured: false,
-          };
-        case 'LOW_T0_HIGH':
-          setSortAltered(true);
-          return {
-            high_to_low: false,
-            low_to_high: true,
-            new_releases: false,
-            featured: false,
-          };
-        case 'NEW_RELEASES':
-          setSortAltered(true);
-          return {
-            high_to_low: false,
-            low_to_high: false,
-            new_releases: true,
-            featured: false,
-          };
-        case 'FEATURED':
-          setSortAltered(true);
-          return {
-            high_to_low: false,
-            low_to_high: false,
-            new_releases: false,
-            featured: true,
-          };
-      }
-    },
-    {
-      high_to_low: false,
-      low_to_high: false,
-      new_releases: false,
-      featured: false,
-    },
+      (prevState, action) => {
+        switch (action.type) {
+          case 'HIGH_TO_LOW':
+            setSortAltered(true);
+            return {
+              high_to_low: true,
+              low_to_high: false,
+              new_releases: false,
+              featured: false,
+            };
+          case 'LOW_T0_HIGH':
+            setSortAltered(true);
+            return {
+              high_to_low: false,
+              low_to_high: true,
+              new_releases: false,
+              featured: false,
+            };
+          case 'NEW_RELEASES':
+            setSortAltered(true);
+            return {
+              high_to_low: false,
+              low_to_high: false,
+              new_releases: true,
+              featured: false,
+            };
+          case 'FEATURED':
+            setSortAltered(true);
+            return {
+              high_to_low: false,
+              low_to_high: false,
+              new_releases: false,
+              featured: true,
+            };
+        }
+      },
+      {
+        high_to_low: false,
+        low_to_high: false,
+        new_releases: false,
+        featured: false,
+      },
   );
- /*
-  const sort_dict = {
-    'HIGH_TO_LOW': {bool_val: sortOption.high_to_low, title: 'High to Low'},
-    'LOW_T0_HIGH': {bool_val: sortOption.low_to_high, title: 'Low to High'},
-    'NEW_RELEASES': {bool_val: sortOption.new_releases, title: 'New Releases'},
-    'FEATURED': {bool_val: sortOption.featured, title: 'Featured'},
-  };
-  */
-  // Hook for determining whether to run update search, will be switched to true
-  // anytime a filter or sort option is changed
-  const [refresh, setRefresh] = useState(false);
 
+  // Hooks for managing store list
+  const [refresh, setRefresh] = useState(false);
   const [stores, setStores] = useState([]);
   const [pageToken, setPageToken] = useState(null);
   const [loadingMore, setLoadingMore] = useState(false);
   const [loading, setLoading] = useState(true);
   const pageTokenRef = useRef();
+  const storesRef = useRef();
 
-  //Initial useEffect to load in data
+//Initial useEffect to load in data
   useEffect(() => {
     async function fetchStores() {
       try {
@@ -276,8 +237,7 @@ export default function SearchScreen({navigation}) {
       fetchStores();
       setLoadingMore(false);
     }
-  }, [loadingMore, pageTokenRef, storesRef]);
-
+  }, [loadingMore, pageTokenRef, storesRef]);    // Functions called upon by render
   const _renderStore = ({store}) => {
     const storePressHandler = () => {
       // set InfoProvider variables to equal the store's attributes
@@ -293,24 +253,24 @@ export default function SearchScreen({navigation}) {
       navigation.navigate('StoreScreen');
     };
     return (
-      <TouchableOpacity
-        style={{backgroundColor: 'pink'}}
-        onPress={storePressHandler}>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <Text>{store.storeName}</Text>
-          <Text>{store.PricePoint}</Text>
-        </View>
-        <View style={{flexDirection: 'row'}}>
-          <FastImage
-            style={{width: 100, height: 100}}
-            source={{
-              uri: store.image,
-            }}
-            resizeMode={FastImage.resizeMode.contain}
-          />
-          <Text>store.bio</Text>
-        </View>
-      </TouchableOpacity>
+        <TouchableOpacity
+            style={{backgroundColor: 'pink'}}
+            onPress={storePressHandler}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <Text>{store.storeName}</Text>
+            <Text>{store.PricePoint}</Text>
+          </View>
+          <View style={{flexDirection: 'row'}}>
+            <FastImage
+                style={{width: 100, height: 100}}
+                source={{
+                  uri: store.image,
+                }}
+                resizeMode={FastImage.resizeMode.contain}
+            />
+            <Text>store.bio</Text>
+          </View>
+        </TouchableOpacity>
     );
   };
 
@@ -321,19 +281,19 @@ export default function SearchScreen({navigation}) {
       return null;
     }
     return (
-      <View
-        style={{
-          position: 'relative',
-          width: width,
-          height: height,
-          paddingVertical: 20,
-          borderTopWidth: 1,
-          marginTop: 10,
-          marginBottom: 10,
-          borderColor: 'pink',
-        }}>
-        <ActivityIndicator animating size="large" />
-      </View>
+        <View
+            style={{
+              position: 'relative',
+              width: width,
+              height: height,
+              paddingVertical: 20,
+              borderTopWidth: 1,
+              marginTop: 10,
+              marginBottom: 10,
+              borderColor: 'pink',
+            }}>
+          <ActivityIndicator animating size="large" />
+        </View>
     );
   };
 
@@ -349,92 +309,58 @@ export default function SearchScreen({navigation}) {
       bodies: ['FOOD', 'BOOKS', 'CLOTHING', 'BEAUTY_HEALTH'],
     },
   ];
-
-
+  // Render return
   return !loading ? (
-    <View style={styles.mainContatiner}>
-      <Text style={styles.sendASmile}>Send A Smile</Text>
-      <Text style={styles.text}>A UniSelfCare Program</Text>
-      <FastImage source={ImageList.Smile} />
-      <View style={styles.FilterSortMenuContainer}>
-        <Button title="Filter" onPress={toggleFilterOverlay} />
+      <View style={styles.mainContatiner}>
+        <Text style={styles.sendASmile}>Send A Smile</Text>
+        <Text style={styles.text}>A UniSelfCare Program</Text>
+        <FastImage source={ImageList.Smile} />
+        <View style={styles.FilterSortMenuContainer}>
+          <Button title="Filter" onPress={toggleFilterOverlay} />
 
-        <Button title="Sort" onPress={toggleSortOverlay} />
+          <Button title="Sort" onPress={toggleSortOverlay} />
+        </View>
+        <OverLay
+            isVisible={filterVisible}
+            fullscreen={false}
+            onBackdropPress={toggleFilterOverlay}
+            overlayStyle={styles.filterMenu}>
+          {/* TODO: ADD accordian from react native paper*/}
+        </OverLay>
+        <OverLay
+            isVisible={sortVisible}
+            fullscreen={false}
+            onBackdropPress={toggleSortOverlay}
+            overlayStyle={styles.sortMenu}>
+          <Button
+              title="Prices High to Low"
+              containterStyle={{backgroundColor: sortOption.high_to_low ? 'green' : 'transparent'}}
+              onPress={() => sortDispatch('HIGH_TO_LOW')}
+          />
+          <Button
+              title='Prices Low to High'
+              containterStyle={{backgroundColor: sortOption.low_to_high ? 'green' : 'transparent'}}
+              onPress={() => sortDispatch('LOW_TO_HIGH')}
+          />
+        </OverLay>
+        <FlatList
+            data={stores}
+            renderItem={_renderStore}
+            onEndReached={_handleLoadMore}
+            onEndReachedThreshold={0.5}
+            keyExtractor={_keyExtractor}
+            initialNumToRender={10}
+            ListFooterComponent={_renderFooter}
+        />
       </View>
-      <OverLay
-        isVisible={filterVisible}
-        fullscreen={false}
-        onBackdropPress={toggleFilterOverlay}
-        overlayStyle={styles.filterMenu}>
-        <Accordion
-          data={filter_data}
-          shouldAnimate={true}
-          collapseOnStart={true}
-          animDuration={300}
-          activeOpacity={1}
-          renderTitle={(item) => <Text style={{color: 'white'}}>{item}</Text>}
-          renderBody={(item) =>
-              <CheckBox
-                  title={filter_dict[item].title}
-                  checkedIcon='dot-circle-o'
-                  uncheckedIcon='circle-o'
-                  checked={filter_dict[item].bool_val.current}
-                  onPress={() => filterDispatch({type: item})}
-              />
-          }
-          titleContainerStyle={{
-            backgroundColor: 'gray',
-          }}
-          bodyContainerStyle={{
-            backgroundColor: 'lightgray',
-          }}
-        />
-      </OverLay>
-      <OverLay
-        isVisible={sortVisible}
-        fullscreen={false}
-        onBackdropPress={toggleSortOverlay}
-        overlayStyle={styles.sortMenu}>
-        <Button
-            title="Prices High to Low"
-            containterStyle={{backgroundColor: sortOption.high_to_low ? 'green' : 'transparent'}}
-            onPress={() => sortDispatch('HIGH_TO_LOW')}
-        />
-        <Button
-          title='Prices Low to High'
-          containterStyle={{backgroundColor: sortOption.low_to_high ? 'green' : 'transparent'}}
-          onPress={() => sortDispatch('LOW_TO_HIGH')}
-        />
-        <Button
-          title='New Releases'
-          containterStyle={{backgroundColor: sortOption.new_releases ? 'green' : 'transparent'}}
-          onPress={() => sortDispatch('NEW_RELEASES')}
-        />
-        <Button
-          title='Featured'
-          containterStyle={{backgroundColor: sortOption.featured ? 'green' : 'transparent'}}
-          onPress={() => sortDispatch('FEATURED')}
-        />
-      </OverLay>
-      {/* TODO: Need to add title and filter selection menus, need to add filter state variables above*/}
-      <FlatList
-        data={stores}
-        renderItem={_renderStore}
-        onEndReached={_handleLoadMore}
-        onEndReachedThreshold={0.5}
-        keyExtractor={_keyExtractor}
-        initialNumToRender={10}
-        ListFooterComponent={_renderFooter}
-      />
-    </View>
+
   ) : (
-    <View>
-      <Text style={{alignSelf: 'center'}}>Loading Stores</Text>
-      <ActivityIndicator />
-    </View>
+      <View>
+        <Text style={{alignSelf: 'center'}}>Loading Stores</Text>
+        <ActivityIndicator />
+      </View>
   );
 }
-
 const styles = StyleSheet.create({
   MainContainer: {
     flex: 1,
@@ -466,4 +392,6 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
 });
-// TODO: Position the overlays; then add filter and search to query 
+
+
+// TODO: Position the overlays; then add filter and search to query, then add S3 bucket
