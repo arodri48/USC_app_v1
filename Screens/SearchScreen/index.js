@@ -16,11 +16,11 @@ import {
 } from 'react-native';
 import {InfoContext} from '../../Provider/InfoProvider';
 import {API} from 'aws-amplify';
-import {listStores} from '../../src/graphql/queries';
+import { storesByCause} from '../../src/graphql/queries';
 import FastImage from 'react-native-fast-image';
 import {Button, OverLay, CheckBox} from 'react-native-elements';
 import ImageList from 'USC_app_v1/media/ImageStore';
-import {Accordion} from 'dooboo-ui';
+import { List } from 'react-native-paper';
 
 const {width, height} = Dimensions.get('window');
 
@@ -38,140 +38,114 @@ export default function SearchScreen({navigation}){
   ] = useContext(InfoContext);
   // Hooks for filter values
   const [filterVisible, setFilterVisible] = useState(false);
-  const [filterAltered, setFilterAltered] = useState(false);
+  //const [filterAltered, setFilterAltered] = useState(false);
+  const causeRef = useRef('');
   const toggleFilterOverlay = () => {
     setFilterVisible(!filterVisible);
-    if (!filterVisible && filterAltered) {
+    if ((causeRef.current !== currentCause) && !filterVisible) {
+      causeRef.current = currentCause;
       setRefresh(true);
     }
   };
+  const [currentCause, setCurrentCause] = useState('');
 // Hooks for filter options
   const [filterOption, filterDispatch] = useReducer(
       (prevState, action) => {
         switch (action.type) {
-          case 'FOOD':
-            setFilterAltered(true);
-            return {
-              food: true,
-              books: false,
-              clothing_jewlery_hair: false,
-              beauty_health: false,
-            };
-          case 'BOOKS':
-            setFilterAltered(true);
-
-            return {
-              food: false,
-              books: true,
-              clothing_jewlery_hair: false,
-              beauty_health: false,
-            };
-          case 'CLOTHING':
-            setFilterAltered(true);
-
-            return {
-              food: false,
-              books: false,
-              clothing_jewlery_hair: true,
-              beauty_health: false,
-            };
-          case 'BEAUTY_HEALTH':
-            setFilterAltered(true);
-
-            return {
-              food: false,
-              books: false,
-              clothing_jewlery_hair: false,
-              beauty_health: true,
-            };
+          case 'BLM':
+            if (filterOption.BLM){
+              setCurrentCause('');
+              return {
+                BLM: false
+              }
+            }
+            else {
+              setCurrentCause("BLM");
+              return {
+                BLM: true,
+              }
+            }
         }
       },
       {
-        food: false,
-        books: false,
-        clothing_jewlery_hair: false,
-        beauty_health: false,
+        BLM: false
       },
   );    // Hooks for sort values
   const [sortVisible, setSortVisible] = useState(false);
-  const [sortAltered, setSortAltered] = useState(false);
+  //const [sortAltered, setSortAltered] = useState(false);
+  const sortRef = useRef('ASC');
   const toggleSortOverlay = () => {
     setSortVisible(!sortVisible);
-    if (!sortVisible && sortAltered) {
+    if ((sortRef.current !== currentSort) && !sortVisible ) {
+      sortRef.current = currentSort;
       setRefresh(true);
     }
   };
+  const [currentSort, setCurrentSort] = useState('ASC');
   const [sortOption, sortDispatch] = useReducer(
       (prevState, action) => {
         switch (action.type) {
           case 'HIGH_TO_LOW':
-            setSortAltered(true);
-            return {
-              high_to_low: true,
-              low_to_high: false,
-              new_releases: false,
-              featured: false,
-            };
+            if (sortOption.high_to_low){
+              setCurrentSort('ASC');
+              return {
+                high_to_low: false,
+                low_to_high: true,
+              };
+            }
+            else{
+              setCurrentSort('DESC');
+              return {
+                high_to_low: true,
+                low_to_high: false,
+              };
+            }
           case 'LOW_T0_HIGH':
-            setSortAltered(true);
-            return {
-              high_to_low: false,
-              low_to_high: true,
-              new_releases: false,
-              featured: false,
-            };
-          case 'NEW_RELEASES':
-            setSortAltered(true);
-            return {
-              high_to_low: false,
-              low_to_high: false,
-              new_releases: true,
-              featured: false,
-            };
-          case 'FEATURED':
-            setSortAltered(true);
-            return {
-              high_to_low: false,
-              low_to_high: false,
-              new_releases: false,
-              featured: true,
-            };
+            if (sortOption.low_to_high){
+              setCurrentSort('DESC');
+              return {
+                high_to_low: true,
+                low_to_high: false,
+              };
+            }
+            else{
+              setCurrentSort('ASC');
+              return {
+                high_to_low: false,
+                low_to_high: true,
+              };
+            }
         }
       },
       {
         high_to_low: false,
-        low_to_high: false,
-        new_releases: false,
-        featured: false,
+        low_to_high: true,
       },
   );
 
   // Hooks for managing store list
   const [refresh, setRefresh] = useState(false);
-  const [stores, setStores] = useState([]);
-  const [pageToken, setPageToken] = useState(null);
   const [loadingMore, setLoadingMore] = useState(false);
   const [loading, setLoading] = useState(true);
   const pageTokenRef = useRef();
-  const storesRef = useRef();
+  const storesRef = useRef([]);
 
 //Initial useEffect to load in data
   useEffect(() => {
     async function fetchStores() {
       try {
         const storeData = await API.graphql({
-          query: listStores,
+          query: storesByCause,
           variables: {
             limit: 10,
+            sortDirection: sortRef.current,
+            cause: causeRef.current,
           },
         });
-        const newStores = storeData.data.listStores.items;
-        const newPageToken = storeData.data.listStores.nextToken;
+        pageTokenRef.current = storeData.data.storesByCause.nextToken;
 
-        setPageToken(newPageToken);
-        setStores(newStores);
-        pageTokenRef.current = newStores;
-        storesRef.current = newPageToken;
+
+        storesRef.current = storeData.data.storesByCause.items;
         setLoading(false);
       } catch (err) {
         console.log('error fetching stores');
@@ -184,18 +158,17 @@ export default function SearchScreen({navigation}){
     async function fetchStores() {
       try {
         const storeData = await API.graphql({
-          query: listStores,
+          query: storesByCause,
           variables: {
             limit: 10,
+            sortDirection: sortRef.current,
+            cause: causeRef.current,
           },
         });
-        const newStores = storeData.data.listStores.items;
-        const newPageToken = storeData.data.listStores.nextToken;
+        pageTokenRef.current = storeData.data.storesByCause.nextToken;
 
-        setPageToken(newPageToken);
-        setStores(newStores);
-        pageTokenRef.current = newStores;
-        storesRef.current = newPageToken;
+
+        storesRef.current = storeData.data.storesByCause.items;
         setLoading(false);
       } catch (err) {
         console.log('error fetching stores');
@@ -203,12 +176,8 @@ export default function SearchScreen({navigation}){
     }
     if (refresh) {
       setLoading(true);
-      setStores([]);
-      setPageToken(null);
       fetchStores();
       setRefresh(false);
-      setSortAltered(false);
-      setFilterAltered(false);
     }
   }, [refresh, pageTokenRef, storesRef]);
   // useEffect for loading more
@@ -216,17 +185,16 @@ export default function SearchScreen({navigation}){
     async function fetchStores() {
       try {
         const storeData = await API.graphql({
-          query: listStores,
+          query: storesByCause,
           variables: {
             limit: 10,
+            sortDirection: sortRef.current,
+            cause: causeRef.current,
             nextToken: pageTokenRef.current,
           },
         });
-        const newStores = storeData.data.listStores.items;
-        const newPageToken = storeData.data.listStores.nextToken;
-        setPageToken(newPageToken);
-        pageTokenRef.current = newPageToken;
-        setStores([...storesRef.current, ...newStores]);
+        const newStores = storeData.data.storesByCause.items;
+        pageTokenRef.current = storeData.data.storesByCause.nextToken;
         storesRef.current = [...storesRef.current, ...newStores];
         setLoading(false);
       } catch (err) {
@@ -298,20 +266,16 @@ export default function SearchScreen({navigation}){
   };
 
   const _handleLoadMore = () => {
-    pageTokenRef.current = pageToken;
-    storesRef.current = stores;
     setLoadingMore(true);
   };
 
-  const filter_data = [
-    {
-      title: 'Shop by Category',
-      bodies: ['FOOD', 'BOOKS', 'CLOTHING', 'BEAUTY_HEALTH'],
-    },
-  ];
+
+  const [causeFilterExpanded, setCauseFilterExpanded] = useState(true);
+  const handleCauseFilterPress = () => setCauseFilterExpanded(!causeFilterExpanded);
+
   // Render return
   return !loading ? (
-      <View style={styles.mainContatiner}>
+      <View style={styles.MainContainer}>
         <Text style={styles.sendASmile}>Send A Smile</Text>
         <Text style={styles.text}>A UniSelfCare Program</Text>
         <FastImage source={ImageList.Smile} />
@@ -325,7 +289,19 @@ export default function SearchScreen({navigation}){
             fullscreen={false}
             onBackdropPress={toggleFilterOverlay}
             overlayStyle={styles.filterMenu}>
-          {/* TODO: ADD accordian from react native paper*/}
+          <List.Accordion
+            title="Filter By Cause"
+            expanded={causeFilterExpanded}
+            onPress={handleCauseFilterPress}
+            >
+            <CheckBox
+              title='BLM'
+              checkedIcon='dot-circle-o'
+              uncheckedIcon='circle-o'
+              checked={filterOption.BLM}
+              onPress={() => filterDispatch('BLM')}
+            />
+          </List.Accordion>
         </OverLay>
         <OverLay
             isVisible={sortVisible}
@@ -344,7 +320,7 @@ export default function SearchScreen({navigation}){
           />
         </OverLay>
         <FlatList
-            data={stores}
+            data={storesRef.current}
             renderItem={_renderStore}
             onEndReached={_handleLoadMore}
             onEndReachedThreshold={0.5}
@@ -394,4 +370,4 @@ const styles = StyleSheet.create({
 });
 
 
-// TODO: Position the overlays; then add filter and search to query, then add S3 bucket
+// TODO:  create objects and add S3 bucket, then test and restyle
