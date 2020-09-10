@@ -16,5 +16,18 @@
 				}
 			}
 		}
+	},
+	"auth": {
+		"uscappv191e6e20d": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	},
+	"storage": {
+		"USCstoreimages": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation"
+		}
 	}
 }

@@ -10,6 +10,11 @@
             "StackName": "amplify-uscappv1-dev-231525",
             "StackId": "arn:aws:cloudformation:us-east-1:664012311393:stack/amplify-uscappv1-dev-231525/42373db0-ca37-11ea-ab23-0a140a53308d",
             "AmplifyAppId": "d3mlkgozwf8pzl"
+        },
+        "categories": {
+            "auth": {
+                "uscappv191e6e20d": {}
+            }
         }
     },
     "prod": {
