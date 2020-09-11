@@ -21,6 +21,7 @@ const {width, height} = Dimensions.get('window');
 const initialState = {storeID: ''};
 
 export default function StoreScreen({navigation}) {
+
   const [
     storeName,
     setStoreName,
@@ -76,7 +77,7 @@ export default function StoreScreen({navigation}) {
     setImage('');
     navigation.navigate('SearchScreen');
   };
-
+  /*
   useEffect(() => {
     setStoreName("Effie's Paper");
     setWebsite('https://effiespaper.com');
@@ -92,6 +93,7 @@ export default function StoreScreen({navigation}) {
     setStoreName,
     setWebsite,
   ]);
+  */
   return (
     <View style={styles.MainContainer}>
       <View style={styles.info}>
@@ -107,7 +109,7 @@ export default function StoreScreen({navigation}) {
           {/* Will need to actually load in image file from url or S3 bucket */}
           <FastImage
             style={{width: 100, height: 100}}
-            source={ImageList.Test}
+            source={{uri: image}}
             resizeMode={FastImage.resizeMode.contain}
           />
           <Text style={styles.ShopName}> Store Name: {storeName} </Text>

@@ -35,6 +35,7 @@ export default function SearchScreen({navigation}){
     setWebsite,
     setGoodsType,
     setImage,
+      setCause
   ] = useContext(InfoContext);
   // Hooks for filter values
   const [filterVisible, setFilterVisible] = useState(false);
@@ -217,6 +218,7 @@ export default function SearchScreen({navigation}){
       setWebsite(store.website);
       setGoodsType(store.goodsType);
       setImage(store.image);
+      setCause(store.cause);
       // navigate to storescreen
       navigation.navigate('StoreScreen');
     };
@@ -236,7 +238,7 @@ export default function SearchScreen({navigation}){
                 }}
                 resizeMode={FastImage.resizeMode.contain}
             />
-            <Text>store.bio</Text>
+            <Text>store.cause</Text>
           </View>
         </TouchableOpacity>
     );
@@ -370,4 +372,4 @@ const styles = StyleSheet.create({
 });
 
 
-// TODO:  create objects and add S3 bucket, then test and restyle
+// TODO:  create objects , then test and restyle
