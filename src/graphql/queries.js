@@ -129,3 +129,37 @@ export const storesByCause = /* GraphQL */ `
     }
   }
 `;
+export const storesByPrice = /* GraphQL */ `
+  query StoresByPrice(
+    $PricePoint: String
+    $cause: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelStoreFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    storesByPrice(
+      PricePoint: $PricePoint
+      cause: $cause
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        goodsType
+        storeName
+        stateLocation
+        website
+        cause
+        PricePoint
+        bio
+        image
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

@@ -1,11 +1,4 @@
-import React, {
-  useState,
-  createContext,
-  useReducer,
-  useEffect,
-  useMemo,
-} from 'react';
-import * as AsyncStorage from 'react-native/Libraries/Storage/AsyncStorage';
+import React, {useState, createContext, useReducer} from 'react';
 
 //Create Context Object
 export const AuthContext = createContext();

@@ -15,8 +15,8 @@ import {
   StyleSheet,
 } from 'react-native';
 import {InfoContext} from '../../Provider/InfoProvider';
-import {API} from 'aws-amplify';
-import {storesByCause} from '../../src/graphql/queries';
+import {API, graphqlOperation} from 'aws-amplify';
+import {storesByPrice} from '../../src/graphql/queries';
 import FastImage from 'react-native-fast-image';
 import {Button, OverLay, CheckBox} from 'react-native-elements';
 import ImageList from 'USC_app_v1/media/ImageStore';
@@ -26,7 +26,7 @@ const {width, height} = Dimensions.get('window');
 
 export default function SearchScreen({navigation}) {
   // Hooks for store values
-  const [
+  const {
     setStoreName,
     setStoreID,
     setStateLocation,
@@ -36,7 +36,7 @@ export default function SearchScreen({navigation}) {
     setGoodsType,
     setImage,
     setCause,
-  ] = useContext(InfoContext);
+  } = useContext(InfoContext);
   // Hooks for filter values
   const [filterVisible, setFilterVisible] = useState(false);
   //const [filterAltered, setFilterAltered] = useState(false);
@@ -149,20 +149,29 @@ export default function SearchScreen({navigation}) {
   useEffect(() => {
     async function fetchStores() {
       try {
-        const storeData = await API.graphql({
-          query: storesByCause,
-          variables: {
-            limit: 10,
-            sortDirection: sortRef.current,
-            cause: causeRef.current,
-          },
-        });
-        pageTokenRef.current = storeData.data.storesByCause.nextToken;
+        let storeData;
+        if (causeRef.current === '') {
+          storeData = await API.graphql(
+            graphqlOperation(storesByPrice, {
+              limit: 10,
+              sortDirection: sortRef.current,
+            }),
+          );
+        } else {
+          storeData = await API.graphql(
+            graphqlOperation(storesByPrice, {
+              cause: causeRef.current,
+              limit: 10,
+              sortDirection: sortRef.current,
+            }),
+          );
+        }
 
-        storesRef.current = storeData.data.storesByCause.items;
+        pageTokenRef.current = storeData.data.storesByPrice.nextToken;
+        storesRef.current = storeData.data.storesByPrice.items;
         setLoading(false);
       } catch (err) {
-        console.log('error fetching stores');
+        console.log(err);
       }
     }
     fetchStores();
@@ -171,20 +180,28 @@ export default function SearchScreen({navigation}) {
   useEffect(() => {
     async function fetchStores() {
       try {
-        const storeData = await API.graphql({
-          query: storesByCause,
-          variables: {
-            limit: 10,
-            sortDirection: sortRef.current,
-            cause: causeRef.current,
-          },
-        });
-        pageTokenRef.current = storeData.data.storesByCause.nextToken;
-
-        storesRef.current = storeData.data.storesByCause.items;
+        let storeData;
+        if (causeRef.current === '') {
+          storeData = await API.graphql(
+            graphqlOperation(storesByPrice, {
+              limit: 10,
+              sortDirection: sortRef.current,
+            }),
+          );
+        } else {
+          storeData = await API.graphql(
+            graphqlOperation(storesByPrice, {
+              cause: causeRef.current,
+              limit: 10,
+              sortDirection: sortRef.current,
+            }),
+          );
+        }
+        pageTokenRef.current = storeData.data.storesByPrice.nextToken;
+        storesRef.current = storeData.data.storesByPrice.items;
         setLoading(false);
       } catch (err) {
-        console.log('error fetching stores');
+        console.log(err);
       }
     }
     if (refresh) {
@@ -197,21 +214,31 @@ export default function SearchScreen({navigation}) {
   useEffect(() => {
     async function fetchStores() {
       try {
-        const storeData = await API.graphql({
-          query: storesByCause,
-          variables: {
-            limit: 10,
-            sortDirection: sortRef.current,
-            cause: causeRef.current,
-            nextToken: pageTokenRef.current,
-          },
-        });
-        const newStores = storeData.data.storesByCause.items;
-        pageTokenRef.current = storeData.data.storesByCause.nextToken;
+        let storeData;
+        if (causeRef.current === '') {
+          storeData = await API.graphql(
+            graphqlOperation(storesByPrice, {
+              limit: 10,
+              sortDirection: sortRef.current,
+              nextToken: pageTokenRef.current,
+            }),
+          );
+        } else {
+          storeData = await API.graphql(
+            graphqlOperation(storesByPrice, {
+              cause: causeRef.current,
+              limit: 10,
+              sortDirection: sortRef.current,
+              nextToken: pageTokenRef.current,
+            }),
+          );
+        }
+        const newStores = storeData.data.storesByPrice.items;
+        pageTokenRef.current = storeData.data.storesByPrice.nextToken;
         storesRef.current = [...storesRef.current, ...newStores];
         setLoading(false);
       } catch (err) {
-        console.log('error fetching stores');
+        console.log(err);
       }
     }
     if (loadingMore) {

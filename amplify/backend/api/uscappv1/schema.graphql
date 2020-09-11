@@ -5,6 +5,11 @@ type Store
     fields: ["cause", "PricePoint"]
     queryField: "storesByCause"
   )
+  @key(
+    name: "ByPricePoint"
+    fields: ["PricePoint", "cause"]
+    queryField: "storesByPrice"
+  )
 {
   id: ID!
   goodsType: String

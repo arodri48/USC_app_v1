@@ -22,9 +22,7 @@ export default function WelcomeScreen({navigation}) {
       </Text>
       <Button
         title="Begin"
-        onPress={() => {
-          navigation.navigate('InitialScreen', {screen: 'SignInScreen'});
-        }}
+        onPress={() => dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'})}
         buttonStyle={styles.buttonStyle}
         titleStyle={styles.buttonText}
       />
