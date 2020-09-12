@@ -16,11 +16,12 @@ import {
 } from 'react-native';
 import {InfoContext} from '../../Provider/InfoProvider';
 import {API, graphqlOperation} from 'aws-amplify';
-import {storesByPrice} from '../../src/graphql/queries';
+import {listStores, storesByPrice} from '../../src/graphql/queries';
 import FastImage from 'react-native-fast-image';
 import {Button, OverLay, CheckBox} from 'react-native-elements';
 import ImageList from 'USC_app_v1/media/ImageStore';
 import {List} from 'react-native-paper';
+import {color} from 'react-native-reanimated';
 
 const {width, height} = Dimensions.get('window');
 
@@ -90,7 +91,7 @@ export default function SearchScreen({navigation}) {
   ); // Hooks for sort values
   const [sortVisible, setSortVisible] = useState(false);
   //const [sortAltered, setSortAltered] = useState(false);
-  const sortRef = useRef('ASC');
+  const sortRef = useRef("ASC");
   const toggleSortOverlay = () => {
     setSortVisible(!sortVisible);
     if (sortRef.current !== currentSort && !sortVisible) {
@@ -150,6 +151,9 @@ export default function SearchScreen({navigation}) {
     async function fetchStores() {
       try {
         let storeData;
+        console.log(causeRef.current)
+        storeData = await  API.graphql(graphqlOperation(listStores));
+        /*
         if (causeRef.current === '') {
           storeData = await API.graphql(
             graphqlOperation(storesByPrice, {
@@ -157,6 +161,7 @@ export default function SearchScreen({navigation}) {
               sortDirection: sortRef.current,
             }),
           );
+          console.log(storeData)
         } else {
           storeData = await API.graphql(
             graphqlOperation(storesByPrice, {
@@ -166,9 +171,10 @@ export default function SearchScreen({navigation}) {
             }),
           );
         }
+         */
 
-        pageTokenRef.current = storeData.data.storesByPrice.nextToken;
-        storesRef.current = storeData.data.storesByPrice.items;
+        pageTokenRef.current = storeData.data.listStores.nextToken;
+        storesRef.current = storeData.data.listStores.items;
         setLoading(false);
       } catch (err) {
         console.log(err);
@@ -176,6 +182,7 @@ export default function SearchScreen({navigation}) {
     }
     fetchStores();
   }, []);
+  /*
   // useEffect function to do a new query once new options are selected (will run when a menu closes, since refresh will be set to true)
   useEffect(() => {
     async function fetchStores() {
@@ -246,6 +253,8 @@ export default function SearchScreen({navigation}) {
       setLoadingMore(false);
     }
   }, [loadingMore, pageTokenRef, storesRef]); // Functions called upon by render
+
+   */
   const _renderStore = ({store}) => {
     const storePressHandler = () => {
       // set InfoProvider variables to equal the store's attributes
@@ -317,68 +326,35 @@ export default function SearchScreen({navigation}) {
   // Render return
   return !loading ? (
     <View style={styles.MainContainer}>
-      <Text style={styles.sendASmile}>Send A Smile</Text>
-      <Text style={styles.text}>A UniSelfCare Program</Text>
-      <FastImage source={ImageList.Smile} />
-      <View style={styles.FilterSortMenuContainer}>
-        <Button title="Filter" onPress={toggleFilterOverlay} />
-
-        <Button title="Sort" onPress={toggleSortOverlay} />
+      <View style={{alignItems: 'center', justifyContent: 'center'}}>
+        <Text style={styles.sendASmile}>Send A Smile</Text>
+        <Text style={styles.text}>A UniSelfCare Program</Text>
       </View>
-      <OverLay
-        isVisible={filterVisible}
-        fullscreen={false}
-        onBackdropPress={toggleFilterOverlay}
-        overlayStyle={styles.filterMenu}>
-        <List.Accordion
-          title="Filter By Cause"
-          expanded={causeFilterExpanded}
-          onPress={handleCauseFilterPress}>
-          <CheckBox
-            title="BLM"
-            checkedIcon="dot-circle-o"
-            uncheckedIcon="circle-o"
-            checked={filterOption.BLM}
-            onPress={() => filterDispatch('BLM')}
-          />
-          <CheckBox
-            title="Mental Health"
-            checkedIcon="dot-circle-o"
-            uncheckedIcon="circle-o"
-            checked={filterOption.mental_health}
-            onPress={() => filterDispatch('Mental Health')}
-          />
-        </List.Accordion>
-      </OverLay>
-      <OverLay
-        isVisible={sortVisible}
-        fullscreen={false}
-        onBackdropPress={toggleSortOverlay}
-        overlayStyle={styles.sortMenu}>
-        <Button
-          title="Prices High to Low"
-          containterStyle={{
-            backgroundColor: sortOption.high_to_low ? 'green' : 'transparent',
-          }}
-          onPress={() => sortDispatch('HIGH_TO_LOW')}
+      <View style={{width: '100%',
+        height: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor : 'blue'
+        }}>
+        <FastImage
+            source={ImageList.Smile}
+            style={{alignSelf: 'center',
+            height: 300,
+            width: 400,
+              marginLeft: 20,
+              marginBottom: 10,
+            }}
+            resizeMode={FastImage.resizeMode.contain}
         />
-        <Button
-          title="Prices Low to High"
-          containterStyle={{
-            backgroundColor: sortOption.low_to_high ? 'green' : 'transparent',
-          }}
-          onPress={() => sortDispatch('LOW_TO_HIGH')}
-        />
-      </OverLay>
-      <FlatList
-        data={storesRef.current}
-        renderItem={_renderStore}
-        onEndReached={_handleLoadMore}
-        onEndReachedThreshold={0.5}
-        keyExtractor={_keyExtractor}
-        initialNumToRender={10}
-        ListFooterComponent={_renderFooter}
-      />
+      </View>
+
+      <View style={styles.FilterSortMenuContainer}>
+        <Button title="Filter" onPress={toggleFilterOverlay} buttonStyle={{backgroundColor : 'transparent'}} titleStyle={{color : 'black'}}/>
+
+        <Button title="Sort" onPress={toggleSortOverlay} buttonStyle={{backgroundColor : 'transparent'}} titleStyle={{color : 'black'}}/>
+      </View>
+
+
     </View>
   ) : (
     <View>
@@ -391,11 +367,17 @@ const styles = StyleSheet.create({
   MainContainer: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     backgroundColor: 'white',
   },
   FilterSortMenuContainer: {
     flexDirection: 'row',
+    position: 'relative',
+    width: '100%',
+    marginTop: 18,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'red'
   },
   filterMenu: {
     height: 400,
@@ -407,15 +389,15 @@ const styles = StyleSheet.create({
   },
   sendASmile: {
     color: '#FCC6DF',
-    fontSize: 45,
+    fontSize: 25,
     fontWeight: 'bold',
-    paddingBottom: 45,
+    paddingBottom: 0,
     fontFamily: 'Raleway-SemiBold',
   },
   text: {
     color: '#535358',
-    fontSize: 25,
-    paddingTop: 10,
+    fontSize: 12,
+    marginTop: -10
   },
 });
 
