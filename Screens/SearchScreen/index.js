@@ -213,6 +213,7 @@ export default function SearchScreen({navigation}) {
 
         pageTokenRef.current = storeData.data.listStores.nextToken;
         storesRef.current = storeData.data.listStores.items;
+        console.log(storesRef.current)
         setLoading(false);
       } catch (err) {
         console.log(err);
@@ -293,44 +294,61 @@ export default function SearchScreen({navigation}) {
   }, [loadingMore, pageTokenRef, storesRef]); // Functions called upon by render
 
    */
+  const storePressHandler = ({store}) => {
+    // set InfoProvider variables to equal the store's attributes
+    setStoreName(store["storeName"]);
+    setStoreID(store["id"]);
+    setStateLocation(store["stateLocation"]);
+    setBio(store["bio"]);
+    setPrice(store["PricePoint"]);
+    setWebsite(store["website"]);
+    setGoodsType(store["goodsType"]);
+    setImage(store["image"]);
+    setCause(store["cause"]);
+    // navigate to storescreen
+    navigation.navigate('StoreScreen');
+  };
+  /*
   const _renderStore = ({store}) => {
     const storePressHandler = () => {
       // set InfoProvider variables to equal the store's attributes
-      setStoreName(store.storeName);
-      setStoreID(store.id);
-      setStateLocation(store.stateLocation);
-      setBio(store.bio);
-      setPrice(store.PricePoint);
-      setWebsite(store.website);
-      setGoodsType(store.goodsType);
-      setImage(store.image);
-      setCause(store.cause);
+      setStoreName(store["storeName"]);
+      setStoreID(store["id"]);
+      setStateLocation(store["stateLocation"]);
+      setBio(store["bio"]);
+      setPrice(store["PricePoint"]);
+      setWebsite(store["website"]);
+      setGoodsType(store["goodsType"]);
+      setImage(store["image"]);
+      setCause(store["cause"]);
       // navigate to storescreen
       navigation.navigate('StoreScreen');
     };
     return (
       <TouchableOpacity
         style={{backgroundColor: 'pink'}}
-        onPress={storePressHandler}>
+        onPress={storePressHandler}
+      >
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <Text>{store.storeName}</Text>
-          <Text>{store.PricePoint}</Text>
+          <Text>{store["storeName"]}</Text>
+          <Text>{store["PricePoint"]}</Text>
         </View>
         <View style={{flexDirection: 'row'}}>
           <FastImage
             style={{width: 100, height: 100}}
             source={{
-              uri: store.image,
+              uri: store["image"],
             }}
             resizeMode={FastImage.resizeMode.contain}
           />
-          <Text>store.cause</Text>
+          <Text>{store["cause"]}</Text>
         </View>
       </TouchableOpacity>
     );
   };
-
+  */
   const _keyExtractor = (obj) => obj.id.toString();
+
 
   const _renderFooter = () => {
     if (!loadingMore) {
@@ -441,6 +459,35 @@ export default function SearchScreen({navigation}) {
           />
         </View>
       </Overlay>
+      <FlatList
+          data={storesRef.current}
+          renderItem={({item}) => (
+              <TouchableOpacity
+                  style={{backgroundColor: 'pink'}}
+                  onPress={() => storePressHandler({item})}
+              >
+                <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                  <Text>{item["storeName"]}</Text>
+                  <Text>{item["PricePoint"]}</Text>
+                </View>
+                <View style={{flexDirection: 'row'}}>
+                  <FastImage
+                      style={{width: 100, height: 100}}
+                      source={{
+                        uri: item["image"],
+                      }}
+                      resizeMode={FastImage.resizeMode.contain}
+                  />
+                  <Text>{item["cause"]}</Text>
+                </View>
+              </TouchableOpacity>
+          )}
+          onEndReached={_handleLoadMore}
+          onEndReachedThreshold={0.5}
+          keyExtractor={_keyExtractor}
+          initialNumToRender={10}
+          ListFooterComponent={_renderFooter}
+      />
 
 
     </View>
