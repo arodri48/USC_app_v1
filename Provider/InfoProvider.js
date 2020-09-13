@@ -19,24 +19,15 @@ export const InfoProvider = (props) => {
   return (
     <InfoContext.Provider
       value={{
-        storeName,
-        setStoreName,
-        storeID,
-        setStoreID,
-          stateLocation,
-          setStateLocation,
-          bio,
-          setBio,
-          price,
-          setPrice,
-          website,
-          setWebsite,
-          goodsType,
-          setGoodsType,
-          image,
-          setImage,
-        cause,
-        setCause
+          storeName : [storeName, setStoreName],
+        storeID: [storeID, setStoreID],
+          stateLocation: [stateLocation, setStateLocation],
+          bio : [bio, setBio],
+          price: [price, setPrice],
+          website: [website, setWebsite],
+          goodsType: [goodsType, setGoodsType],
+          image: [image, setImage],
+        cause : [cause, setCause]
       }}>
       {props.children}
     </InfoContext.Provider>

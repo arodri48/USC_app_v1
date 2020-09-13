@@ -26,16 +26,31 @@ const {width, height} = Dimensions.get('window');
 export default function SearchScreen({navigation}) {
   // Hooks for store values
   const {
-    setStoreName,
-    setStoreID,
-    setStateLocation,
-    setBio,
-    setPrice,
-    setWebsite,
-    setGoodsType,
-    setImage,
-    setCause,
+    storeName,
+      storeID,
+    stateLocation,
+      bio,
+    price,
+      website,
+      goodsType,
+      image,
+      cause,
   } = useContext(InfoContext);
+  const [storeNameValue, setStoreNameValue] = storeName;
+  const [storeIDValue, setStoreIDValue] = storeID;
+  const [storeLocationValue, setStoreLocationValue] = stateLocation;
+  const [bioValue, setBioValue] = bio;
+  const [priceValue, setPriceValue] = price;
+  const [websiteValue, setWebsiteValue] = website;
+  const [goodsTypeValue, setGoodsTypeValue] = goodsType;
+  const [imageValue, setImageValue] = image;
+  const [causeValue, setCauseValue] = cause;
+
+
+
+
+
+
   // Hooks for filter values
   const [filterVisible, setFilterVisible] = useState(false);
   //const [filterAltered, setFilterAltered] = useState(false);
@@ -189,7 +204,7 @@ export default function SearchScreen({navigation}) {
     async function fetchStores() {
       try {
         let storeData;
-        console.log(causeRef.current)
+        //console.log(causeRef.current)
         storeData = await  API.graphql(graphqlOperation(listStores));
         /*
         if (causeRef.current === '') {
@@ -213,7 +228,7 @@ export default function SearchScreen({navigation}) {
 
         pageTokenRef.current = storeData.data.listStores.nextToken;
         storesRef.current = storeData.data.listStores.items;
-        console.log(storesRef.current)
+        //console.log(storesRef.current)
         setLoading(false);
       } catch (err) {
         console.log(err);
@@ -294,19 +309,19 @@ export default function SearchScreen({navigation}) {
   }, [loadingMore, pageTokenRef, storesRef]); // Functions called upon by render
 
    */
-  const storePressHandler = ({store}) => {
+  const storePressHandler = ({storeName, id, stateLocation, bio, PricePoint, website, goodsType, image, cause}) => {
     // set InfoProvider variables to equal the store's attributes
-    setStoreName(store["storeName"]);
-    setStoreID(store["id"]);
-    setStateLocation(store["stateLocation"]);
-    setBio(store["bio"]);
-    setPrice(store["PricePoint"]);
-    setWebsite(store["website"]);
-    setGoodsType(store["goodsType"]);
-    setImage(store["image"]);
-    setCause(store["cause"]);
+    setStoreNameValue(storeName);
+    setStoreIDValue(id);
+    setStoreLocationValue(stateLocation);
+    setBioValue(bio);
+    setPriceValue(PricePoint);
+    setWebsiteValue(website);
+    setGoodsTypeValue(goodsType);
+    setImageValue(image);
+    setCauseValue(cause);
     // navigate to storescreen
-    navigation.navigate('StoreScreen');
+    navigation.navigate("StoreScreen");
   };
   /*
   const _renderStore = ({store}) => {
@@ -464,7 +479,7 @@ export default function SearchScreen({navigation}) {
           renderItem={({item}) => (
               <TouchableOpacity
                   style={{backgroundColor: 'pink'}}
-                  onPress={() => storePressHandler({item})}
+                  onPress={() => storePressHandler(item)}
               >
                 <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                   <Text>{item["storeName"]}</Text>

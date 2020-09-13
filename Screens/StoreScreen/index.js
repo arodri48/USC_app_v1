@@ -4,11 +4,10 @@ import {
   Text,
   Dimensions,
   StyleSheet,
-  Button,
   Linking,
   TouchableWithoutFeedback,
 } from 'react-native';
-
+import {Button} from 'react-native-elements';
 import {InfoContext} from '../../Provider/InfoProvider';
 import {API, graphqlOperation} from 'aws-amplify';
 import {createUrlClicked} from 'USC_app_v1/src/graphql/mutations';
@@ -22,24 +21,26 @@ const initialState = {storeID: ''};
 
 export default function StoreScreen({navigation}) {
 
-  const [
+  const {
     storeName,
-    setStoreName,
     storeID,
-    setStoreID,
     stateLocation,
-    setStateLocation,
     bio,
-    setBio,
     price,
-    setPrice,
     website,
-    setWebsite,
     goodsType,
-    setGoodsType,
     image,
-    setImage,
-  ] = useContext(InfoContext);
+    cause,
+  } = useContext(InfoContext);
+  const [storeNameValue, setStoreNameValue] = storeName;
+  const [storeIDValue, setStoreIDValue] = storeID;
+  const [storeLocationValue, setStoreLocationValue] = stateLocation;
+  const [bioValue, setBioValue] = bio;
+  const [priceValue, setPriceValue] = price;
+  const [websiteValue, setWebsiteValue] = website;
+  const [goodsTypeValue, setGoodsTypeValue] = goodsType;
+  const [imageValue, setImageValue] = image;
+  const [causeValue, setCauseValue] = cause;
 
   const [urlState, setURLState] = useState(initialState);
   function setURL(key, value) {
@@ -67,14 +68,15 @@ export default function StoreScreen({navigation}) {
     );
   };
   const _handleExit = () => {
-    setStoreName('');
-    setStoreID('');
-    setStateLocation('');
-    setBio('');
-    setPrice('');
-    setWebsite('');
-    setGoodsType('');
-    setImage('');
+    setStoreNameValue('');
+    setStoreIDValue('');
+    setStoreLocationValue('');
+    setBioValue('');
+    setPriceValue('');
+    setWebsiteValue('');
+    setGoodsTypeValue('');
+    setImageValue('');
+    setCauseValue('')
     navigation.navigate('SearchScreen');
   };
   /*
@@ -94,41 +96,65 @@ export default function StoreScreen({navigation}) {
     setWebsite,
   ]);
   */
+  return(
+      <View style={styles.MainContainer}>
+        <View style={styles.info}>
+          <Button
+              onPress={_handleExit}
+              title="X"
+              buttonStyle={styles.CancelButton}
+          />
+          <View style={{alignItems: 'center', justifyContent: 'center'}}>
+            <View style={{ justifyContent: 'center', alignItems: 'center'}}>
+              <FastImage
+                  style={{width: 300, height: 100}}
+                  source={{uri: imageValue}}
+                  resizeMode={FastImage.resizeMode.contain}
+              />
+            </View>
+            <Text style={styles.ShopName}>{storeNameValue} </Text>
+            <Text style={styles.support}>{goodsType}</Text>
+            <URL_Component website_URL={website} storeID_code={storeIDValue} />
+
+            <Text style={styles.origin}>{priceValue} </Text>
+
+            <Text style={styles.service}>{bioValue}</Text>
+
+
+          </View>
+        </View>
+      </View>
+  )
+  /*
   return (
     <View style={styles.MainContainer}>
       <View style={styles.info}>
         <Button
           onPress={_handleExit}
-          color="#FFC0CB"
-          borderColor="#FFC0CB"
-          backgroundColor="#FFC0CB"
-          title=" X "
+
+          title="X"
           style={styles.CancelButton}
         />
         <View style={{alignItems: 'center', justifyContent: 'center'}}>
-          {/* Will need to actually load in image file from url or S3 bucket */}
           <FastImage
             style={{width: 100, height: 100}}
-            source={{uri: image}}
+            source={{uri: imageValue}}
             resizeMode={FastImage.resizeMode.contain}
           />
-          <Text style={styles.ShopName}> Store Name: {storeName} </Text>
+          <Text style={styles.ShopName}>{storeNameValue} </Text>
+          <Text style={styles.support}>{goodsType}</Text>
+          <URL_Component website_URL={website} storeID_code={storeIDValue} />
 
-          <URL_Component website_URL={website} storeID_code={storeID} />
+          <Text style={styles.origin}>{priceValue} </Text>
 
-          <Text style={styles.ShopLoc}> State: {stateLocation} </Text>
+          <Text style={styles.service}>{bioValue}</Text>
 
-          <Text style={styles.origin}> Price: {price} </Text>
 
-          <Text style={styles.service}> Bio: {bio}</Text>
-
-          <Text style={styles.support}>
-            Type of Product/Service: {goodsType}
-          </Text>
         </View>
       </View>
     </View>
   );
+  */
 }
 
 const styles = StyleSheet.create({
@@ -175,14 +201,11 @@ const styles = StyleSheet.create({
   },
   CancelButton: {
     position: 'relative',
-    backgroundColor: '#FFC0CB',
-    borderColor: '#FFC0CB',
-    color: '#FFC0CB',
-    width: 40,
-    height: 40,
-    borderTopWidth: 10,
-    borderLeftWidth: 10,
-    borderRadius: 15,
+    backgroundColor: 'transparent',
+    width: 30,
+    height: 30,
+    marginLeft: 10,
+    marginTop: 5,
     alignItems: 'center',
     justifyContent: 'center',
   },
