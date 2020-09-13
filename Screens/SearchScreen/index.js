@@ -53,7 +53,7 @@ export default function SearchScreen({navigation}) {
     (prevState, action) => {
       switch (action.type) {
         case 'BLM':
-          if (filterOption.BLM) {
+          if (prevState.BLM) {
             setCurrentCause('');
             return {
               ...prevState,
@@ -65,10 +65,11 @@ export default function SearchScreen({navigation}) {
               ...prevState,
               mental_health: false,
               BLM: true,
+              cancer: false
             };
           }
         case 'Mental Health':
-          if (filterOption.mental_health) {
+          if (prevState.mental_health) {
             setCurrentCause('');
             return {
               ...prevState,
@@ -80,15 +81,42 @@ export default function SearchScreen({navigation}) {
               ...prevState,
               mental_health: true,
               BLM: false,
+              cancer : false
             };
           }
+        case 'Cancer':
+          if (prevState.cancer){
+            setCurrentCause('');
+            return{
+              ...prevState,
+              cancer: false,
+            };
+          }
+          else {
+            setCurrentCause('Cancer');
+            return {
+              ...prevState,
+              cancer: true,
+              BLM: false,
+              mental_health: false,
+            }
+          }
+        default:
+          return prevState;
       }
     },
     {
       BLM: false,
       mental_health: false,
+      cancer: false
     },
-  ); // Hooks for sort values
+  );
+  /*
+  useEffect(() => {
+    console.log(filterOption);
+  }, [filterOption]);
+  */
+  // Hooks for sort values
   const [sortVisible, setSortVisible] = useState(false);
   //const [sortAltered, setSortAltered] = useState(false);
   const sortRef = useRef("ASC");
@@ -104,7 +132,7 @@ export default function SearchScreen({navigation}) {
     (prevState, action) => {
       switch (action.type) {
         case 'HIGH_TO_LOW':
-          if (sortOption.high_to_low) {
+          if (prevState.high_to_low) {
             setCurrentSort('ASC');
             return {
               ...prevState,
@@ -119,8 +147,8 @@ export default function SearchScreen({navigation}) {
               low_to_high: false,
             };
           }
-        case 'LOW_T0_HIGH':
-          if (sortOption.low_to_high) {
+        case 'LOW_TO_HIGH':
+          if (prevState.low_to_high) {
             setCurrentSort('DESC');
             return {
               ...prevState,
@@ -135,6 +163,8 @@ export default function SearchScreen({navigation}) {
               low_to_high: true,
             };
           }
+        default:
+          return prevState;
       }
     },
     {
@@ -142,7 +172,11 @@ export default function SearchScreen({navigation}) {
       low_to_high: true,
     },
   );
-
+  /*
+  useEffect(() => {
+    console.log(sortOption);
+  }, [sortOption])
+  */
   // Hooks for managing store list
   const [refresh, setRefresh] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -367,15 +401,43 @@ export default function SearchScreen({navigation}) {
               title="BLM"
               checkedIcon="dot-circle-o"
               uncheckedIcon="circle-o"
-              checked={filterOption.BLM}
-              onPress={() => filterDispatch('BLM')}
+              checked={filterOption["BLM"]}
+              onPress={() => filterDispatch({type:'BLM'})}
           />
           <CheckBox
               title="Mental Health"
               checkedIcon="dot-circle-o"
               uncheckedIcon="circle-o"
-              checked={filterOption.mental_health}
-              onPress={() => filterDispatch('Mental Health')}
+              checked={filterOption["mental_health"]}
+              onPress={() => filterDispatch({type:'Mental Health'})}
+          />
+          <CheckBox
+              title="Cancer"
+              checkedIcon="dot-circle-o"
+              uncheckedIcon="circle-o"
+              checked={filterOption["cancer"]}
+              onPress={() => filterDispatch({type:'Cancer'})}
+          />
+        </View>
+      </Overlay>
+      <Overlay
+          isVisible={sortVisible}
+          onBackdropPress={toggleSortOverlay}
+          overlayStyle={styles.sortMenu}>
+        <View>
+          <CheckBox
+              checked={sortOption.high_to_low}
+              title='Prices High to Low'
+              onPress={() => sortDispatch({type:'HIGH_TO_LOW'})}
+              checkedIcon="dot-circle-o"
+              uncheckedIcon="circle-o"
+          />
+          <CheckBox
+              checked={sortOption.low_to_high}
+              title='Prices Low to High'
+              onPress={() => sortDispatch({type:'LOW_TO_HIGH'})}
+              checkedIcon="dot-circle-o"
+              uncheckedIcon="circle-o"
           />
         </View>
       </Overlay>
