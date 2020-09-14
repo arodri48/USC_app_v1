@@ -13,6 +13,7 @@ export const getStore = /* GraphQL */ `
       PricePoint
       bio
       image
+      featured
       createdAt
       updatedAt
     }
@@ -35,6 +36,7 @@ export const listStores = /* GraphQL */ `
         PricePoint
         bio
         image
+        featured
         createdAt
         updatedAt
       }
@@ -57,6 +59,7 @@ export const getUrlClicked = /* GraphQL */ `
         PricePoint
         bio
         image
+        featured
         createdAt
         updatedAt
       }
@@ -85,6 +88,7 @@ export const listUrlClickeds = /* GraphQL */ `
           PricePoint
           bio
           image
+          featured
           createdAt
           updatedAt
         }
@@ -122,6 +126,7 @@ export const storesByCause = /* GraphQL */ `
         PricePoint
         bio
         image
+        featured
         createdAt
         updatedAt
       }
@@ -156,6 +161,7 @@ export const storesByPrice = /* GraphQL */ `
         PricePoint
         bio
         image
+        featured
         createdAt
         updatedAt
       }

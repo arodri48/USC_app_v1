@@ -16,6 +16,7 @@ export const createStore = /* GraphQL */ `
       PricePoint
       bio
       image
+      featured
       createdAt
       updatedAt
     }
@@ -36,6 +37,7 @@ export const updateStore = /* GraphQL */ `
       PricePoint
       bio
       image
+      featured
       createdAt
       updatedAt
     }
@@ -56,6 +58,7 @@ export const deleteStore = /* GraphQL */ `
       PricePoint
       bio
       image
+      featured
       createdAt
       updatedAt
     }
@@ -79,6 +82,7 @@ export const createUrlClicked = /* GraphQL */ `
         PricePoint
         bio
         image
+        featured
         createdAt
         updatedAt
       }
@@ -105,6 +109,7 @@ export const updateUrlClicked = /* GraphQL */ `
         PricePoint
         bio
         image
+        featured
         createdAt
         updatedAt
       }
@@ -131,6 +136,7 @@ export const deleteUrlClicked = /* GraphQL */ `
         PricePoint
         bio
         image
+        featured
         createdAt
         updatedAt
       }

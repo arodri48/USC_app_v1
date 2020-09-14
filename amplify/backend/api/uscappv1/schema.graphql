@@ -20,6 +20,7 @@ type Store
   PricePoint: String
   bio: String
   image: String
+  featured: String
 }
 
 type urlClicked @model(subscriptions: null){
