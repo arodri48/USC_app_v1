@@ -1,5 +1,6 @@
 export default(images = {
     Hands: require('./Hands.png'),
     Smile: require('./Smile.png'),
-    Test:require('./Test.png')
+    Test: require('./Test.png'),
+    HandsCenter: require('./HandsCenter.png')
 });

@@ -13,8 +13,8 @@ export default function SplashScreen({navigation}){
           <Text>Loading...</Text>
           <View style={styles.image}>
             <FastImage
-              style={{width: 300, height: 300}}
-              source={ImageList.Hands}
+              style={{width: 400, height: 400}}
+              source={ImageList.HandsCenter}
               resizeMode={FastImage.resizeMode.contain}
             />
           </View>
@@ -36,8 +36,9 @@ const styles = StyleSheet.create({
     image:{
       alignItems:'center',
       justifyContent:'center',
-      width:200,
-      height:200,
+      width:500,
+      height:500,
+      marginBottom:5,
     }
 
 
