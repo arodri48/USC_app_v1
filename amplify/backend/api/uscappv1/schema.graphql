@@ -1,20 +1,20 @@
-type Store @model(subscriptions: null) {
+type Blog @model {
   id: ID!
-  goodsType: String
-  storeName: String
-  stateLocation: String
-  website: String
-  BLM: Boolean
-  PricePoint: String
-  COVID: String
-  bio: String
-  image: String
+  name: String!
+  posts: [Post] @connection(keyName: "byBlog", fields: ["id"])
 }
 
-type urlClicked @model(subscriptions: null){
+type Post @model @key(name: "byBlog", fields: ["blogID"]) {
   id: ID!
-  storeID: ID!
-  store: Store @connection(fields: ["storeID"])
+  title: String!
+  blogID: ID!
+  blog: Blog @connection(fields: ["blogID"])
+  comments: [Comment] @connection(keyName: "byPost", fields: ["id"])
 }
 
-
+type Comment @model @key(name: "byPost", fields: ["postID", "content"]) {
+  id: ID!
+  postID: ID!
+  post: Post @connection(fields: ["postID"])
+  content: String!
+}
