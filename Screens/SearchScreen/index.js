@@ -392,6 +392,9 @@ export default function SearchScreen({navigation}) {
             keyExtractor={_keyExtractor}
             initialNumToRender={6}
             ListFooterComponent={_renderFooter}
+            getItemLayout={(data, index) => (
+                {length: 150, offset: 150 * index, index}
+            )}
         />
       </View>
 
