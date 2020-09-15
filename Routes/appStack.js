@@ -39,15 +39,15 @@ export default function AppStack() {
   return (
     <NavigationContainer>
       <MainStack.Navigator>
-      {/*   {state.isLoading ? (  */}
+         {state.isLoading ? (
           <MainStack.Screen name="SplashScreen" component={SplashScreen} options={{headerShown: false}}/>
-{/*
-       ) : state.userToken == null ? (
+
+        ) : state.userToken == null ? (
           <MainStack.Screen name="WelcomeScreen" component={WelcomeScreen} options={{headerShown: false}}/>
         ) : (
           <MainStack.Screen name="Root" component={Root} options={{headerShown: false}}/>
         )}
-*/}
+
       </MainStack.Navigator>
     </NavigationContainer>
   );
