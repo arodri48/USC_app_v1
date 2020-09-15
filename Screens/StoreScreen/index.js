@@ -18,8 +18,8 @@ import FastImage from 'react-native-fast-image';
 const {width, height} = Dimensions.get('window');
 
 
-export default function StoreScreen({navigation}) {
-
+export default function StoreScreen({route, navigation}) {
+  /*
   const {
     storeName,
     storeID,
@@ -31,15 +31,8 @@ export default function StoreScreen({navigation}) {
     image,
     cause,
   } = useContext(InfoContext);
-  const [storeNameValue, setStoreNameValue] = storeName;
-  const [storeIDValue, setStoreIDValue] = storeID;
-  const [storeLocationValue, setStoreLocationValue] = stateLocation;
-  const [bioValue, setBioValue] = bio;
-  const [priceValue, setPriceValue] = price;
-  const [websiteValue, setWebsiteValue] = website;
-  const [goodsTypeValue, setGoodsTypeValue] = goodsType;
-  const [imageValue, setImageValue] = image;
-  const [causeValue, setCauseValue] = cause;
+   */
+  const {storeName, id, stateLocation, bio, PricePoint, website, goodsType, image, cause} = route.params;
 
 
   const URL_Component = ({website_URL, storeID_code}) => {
@@ -49,10 +42,10 @@ export default function StoreScreen({navigation}) {
         const urlAPI = await API.graphql(
           graphqlOperation(createUrlClicked, {input: {storeID: storeID_code}}),
         );
-        console.log(urlAPI);
+        //console.log(urlAPI);
         await Linking.openURL(website_URL);
       } catch (err) {
-        console.log('Error opening URL');
+        //console.log('Error opening URL');
       }
     }
     return (
@@ -61,6 +54,7 @@ export default function StoreScreen({navigation}) {
       </TouchableWithoutFeedback>
     );
   };
+  /*
   const _handleExit = () => {
     setStoreNameValue('');
     setStoreIDValue('');
@@ -73,12 +67,12 @@ export default function StoreScreen({navigation}) {
     setCauseValue('')
     navigation.navigate('SearchScreen');
   };
-
+  */
   return(
       <View style={styles.MainContainer}>
         <View style={styles.info}>
           <Button
-              onPress={_handleExit}
+              onPress={() => navigation.navigate('SearchScreen')}
               title="X"
               buttonStyle={styles.CancelButton}
           />
@@ -86,17 +80,17 @@ export default function StoreScreen({navigation}) {
             <View style={{ justifyContent: 'center', alignItems: 'center'}}>
               <FastImage
                   style={{width: 300, height: 100}}
-                  source={{uri: imageValue}}
+                  source={{uri: image}}
                   resizeMode={FastImage.resizeMode.contain}
               />
             </View>
-            <Text style={styles.ShopName}>{storeNameValue} </Text>
-            <Text style={styles.support}>{goodsTypeValue}</Text>
-            <URL_Component website_URL={websiteValue} storeID_code={storeIDValue} />
+            <Text style={styles.ShopName}>{storeName} </Text>
+            <Text style={styles.support}>{goodsType}</Text>
+            <URL_Component website_URL={website} storeID_code={id} />
 
-            <Text style={styles.origin}>{priceValue} </Text>
+            <Text style={styles.origin}>{PricePoint} </Text>
             <ScrollView style={{ width: '80%', height: '60%'}}>
-              <Text style={styles.service}>{bioValue}</Text>
+              <Text style={styles.service}>{bio}</Text>
 
             </ScrollView>
 

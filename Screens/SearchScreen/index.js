@@ -1,51 +1,14 @@
-import React, {
-  useContext,
-  useEffect,
-  useReducer,
-  useRef,
-  useState,
-} from 'react';
-import {
-  View,
-  Text,
-  Dimensions,
-  FlatList,
-  TouchableOpacity,
-  ActivityIndicator,
-  StyleSheet,
-} from 'react-native';
-import {InfoContext} from '../../Provider/InfoProvider';
+import React, {useEffect, useReducer, useRef, useState} from 'react';
+import {ActivityIndicator, Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {API, graphqlOperation} from 'aws-amplify';
-import {listStores, storesByPrice} from '../../src/graphql/queries';
+import {listStores} from '../../src/graphql/queries';
 import FastImage from 'react-native-fast-image';
-import {Button, Overlay, CheckBox} from 'react-native-elements';
+import {Button, CheckBox, Overlay} from 'react-native-elements';
 import ImageList from 'USC_app_v1/media/ImageStore';
 
-const {width, height} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 export default function SearchScreen({navigation}) {
-  // Hooks for store values
-  const {
-    storeName,
-      storeID,
-    stateLocation,
-      bio,
-    price,
-      website,
-      goodsType,
-      image,
-      cause,
-  } = useContext(InfoContext);
-  const [storeNameValue, setStoreNameValue] = storeName;
-  const [storeIDValue, setStoreIDValue] = storeID;
-  const [storeLocationValue, setStoreLocationValue] = stateLocation;
-  const [bioValue, setBioValue] = bio;
-  const [priceValue, setPriceValue] = price;
-  const [websiteValue, setWebsiteValue] = website;
-  const [goodsTypeValue, setGoodsTypeValue] = goodsType;
-  const [imageValue, setImageValue] = image;
-  const [causeValue, setCauseValue] = cause;
-
 
 
 
@@ -53,7 +16,6 @@ export default function SearchScreen({navigation}) {
 
   // Hooks for filter values
   const [filterVisible, setFilterVisible] = useState(false);
-  //const [filterAltered, setFilterAltered] = useState(false);
   const causeRef = useRef('');
   const toggleFilterOverlay = () => {
     setFilterVisible(!filterVisible);
@@ -126,14 +88,9 @@ export default function SearchScreen({navigation}) {
       cancer: false
     },
   );
-  /*
-  useEffect(() => {
-    console.log(filterOption);
-  }, [filterOption]);
-  */
+
   // Hooks for sort values
   const [sortVisible, setSortVisible] = useState(false);
-  //const [sortAltered, setSortAltered] = useState(false);
   const sortRef = useRef("ASC");
   const toggleSortOverlay = () => {
     setSortVisible(!sortVisible);
@@ -187,55 +144,55 @@ export default function SearchScreen({navigation}) {
       low_to_high: true,
     },
   );
-  /*
-  useEffect(() => {
-    console.log(sortOption);
-  }, [sortOption])
-  */
+
   // Hooks for managing store list
   const [refresh, setRefresh] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [loading, setLoading] = useState(true);
   const pageTokenRef = useRef();
-  const storesRef = useRef([]);
-
+ // const storesRef = useRef([]);
+  const [stores, setStores] = useState([]);
   //Initial useEffect to load in data
   useEffect(() => {
     async function fetchStores() {
-      try {
-        let storeData;
-        //console.log(causeRef.current)
-        storeData = await  API.graphql(graphqlOperation(listStores));
-        /*
-        if (causeRef.current === '') {
-          storeData = await API.graphql(
-            graphqlOperation(storesByPrice, {
-              limit: 10,
-              sortDirection: sortRef.current,
-            }),
-          );
-          console.log(storeData)
-        } else {
-          storeData = await API.graphql(
-            graphqlOperation(storesByPrice, {
-              cause: causeRef.current,
-              limit: 10,
-              sortDirection: sortRef.current,
-            }),
-          );
-        }
-         */
-
-        pageTokenRef.current = storeData.data.listStores.nextToken;
-        storesRef.current = storeData.data.listStores.items;
-        //console.log(storesRef.current)
-        setLoading(false);
-      } catch (err) {
-        console.log(err);
-      }
+      return API.graphql(graphqlOperation(listStores, {
+        limit: 10
+      }));
     }
-    fetchStores();
+    fetchStores().then((storeData) => {
+      pageTokenRef.current = storeData.data.listStores.nextToken;
+      setStores(storeData.data.listStores.items);
+      setLoading(false);
+    }).catch((err) => {
+      console.log(err);
+    });
   }, []);
+  // useEffect for loading more
+  useEffect(() => {
+    async function fetchStores() {
+      return API.graphql(graphqlOperation(listStores, {
+        nextToken: pageTokenRef.current,
+        limit: 10
+      }));
+    }
+
+    if (loadingMore) {
+      console.log("this ran")
+      fetchStores().then((storeData) => {
+        console.log(storeData);
+        pageTokenRef.current = storeData.data.listStores.nextToken;
+        console.log(pageTokenRef.current);
+        const newStores = storeData.data.listStores.items;
+        console.log(newStores);
+        setStores( [...stores, ...newStores]);
+        setLoading(false);
+        setLoadingMore(false);
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
+  }, [loadingMore, pageTokenRef]); // Functions called upon by render
+
   /*
   // useEffect function to do a new query once new options are selected (will run when a menu closes, since refresh will be set to true)
   useEffect(() => {
@@ -271,97 +228,10 @@ export default function SearchScreen({navigation}) {
       setRefresh(false);
     }
   }, [refresh, pageTokenRef, storesRef]);
-  // useEffect for loading more
-  useEffect(() => {
-    async function fetchStores() {
-      try {
-        let storeData;
-        if (causeRef.current === '') {
-          storeData = await API.graphql(
-            graphqlOperation(storesByPrice, {
-              limit: 10,
-              sortDirection: sortRef.current,
-              nextToken: pageTokenRef.current,
-            }),
-          );
-        } else {
-          storeData = await API.graphql(
-            graphqlOperation(storesByPrice, {
-              cause: causeRef.current,
-              limit: 10,
-              sortDirection: sortRef.current,
-              nextToken: pageTokenRef.current,
-            }),
-          );
-        }
-        const newStores = storeData.data.storesByPrice.items;
-        pageTokenRef.current = storeData.data.storesByPrice.nextToken;
-        storesRef.current = [...storesRef.current, ...newStores];
-        setLoading(false);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    if (loadingMore) {
-      fetchStores();
-      setLoadingMore(false);
-    }
-  }, [loadingMore, pageTokenRef, storesRef]); // Functions called upon by render
-
-   */
-  const storePressHandler = ({storeName, id, stateLocation, bio, PricePoint, website, goodsType, image, cause}) => {
-    // set InfoProvider variables to equal the store's attributes
-    setStoreNameValue(storeName);
-    setStoreIDValue(id);
-    setStoreLocationValue(stateLocation);
-    setBioValue(bio);
-    setPriceValue(PricePoint);
-    setWebsiteValue(website);
-    setGoodsTypeValue(goodsType);
-    setImageValue(image);
-    setCauseValue(cause);
-    // navigate to storescreen
-    navigation.navigate("StoreScreen");
-  };
-  /*
-  const _renderStore = ({store}) => {
-    const storePressHandler = () => {
-      // set InfoProvider variables to equal the store's attributes
-      setStoreName(store["storeName"]);
-      setStoreID(store["id"]);
-      setStateLocation(store["stateLocation"]);
-      setBio(store["bio"]);
-      setPrice(store["PricePoint"]);
-      setWebsite(store["website"]);
-      setGoodsType(store["goodsType"]);
-      setImage(store["image"]);
-      setCause(store["cause"]);
-      // navigate to storescreen
-      navigation.navigate('StoreScreen');
-    };
-    return (
-      <TouchableOpacity
-        style={{backgroundColor: 'pink'}}
-        onPress={storePressHandler}
-      >
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <Text>{store["storeName"]}</Text>
-          <Text>{store["PricePoint"]}</Text>
-        </View>
-        <View style={{flexDirection: 'row'}}>
-          <FastImage
-            style={{width: 100, height: 100}}
-            source={{
-              uri: store["image"],
-            }}
-            resizeMode={FastImage.resizeMode.contain}
-          />
-          <Text>{store["cause"]}</Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
   */
+
+
+
   const _keyExtractor = (obj) => obj.id.toString();
 
 
@@ -374,25 +244,43 @@ export default function SearchScreen({navigation}) {
         style={{
           position: 'relative',
           width: width,
-          height: height,
-          paddingVertical: 20,
-          borderTopWidth: 1,
-          marginTop: 10,
-          marginBottom: 10,
-          borderColor: 'pink',
+          height: 100,
+          justifyContent: 'center'
         }}>
-        <ActivityIndicator animating size="large" />
+        <ActivityIndicator size="large" color={"blue"}/>
       </View>
     );
   };
 
   const _handleLoadMore = () => {
-    setLoadingMore(true);
+    if (pageTokenRef.current !== null){
+      console.log("Loading more");
+      setLoadingMore(true);
+
+    }
   };
 
-  const [causeFilterExpanded, setCauseFilterExpanded] = useState(true);
-  const handleCauseFilterPress = () =>
-    setCauseFilterExpanded(!causeFilterExpanded);
+  const _renderItem = ({item}) => (
+      <TouchableOpacity
+          style={{backgroundColor: 'pink', width:300, height:150, marginBottom: 20, alignItems:'center', alignContent:'center', justifyContent:'center', borderRadius: 30}}
+          onPress={() => {navigation.navigate("StoreScreen", item)}}
+      >
+        <View style={{flexDirection: 'row', width: 250, height: 120, alignItems: 'center', justifyContent: 'space-between'}}>
+          <FastImage
+              style={{width: 100, height: 100}}
+              source={{
+                uri: item["image"],
+              }}
+              resizeMode={FastImage.resizeMode.contain}
+          />
+          <View style={{justifyContent: 'space-between',width:120, height: 80}}>
+            <Text>{item["storeName"]}</Text>
+            <Text>{item["PricePoint"]}</Text>
+            <Text>{item["cause"]}</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+  )
 
   // Render return
   return !loading ? (
@@ -474,35 +362,18 @@ export default function SearchScreen({navigation}) {
           />
         </View>
       </Overlay>
-      <FlatList
-          data={storesRef.current}
-          renderItem={({item}) => (
-              <TouchableOpacity
-                  style={{backgroundColor: 'pink'}}
-                  onPress={() => storePressHandler(item)}
-              >
-                <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                  <Text>{item["storeName"]}</Text>
-                  <Text>{item["PricePoint"]}</Text>
-                </View>
-                <View style={{flexDirection: 'row'}}>
-                  <FastImage
-                      style={{width: 100, height: 100}}
-                      source={{
-                        uri: item["image"],
-                      }}
-                      resizeMode={FastImage.resizeMode.contain}
-                  />
-                  <Text>{item["cause"]}</Text>
-                </View>
-              </TouchableOpacity>
-          )}
-          onEndReached={_handleLoadMore}
-          onEndReachedThreshold={0.5}
-          keyExtractor={_keyExtractor}
-          initialNumToRender={10}
-          ListFooterComponent={_renderFooter}
-      />
+      <View style={{flex:1,alignItems:'center',justifyContent:'center',alignSelf:'stretch',}}>
+        <FlatList
+            data={stores}
+            renderItem={_renderItem}
+            onEndReached={_handleLoadMore}
+            onEndReachedThreshold={0.5}
+            keyExtractor={_keyExtractor}
+            initialNumToRender={6}
+            ListFooterComponent={_renderFooter}
+        />
+      </View>
+
 
 
     </View>
@@ -537,7 +408,7 @@ const styles = StyleSheet.create({
     width: 400,
   },
   sendASmile: {
-    color: '#FCC6DF',
+    color: '#fcc6df',
     fontSize: 25,
     fontWeight: 'bold',
     paddingBottom: 0,
