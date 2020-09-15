@@ -362,7 +362,7 @@ export default function SearchScreen({navigation}) {
           />
         </View>
       </Overlay>
-      <View style={{flex:1,alignItems:'center',justifyContent:'center',alignSelf:'stretch', backgroundColor: 'blue', }}>
+      <View style={{flex:1,alignItems:'center',justifyContent:'center', backgroundColor: 'blue', width: 300}}>
         <FlatList
             data={stores}
             renderItem={_renderItem}
