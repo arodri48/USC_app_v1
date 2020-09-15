@@ -362,7 +362,7 @@ export default function SearchScreen({navigation}) {
           />
         </View>
       </Overlay>
-      <View style={{flex:1,alignItems:'center',justifyContent:'center',alignSelf:'stretch',}}>
+      <View style={{flex:1,alignItems:'center',justifyContent:'center',alignSelf:'stretch', backgroundColor: 'blue', }}>
         <FlatList
             data={stores}
             renderItem={_renderItem}
@@ -371,6 +371,9 @@ export default function SearchScreen({navigation}) {
             keyExtractor={_keyExtractor}
             initialNumToRender={6}
             ListFooterComponent={_renderFooter}
+            getItemLayout={(data, index) => (
+                {length: 150, offset: 150 * index, index}
+            )}
         />
       </View>
 
