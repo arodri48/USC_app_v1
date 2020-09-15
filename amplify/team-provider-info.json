@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "dev": {
         "awscloudformation": {
             "AuthRoleName": "amplify-uscappv1-dev-231525-authRole",
@@ -42,5 +43,45 @@
             "StackId": "arn:aws:cloudformation:us-east-1:664012311393:stack/amplify-uscappv1-test-231719/860e5640-ca37-11ea-aab1-0a39c55408a9",
             "AmplifyAppId": "d3mlkgozwf8pzl"
         }
+=======
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-uscappv1-dev-231525-authRole",
+      "UnauthRoleArn": "arn:aws:iam::664012311393:role/amplify-uscappv1-dev-231525-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::664012311393:role/amplify-uscappv1-dev-231525-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-uscappv1-dev-231525-deployment",
+      "UnauthRoleName": "amplify-uscappv1-dev-231525-unauthRole",
+      "StackName": "amplify-uscappv1-dev-231525",
+      "StackId": "arn:aws:cloudformation:us-east-1:664012311393:stack/amplify-uscappv1-dev-231525/42373db0-ca37-11ea-ab23-0a140a53308d",
+      "AmplifyAppId": "d3mlkgozwf8pzl"
+>>>>>>> chen
     }
+  },
+  "prod": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-uscappv1-prod-231325-authRole",
+      "UnauthRoleArn": "arn:aws:iam::664012311393:role/amplify-uscappv1-prod-231325-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::664012311393:role/amplify-uscappv1-prod-231325-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-uscappv1-prod-231325-deployment",
+      "UnauthRoleName": "amplify-uscappv1-prod-231325-unauthRole",
+      "StackName": "amplify-uscappv1-prod-231325",
+      "StackId": "arn:aws:cloudformation:us-east-1:664012311393:stack/amplify-uscappv1-prod-231325/fb53cf80-ca36-11ea-b4f7-0a637f9cba95",
+      "AmplifyAppId": "d3mlkgozwf8pzl"
+    }
+  },
+  "test": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-uscappv1-test-231719-authRole",
+      "UnauthRoleArn": "arn:aws:iam::664012311393:role/amplify-uscappv1-test-231719-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::664012311393:role/amplify-uscappv1-test-231719-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-uscappv1-test-231719-deployment",
+      "UnauthRoleName": "amplify-uscappv1-test-231719-unauthRole",
+      "StackName": "amplify-uscappv1-test-231719",
+      "StackId": "arn:aws:cloudformation:us-east-1:664012311393:stack/amplify-uscappv1-test-231719/860e5640-ca37-11ea-aab1-0a39c55408a9",
+      "AmplifyAppId": "d3mlkgozwf8pzl"
+    }
+  }
 }
