@@ -1,7 +1,7 @@
 import React, {useEffect, useReducer, useRef, useState} from 'react';
 import {ActivityIndicator, Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {API, graphqlOperation} from 'aws-amplify';
-import {listStores} from '../../src/graphql/queries';
+import {listStores, storesByPrice} from '../../src/graphql/queries';
 import FastImage from 'react-native-fast-image';
 import {Button, CheckBox, Overlay} from 'react-native-elements';
 import ImageList from 'USC_app_v1/media/ImageStore';
@@ -155,34 +155,54 @@ export default function SearchScreen({navigation}) {
   //Initial useEffect to load in data
   useEffect(() => {
     async function fetchStores() {
-      return API.graphql(graphqlOperation(listStores, {
-        limit: 10
-      }));
+      return API.graphql(
+          graphqlOperation(storesByPrice, {
+            limit: 10,
+            sortDirection: sortRef.current,
+          })
+      );
     }
     fetchStores().then((storeData) => {
-      pageTokenRef.current = storeData.data.listStores.nextToken;
-      setStores(storeData.data.listStores.items);
+      pageTokenRef.current = storeData.data.storesByPrice.nextToken;
+      setStores(storeData.data.storeByPrice.items);
       setLoading(false);
     }).catch((err) => {
       console.log(err);
     });
   }, []);
+  /*
   // useEffect for loading more
   useEffect(() => {
     async function fetchStores() {
-      return API.graphql(graphqlOperation(listStores, {
-        nextToken: pageTokenRef.current,
-        limit: 10
-      }));
+      let storeData;
+      if (causeRef.current === '') {
+        storeData = await API.graphql(
+            graphqlOperation(storesByPrice, {
+              limit: 10,
+              sortDirection: sortRef.current,
+              nextToken: pageTokenRef.current
+            }),
+        );
+      } else {
+        storeData = await API.graphql(
+            graphqlOperation(storesByPrice, {
+              cause: causeRef.current,
+              limit: 10,
+              sortDirection: sortRef.current,
+              nextToken: pageTokenRef.current
+            }),
+        );
+      }
+      return storeData;
     }
 
     if (loadingMore) {
       console.log("this ran")
       fetchStores().then((storeData) => {
         console.log(storeData);
-        pageTokenRef.current = storeData.data.listStores.nextToken;
+        pageTokenRef.current = storeData.data.storesByPrice.nextToken;
         console.log(pageTokenRef.current);
-        const newStores = storeData.data.listStores.items;
+        const newStores = storeData.data.storesByPrice.items;
         console.log(newStores);
         setStores( [...stores, ...newStores]);
         setLoading(false);
@@ -193,18 +213,17 @@ export default function SearchScreen({navigation}) {
     }
   }, [loadingMore, pageTokenRef]); // Functions called upon by render
 
-  /*
+
   // useEffect function to do a new query once new options are selected (will run when a menu closes, since refresh will be set to true)
   useEffect(() => {
     async function fetchStores() {
-      try {
         let storeData;
         if (causeRef.current === '') {
           storeData = await API.graphql(
             graphqlOperation(storesByPrice, {
               limit: 10,
               sortDirection: sortRef.current,
-            }),
+            })
           );
         } else {
           storeData = await API.graphql(
@@ -215,20 +234,22 @@ export default function SearchScreen({navigation}) {
             }),
           );
         }
-        pageTokenRef.current = storeData.data.storesByPrice.nextToken;
-        storesRef.current = storeData.data.storesByPrice.items;
-        setLoading(false);
-      } catch (err) {
-        console.log(err);
+        return storeData;
       }
-    }
+
     if (refresh) {
       setLoading(true);
-      fetchStores();
-      setRefresh(false);
+      fetchStores().then((storeData) => {
+        pageTokenRef.current = storeData.data.storesByPrice.nextToken;
+        setStores(storeData.data.storesByPrice.items);
+        setLoading(false);
+        setRefresh(false);
+      }).catch((err) => {
+        console.log(err);
+      });
     }
-  }, [refresh, pageTokenRef, storesRef]);
-  */
+  }, [refresh, pageTokenRef]);
+*/
 
 
 
