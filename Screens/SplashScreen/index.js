@@ -15,9 +15,9 @@ export default function SplashScreen({navigation}){
           </View>
           <View style={styles.image}>
             <FastImage
-              style={{width: '100%', height: 560}}
+              style={{width: '100%', height: 660}}
               source={ImageList.HandsCenter}
-              resizeMode={FastImage.resizeMode.contain}
+              resizeMode={FastImage.resizeMode.stretch}
             />
           </View>
       </View>
@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
     txt:{
       justifyContent:'center',
       alignItems:'center',
+      marginTop:50,
       height:20,
       width:100,
     },
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
       bottom:0,
       alignItems:'center',
       width:width,
-      height:560,
+      height:650,
       marginBottom:5,
     }
 
