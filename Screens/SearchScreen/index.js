@@ -1,7 +1,7 @@
 import React, {useEffect, useReducer, useRef, useState} from 'react';
 import {ActivityIndicator, Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {API, graphqlOperation} from 'aws-amplify';
-import {listStores} from '../../src/graphql/queries';
+import {listAllStoresByPrice, listStores, storesByPrice} from '../../src/graphql/queries';
 import FastImage from 'react-native-fast-image';
 import {Button, CheckBox, Overlay} from 'react-native-elements';
 import ImageList from 'USC_app_v1/media/ImageStore';
@@ -19,7 +19,7 @@ export default function SearchScreen({navigation}) {
   const causeRef = useRef('');
   const toggleFilterOverlay = () => {
     setFilterVisible(!filterVisible);
-    if (causeRef.current !== currentCause && !filterVisible) {
+    if (causeRef.current !== currentCause) {
       causeRef.current = currentCause;
       setRefresh(true);
     }
@@ -94,7 +94,7 @@ export default function SearchScreen({navigation}) {
   const sortRef = useRef("ASC");
   const toggleSortOverlay = () => {
     setSortVisible(!sortVisible);
-    if (sortRef.current !== currentSort && !sortVisible) {
+    if (sortRef.current !== currentSort) {
       sortRef.current = currentSort;
       setRefresh(true);
     }
@@ -155,34 +155,80 @@ export default function SearchScreen({navigation}) {
   //Initial useEffect to load in data
   useEffect(() => {
     async function fetchStores() {
-      return API.graphql(graphqlOperation(listStores, {
-        limit: 10
-      }));
+      let storeData;
+      if (causeRef.current !== ''){
+        storeData = API.graphql(
+            graphqlOperation(listAllStoresByPrice, {
+              limit: 15,
+              listAll: "Y",
+              sortDirection: sortRef.current,
+              filter: {
+                cause: {
+                  eq: causeRef.current
+                }
+              }
+            })
+        );
+      }
+      else{
+        storeData = API.graphql(
+            graphqlOperation(listAllStoresByPrice, {
+              limit: 15,
+              listAll: "Y",
+              sortDirection: sortRef.current
+            })
+        );
+      }
+      return storeData;
     }
     fetchStores().then((storeData) => {
-      pageTokenRef.current = storeData.data.listStores.nextToken;
-      setStores(storeData.data.listStores.items);
+      pageTokenRef.current = storeData.data.listAllStoresByPrice.nextToken;
+      setStores(storeData.data.listAllStoresByPrice.items);
       setLoading(false);
     }).catch((err) => {
       console.log(err);
     });
   }, []);
+
   // useEffect for loading more
   useEffect(() => {
     async function fetchStores() {
-      return API.graphql(graphqlOperation(listStores, {
-        nextToken: pageTokenRef.current,
-        limit: 10
-      }));
+      let storeData;
+      if (causeRef.current !== ''){
+        storeData = API.graphql(
+            graphqlOperation(listAllStoresByPrice, {
+              nextToken: pageTokenRef.current,
+              limit: 15,
+              listAll: "Y",
+              sortDirection: sortRef.current,
+              filter: {
+                cause: {
+                  eq: causeRef.current
+                }
+              }
+            })
+        );
+      }
+      else{
+        storeData = API.graphql(
+            graphqlOperation(listAllStoresByPrice, {
+              nextToken: pageTokenRef.current,
+              limit: 15,
+              listAll: "Y",
+              sortDirection: sortRef.current
+            })
+        );
+      }
+      return storeData;
     }
 
     if (loadingMore) {
       console.log("this ran")
       fetchStores().then((storeData) => {
         console.log(storeData);
-        pageTokenRef.current = storeData.data.listStores.nextToken;
+        pageTokenRef.current = storeData.data.listAllStoresByPrice.nextToken;
         console.log(pageTokenRef.current);
-        const newStores = storeData.data.listStores.items;
+        const newStores = storeData.data.listAllStoresByPrice.items;
         console.log(newStores);
         setStores( [...stores, ...newStores]);
         setLoading(false);
@@ -193,42 +239,50 @@ export default function SearchScreen({navigation}) {
     }
   }, [loadingMore, pageTokenRef]); // Functions called upon by render
 
-  /*
+
   // useEffect function to do a new query once new options are selected (will run when a menu closes, since refresh will be set to true)
   useEffect(() => {
     async function fetchStores() {
-      try {
-        let storeData;
-        if (causeRef.current === '') {
-          storeData = await API.graphql(
-            graphqlOperation(storesByPrice, {
-              limit: 10,
+      let storeData;
+      if (causeRef.current !== ''){
+        storeData = API.graphql(
+            graphqlOperation(listAllStoresByPrice, {
+              limit: 15,
+              listAll: "Y",
               sortDirection: sortRef.current,
-            }),
-          );
-        } else {
-          storeData = await API.graphql(
-            graphqlOperation(storesByPrice, {
-              cause: causeRef.current,
-              limit: 10,
-              sortDirection: sortRef.current,
-            }),
-          );
-        }
-        pageTokenRef.current = storeData.data.storesByPrice.nextToken;
-        storesRef.current = storeData.data.storesByPrice.items;
-        setLoading(false);
-      } catch (err) {
-        console.log(err);
+              filter: {
+                cause: {
+                  eq: causeRef.current
+                }
+              }
+            })
+        );
       }
-    }
+      else{
+        storeData = API.graphql(
+            graphqlOperation(listAllStoresByPrice, {
+              limit: 15,
+              listAll: "Y",
+              sortDirection: sortRef.current
+            })
+        );
+      }
+      return storeData;
+      }
+
     if (refresh) {
       setLoading(true);
-      fetchStores();
-      setRefresh(false);
+      fetchStores().then((storeData) => {
+        pageTokenRef.current = storeData.data.listAllStoresByPrice.nextToken;
+        setStores(storeData.data.listAllStoresByPrice.items);
+        setLoading(false);
+        setRefresh(false);
+      }).catch((err) => {
+        console.log(err);
+      });
     }
-  }, [refresh, pageTokenRef, storesRef]);
-  */
+  }, [refresh, pageTokenRef]);
+
 
 
 
@@ -253,7 +307,7 @@ export default function SearchScreen({navigation}) {
   };
 
   const _handleLoadMore = () => {
-    if (pageTokenRef.current !== null){
+    if ((pageTokenRef.current !== null) && !loadingMore){
       console.log("Loading more");
       setLoadingMore(true);
 
@@ -362,7 +416,11 @@ export default function SearchScreen({navigation}) {
           />
         </View>
       </Overlay>
+<<<<<<< HEAD
       <View style={{flex:1,alignItems:'center',justifyContent:'center', backgroundColor: 'blue', width: 300}}>
+=======
+      <View style={{flex:1,alignItems:'center',justifyContent:'center',width:300}}>
+>>>>>>> alex
         <FlatList
             data={stores}
             renderItem={_renderItem}

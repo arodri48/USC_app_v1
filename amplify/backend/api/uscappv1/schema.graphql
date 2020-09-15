@@ -11,8 +11,14 @@ type Store
     fields: ["PricePoint", "cause"]
     queryField: "storesByPrice"
   )
+  @key(
+    name: "ByListAll"
+    fields: ["listAll", "PricePoint"]
+    queryField: "listAllStoresByPrice"
+  )
 {
   id: ID!
+<<<<<<< HEAD
   goodsType: String
   storeName: String
   stateLocation: String
@@ -36,6 +42,32 @@ type Post @model @key(name: "byBlog", fields: ["blogID"]) {
   blogID: ID!
   blog: Blog @connection(fields: ["blogID"])
   comments: [Comment] @connection(keyName: "byPost", fields: ["id"])
+=======
+  goodsType: String!
+  storeName: String!
+  stateLocation: String!
+  website: String!
+  cause: String!
+  PricePoint: String!
+  bio: String!
+  image: String!
+  featured: String!
+  listAll: String!
+}
+
+type urlClicked @model(subscriptions: null)
+  @key(
+    name: "ListAllByDate"
+    fields: ["listAll", "createdAt"]
+    queryField: "listAllClicksByCreationTime"
+  ){
+  id: ID!
+  storeID: ID!
+  listAll: String!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  store: Store @connection(fields: ["storeID"])
+>>>>>>> alex
 }
 
 type Comment @model @key(name: "byPost", fields: ["postID", "content"]) {
