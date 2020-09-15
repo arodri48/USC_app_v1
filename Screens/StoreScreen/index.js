@@ -40,7 +40,7 @@ export default function StoreScreen({route, navigation}) {
       // create graphQL entry for website and then open URL
       try {
         const urlAPI = await API.graphql(
-          graphqlOperation(createUrlClicked, {input: {storeID: storeID_code}}),
+          graphqlOperation(createUrlClicked, {input: {storeID: storeID_code, listAll: "Y"}}),
         );
         //console.log(urlAPI);
         await Linking.openURL(website_URL);

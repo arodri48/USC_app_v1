@@ -14,6 +14,7 @@ export const getStore = /* GraphQL */ `
       bio
       image
       featured
+      listAll
       createdAt
       updatedAt
     }
@@ -37,6 +38,7 @@ export const listStores = /* GraphQL */ `
         bio
         image
         featured
+        listAll
         createdAt
         updatedAt
       }
@@ -49,6 +51,9 @@ export const getUrlClicked = /* GraphQL */ `
     getUrlClicked(id: $id) {
       id
       storeID
+      listAll
+      createdAt
+      updatedAt
       store {
         id
         goodsType
@@ -60,11 +65,10 @@ export const getUrlClicked = /* GraphQL */ `
         bio
         image
         featured
+        listAll
         createdAt
         updatedAt
       }
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -78,6 +82,9 @@ export const listUrlClickeds = /* GraphQL */ `
       items {
         id
         storeID
+        listAll
+        createdAt
+        updatedAt
         store {
           id
           goodsType
@@ -89,11 +96,10 @@ export const listUrlClickeds = /* GraphQL */ `
           bio
           image
           featured
+          listAll
           createdAt
           updatedAt
         }
-        createdAt
-        updatedAt
       }
       nextToken
     }
@@ -127,6 +133,7 @@ export const storesByCause = /* GraphQL */ `
         bio
         image
         featured
+        listAll
         createdAt
         updatedAt
       }
@@ -162,8 +169,88 @@ export const storesByPrice = /* GraphQL */ `
         bio
         image
         featured
+        listAll
         createdAt
         updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const listAllStoresByPrice = /* GraphQL */ `
+  query ListAllStoresByPrice(
+    $listAll: String
+    $PricePoint: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelStoreFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAllStoresByPrice(
+      listAll: $listAll
+      PricePoint: $PricePoint
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        goodsType
+        storeName
+        stateLocation
+        website
+        cause
+        PricePoint
+        bio
+        image
+        featured
+        listAll
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const listAllClicksByCreationTime = /* GraphQL */ `
+  query ListAllClicksByCreationTime(
+    $listAll: String
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelurlClickedFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAllClicksByCreationTime(
+      listAll: $listAll
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        storeID
+        listAll
+        createdAt
+        updatedAt
+        store {
+          id
+          goodsType
+          storeName
+          stateLocation
+          website
+          cause
+          PricePoint
+          bio
+          image
+          featured
+          listAll
+          createdAt
+          updatedAt
+        }
       }
       nextToken
     }

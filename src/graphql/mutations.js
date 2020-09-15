@@ -17,6 +17,7 @@ export const createStore = /* GraphQL */ `
       bio
       image
       featured
+      listAll
       createdAt
       updatedAt
     }
@@ -38,6 +39,7 @@ export const updateStore = /* GraphQL */ `
       bio
       image
       featured
+      listAll
       createdAt
       updatedAt
     }
@@ -59,6 +61,7 @@ export const deleteStore = /* GraphQL */ `
       bio
       image
       featured
+      listAll
       createdAt
       updatedAt
     }
@@ -72,6 +75,9 @@ export const createUrlClicked = /* GraphQL */ `
     createUrlClicked(input: $input, condition: $condition) {
       id
       storeID
+      listAll
+      createdAt
+      updatedAt
       store {
         id
         goodsType
@@ -83,11 +89,10 @@ export const createUrlClicked = /* GraphQL */ `
         bio
         image
         featured
+        listAll
         createdAt
         updatedAt
       }
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -99,6 +104,9 @@ export const updateUrlClicked = /* GraphQL */ `
     updateUrlClicked(input: $input, condition: $condition) {
       id
       storeID
+      listAll
+      createdAt
+      updatedAt
       store {
         id
         goodsType
@@ -110,11 +118,10 @@ export const updateUrlClicked = /* GraphQL */ `
         bio
         image
         featured
+        listAll
         createdAt
         updatedAt
       }
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -126,6 +133,9 @@ export const deleteUrlClicked = /* GraphQL */ `
     deleteUrlClicked(input: $input, condition: $condition) {
       id
       storeID
+      listAll
+      createdAt
+      updatedAt
       store {
         id
         goodsType
@@ -137,11 +147,10 @@ export const deleteUrlClicked = /* GraphQL */ `
         bio
         image
         featured
+        listAll
         createdAt
         updatedAt
       }
-      createdAt
-      updatedAt
     }
   }
 `;

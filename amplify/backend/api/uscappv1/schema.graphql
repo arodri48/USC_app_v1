@@ -10,22 +10,36 @@ type Store
     fields: ["PricePoint", "cause"]
     queryField: "storesByPrice"
   )
+  @key(
+    name: "ByListAll"
+    fields: ["listAll", "PricePoint"]
+    queryField: "listAllStoresByPrice"
+  )
 {
   id: ID!
-  goodsType: String
-  storeName: String
-  stateLocation: String
-  website: String
-  cause: String
-  PricePoint: String
-  bio: String
-  image: String
-  featured: String
+  goodsType: String!
+  storeName: String!
+  stateLocation: String!
+  website: String!
+  cause: String!
+  PricePoint: String!
+  bio: String!
+  image: String!
+  featured: String!
+  listAll: String!
 }
 
-type urlClicked @model(subscriptions: null){
+type urlClicked @model(subscriptions: null)
+  @key(
+    name: "ListAllByDate"
+    fields: ["listAll", "createdAt"]
+    queryField: "listAllClicksByCreationTime"
+  ){
   id: ID!
   storeID: ID!
+  listAll: String!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
   store: Store @connection(fields: ["storeID"])
 }
 
