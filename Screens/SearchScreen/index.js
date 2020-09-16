@@ -1,7 +1,7 @@
 import React, {useEffect, useReducer, useRef, useState} from 'react';
 import {ActivityIndicator, Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {API, graphqlOperation} from 'aws-amplify';
-import {listAllStoresByPrice, listStores, storesByPrice} from '../../src/graphql/queries';
+import {listAllStoresByPrice} from '../../src/graphql/queries';
 import FastImage from 'react-native-fast-image';
 import {Button, CheckBox, Overlay} from 'react-native-elements';
 import ImageList from 'USC_app_v1/media/ImageStore';
@@ -42,7 +42,8 @@ export default function SearchScreen({navigation}) {
               ...prevState,
               mental_health: false,
               BLM: true,
-              cancer: false
+              cancer: false,
+              covid_19: false
             };
           }
         case 'Mental Health':
@@ -58,7 +59,8 @@ export default function SearchScreen({navigation}) {
               ...prevState,
               mental_health: true,
               BLM: false,
-              cancer : false
+              cancer : false,
+              covid_19: false
             };
           }
         case 'Cancer':
@@ -76,8 +78,28 @@ export default function SearchScreen({navigation}) {
               cancer: true,
               BLM: false,
               mental_health: false,
+              covid_19: false
             }
           }
+        case 'COVID-19':
+          if (prevState.covid_19){
+            setCurrentCause('');
+            return {
+              ...prevState,
+              covid_19: false
+            };
+          }
+          else{
+            setCurrentCause('COVID-19');
+            return {
+              ...prevState,
+              covid_19: true,
+              cancer: false,
+              BLM: false,
+              mental_health: false
+            }
+          }
+
         default:
           return prevState;
       }
@@ -85,7 +107,8 @@ export default function SearchScreen({navigation}) {
     {
       BLM: false,
       mental_health: false,
-      cancer: false
+      cancer: false,
+      covid_19: false
     },
   );
 
@@ -301,7 +324,7 @@ export default function SearchScreen({navigation}) {
           height: 100,
           justifyContent: 'center'
         }}>
-        <ActivityIndicator size="large" color={"blue"}/>
+        <ActivityIndicator size="small" color="pink"/>
       </View>
     );
   };
@@ -337,7 +360,7 @@ export default function SearchScreen({navigation}) {
   )
 
   // Render return
-  return !loading ? (
+  return  (
     <View style={styles.MainContainer}>
       <View style={{alignItems: 'center', justifyContent: 'center'}}>
         <Text style={styles.sendASmile}>Send A Smile</Text>
@@ -393,6 +416,13 @@ export default function SearchScreen({navigation}) {
               checked={filterOption["cancer"]}
               onPress={() => filterDispatch({type:'Cancer'})}
           />
+          <CheckBox
+              title="COVID-19"
+              checkedIcon="dot-circle-o"
+              uncheckedIcon="circle-o"
+              checked={filterOption["covid_19"]}
+              onPress={() => filterDispatch({type:'COVID-19'})}
+          />
         </View>
       </Overlay>
       <Overlay
@@ -416,30 +446,32 @@ export default function SearchScreen({navigation}) {
           />
         </View>
       </Overlay>
-      <View style={{flex:1,alignItems:'center',justifyContent:'center',width:300}}>
-        <FlatList
-            data={stores}
-            renderItem={_renderItem}
-            onEndReached={_handleLoadMore}
-            onEndReachedThreshold={0.5}
-            keyExtractor={_keyExtractor}
-            initialNumToRender={6}
-            ListFooterComponent={_renderFooter}
-            getItemLayout={(data, index) => (
-                {length: 150, offset: 150 * index, index}
-            )}
-        />
-      </View>
+      {
+        !loading ?
+            <View style={{flex:1,alignItems:'center',justifyContent:'center',width:300}}>
+              <FlatList
+                  data={stores}
+                  renderItem={_renderItem}
+                  onEndReached={_handleLoadMore}
+                  onEndReachedThreshold={0.5}
+                  keyExtractor={_keyExtractor}
+                  initialNumToRender={5}
+                  ListFooterComponent={_renderFooter}
+                  getItemLayout={(data, index) => (
+                      {length: 150, offset: 150 * index, index}
+                  )}
+              />
+            </View>
+            :
+            <View style={{flex:1,alignItems:'center',justifyContent:'center',alignSelf: 'stretch'}}>
+              <ActivityIndicator color="pink" size="small"/>
+              <Text>Loading</Text>
 
+            </View>
 
-
+      }
     </View>
-  ) : (
-    <View>
-      <Text style={{alignSelf: 'center'}}>Loading Stores</Text>
-      <ActivityIndicator />
-    </View>
-  );
+  )
 }
 const styles = StyleSheet.create({
   MainContainer: {
