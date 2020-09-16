@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 type Store
   @model(subscriptions: null)
   @key(
@@ -18,7 +17,6 @@ type Store
   )
 {
   id: ID!
-<<<<<<< HEAD
   goodsType: String
   storeName: String
   stateLocation: String
@@ -28,32 +26,8 @@ type Store
   bio: String
   image: String
   featured: String
-=======
-type Blog @model {
-  id: ID!
-  name: String!
-  posts: [Post] @connection(keyName: "byBlog", fields: ["id"])
->>>>>>> chen
 }
 
-type Post @model @key(name: "byBlog", fields: ["blogID"]) {
-  id: ID!
-  title: String!
-  blogID: ID!
-  blog: Blog @connection(fields: ["blogID"])
-  comments: [Comment] @connection(keyName: "byPost", fields: ["id"])
-=======
-  goodsType: String!
-  storeName: String!
-  stateLocation: String!
-  website: String!
-  cause: String!
-  PricePoint: String!
-  bio: String!
-  image: String!
-  featured: String!
-  listAll: String!
-}
 
 type urlClicked @model(subscriptions: null)
   @key(
@@ -67,12 +41,6 @@ type urlClicked @model(subscriptions: null)
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   store: Store @connection(fields: ["storeID"])
->>>>>>> alex
 }
 
-type Comment @model @key(name: "byPost", fields: ["postID", "content"]) {
-  id: ID!
-  postID: ID!
-  post: Post @connection(fields: ["postID"])
-  content: String!
-}
+
