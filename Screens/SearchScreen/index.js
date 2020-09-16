@@ -422,6 +422,7 @@ export default function SearchScreen({navigation}) {
             overlayStyle={styles.filterMenu}
             isVisible={filterVisible}>
           <View>
+              <Text>Filter By Cause</Text>
             <CheckBox
                 title="BLM"
                 checkedIcon="dot-circle-o"
@@ -457,6 +458,7 @@ export default function SearchScreen({navigation}) {
             onBackdropPress={toggleSortOverlay}
             overlayStyle={styles.sortMenu}>
           <View>
+              <Text>Sort By Price</Text>
             <CheckBox
                 checked={sortOption.high_to_low}
                 title="Prices High to Low"
