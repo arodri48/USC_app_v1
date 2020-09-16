@@ -9,27 +9,48 @@ export default function WelcomeScreen({navigation}) {
   const {dispatch} = useContext(AuthContext);
   return (
     <View style={styles.MainContainer}>
-      <Text style={styles.sendASmile}>Send A Smile</Text>
-      <Text style={styles.text}>A UniSelfCare Program</Text>
-      <FastImage source={ImageList.Smile} />
-      <Text style={styles.text}>
-        Covid 19 has changed the way of{'\n'} life for many people. We have
-        {'\n'}
-        suffered as a result and are still on{'\n'} our way to normalcy. Let's
-        help{'\n'}
-        out our local businesses and take{'\n'} care of ourselves and loved
-        ones.
-      </Text>
-      <Button
-        title="Begin"
-        onPress={() => dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'})}
-        buttonStyle={styles.buttonStyle}
-        titleStyle={styles.buttonText}
-      />
+      <View style={{alignItems: 'center', justifyContent: 'center',  paddingTop: 100}}>
+        <Text style={styles.sendASmile}>Send A Smile</Text>
+        <Text style={styles.usc_text}>A UniSelfCare Program</Text>
+          <View style={{width: '100%',
+              height: 0,
+              justifyContent: 'center',
+              alignItems: 'center',
+          }}>
+              <FastImage
+                  source={ImageList.Smile}
+                  style={{alignSelf: 'center',
+                      height: 400,
+                      width: 800,
+                      marginLeft: 30,
+                      marginBottom: 0,
+
+                  }}
+                  resizeMode={FastImage.resizeMode.contain}
+              />
+          </View>
+      </View>
+        <View style={{alignItems: 'center', justifyContent: 'space-around',  width: '100%', height: 230}}>
+            <Text style={styles.text}>
+                Covid 19 has changed the way of{'\n'} life for many people. We have
+                {'\n'}
+                suffered as a result and are still on{'\n'} our way to normalcy. Let's
+                help{'\n'}
+                out our local businesses and take{'\n'} care of ourselves and loved
+                ones.
+            </Text>
+            <Button
+                title="Begin"
+                onPress={() => dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'})}
+                buttonStyle={styles.buttonStyle}
+                titleStyle={styles.buttonText}
+            />
+        </View>
+
       <View style={styles.bottomView}>
         <FastImage
-          source={ImageList.Hands}
-          style={{width: '100%', height: 150}}
+          source={ImageList.Hands_cropped}
+          style={{width: '100%', height: 130, }}
           resizeMode={FastImage.resizeMode.contain}
         />
       </View>
@@ -41,13 +62,19 @@ const styles = StyleSheet.create({
     color: '#FCC6DF',
     fontSize: 45,
     fontWeight: 'bold',
-    paddingBottom: 45,
     fontFamily: 'Raleway-SemiBold',
+      paddingBottom: 0
   },
+    usc_text: {
+        color: '#535358',
+        fontSize: 14,
+        marginTop: -10
+    },
   text: {
     color: '#535358',
-    fontSize: 25,
+    fontSize: 18,
     paddingTop: 10,
+      textAlign: 'center'
   },
   buttonStyle: {
     borderRadius: 40,
@@ -62,15 +89,14 @@ const styles = StyleSheet.create({
   MainContainer: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     backgroundColor: 'white',
   },
   bottomView: {
     width: '100%',
     height: 150,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    position: 'absolute',
-    bottom: 0,
+
   },
 });

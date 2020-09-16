@@ -1,7 +1,7 @@
 import React, {useEffect, useReducer, useRef, useState} from 'react';
 import {ActivityIndicator, Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {API, graphqlOperation} from 'aws-amplify';
-import {listAllStoresByPrice, listStores, storesByPrice} from '../../src/graphql/queries';
+import {listAllStoresByPrice} from '../../src/graphql/queries';
 import FastImage from 'react-native-fast-image';
 import {Button, CheckBox, Overlay} from 'react-native-elements';
 import ImageList from 'USC_app_v1/media/ImageStore';
@@ -27,66 +27,89 @@ export default function SearchScreen({navigation}) {
   const [currentCause, setCurrentCause] = useState('');
   // Hooks for filter options
   const [filterOption, filterDispatch] = useReducer(
-    (prevState, action) => {
-      switch (action.type) {
-        case 'BLM':
-          if (prevState.BLM) {
-            setCurrentCause('');
-            return {
-              ...prevState,
-              BLM: false,
-            };
-          } else {
-            setCurrentCause('BLM');
-            return {
-              ...prevState,
-              mental_health: false,
-              BLM: true,
-              cancer: false
-            };
-          }
-        case 'Mental Health':
-          if (prevState.mental_health) {
-            setCurrentCause('');
-            return {
-              ...prevState,
-              mental_health: false,
-            };
-          } else {
-            setCurrentCause('Mental Health');
-            return {
-              ...prevState,
-              mental_health: true,
-              BLM: false,
-              cancer : false
-            };
-          }
-        case 'Cancer':
-          if (prevState.cancer){
-            setCurrentCause('');
-            return{
-              ...prevState,
-              cancer: false,
-            };
-          }
-          else {
-            setCurrentCause('Cancer');
-            return {
-              ...prevState,
-              cancer: true,
-              BLM: false,
-              mental_health: false,
+      (prevState, action) => {
+        switch (action.type) {
+          case 'BLM':
+            if (prevState.BLM) {
+              setCurrentCause('');
+              return {
+                ...prevState,
+                BLM: false,
+              };
+            } else {
+              setCurrentCause('BLM');
+              return {
+                ...prevState,
+                mental_health: false,
+                BLM: true,
+                cancer: false,
+                covid_19: false
+              };
             }
-          }
-        default:
-          return prevState;
-      }
-    },
-    {
-      BLM: false,
-      mental_health: false,
-      cancer: false
-    },
+          case 'Mental Health':
+            if (prevState.mental_health) {
+              setCurrentCause('');
+              return {
+                ...prevState,
+                mental_health: false,
+              };
+            } else {
+              setCurrentCause('Mental Health');
+              return {
+                ...prevState,
+                mental_health: true,
+                BLM: false,
+                cancer : false,
+                covid_19: false
+              };
+            }
+          case 'Cancer':
+            if (prevState.cancer){
+              setCurrentCause('');
+              return{
+                ...prevState,
+                cancer: false,
+              };
+            }
+            else {
+              setCurrentCause('Cancer');
+              return {
+                ...prevState,
+                cancer: true,
+                BLM: false,
+                mental_health: false,
+                covid_19: false
+              }
+            }
+          case 'COVID-19':
+            if (prevState.covid_19){
+              setCurrentCause('');
+              return {
+                ...prevState,
+                covid_19: false
+              };
+            }
+            else{
+              setCurrentCause('COVID-19');
+              return {
+                ...prevState,
+                covid_19: true,
+                cancer: false,
+                BLM: false,
+                mental_health: false
+              }
+            }
+
+          default:
+            return prevState;
+        }
+      },
+      {
+        BLM: false,
+        mental_health: false,
+        cancer: false,
+        covid_19: false
+      },
   );
 
   // Hooks for sort values
@@ -101,48 +124,48 @@ export default function SearchScreen({navigation}) {
   };
   const [currentSort, setCurrentSort] = useState('ASC');
   const [sortOption, sortDispatch] = useReducer(
-    (prevState, action) => {
-      switch (action.type) {
-        case 'HIGH_TO_LOW':
-          if (prevState.high_to_low) {
-            setCurrentSort('ASC');
-            return {
-              ...prevState,
-              high_to_low: false,
-              low_to_high: true,
-            };
-          } else {
-            setCurrentSort('DESC');
-            return {
-              ...prevState,
-              high_to_low: true,
-              low_to_high: false,
-            };
-          }
-        case 'LOW_TO_HIGH':
-          if (prevState.low_to_high) {
-            setCurrentSort('DESC');
-            return {
-              ...prevState,
-              high_to_low: true,
-              low_to_high: false,
-            };
-          } else {
-            setCurrentSort('ASC');
-            return {
-              ...prevState,
-              high_to_low: false,
-              low_to_high: true,
-            };
-          }
-        default:
-          return prevState;
-      }
-    },
-    {
-      high_to_low: false,
-      low_to_high: true,
-    },
+      (prevState, action) => {
+        switch (action.type) {
+          case 'HIGH_TO_LOW':
+            if (prevState.high_to_low) {
+              setCurrentSort('ASC');
+              return {
+                ...prevState,
+                high_to_low: false,
+                low_to_high: true,
+              };
+            } else {
+              setCurrentSort('DESC');
+              return {
+                ...prevState,
+                high_to_low: true,
+                low_to_high: false,
+              };
+            }
+          case 'LOW_TO_HIGH':
+            if (prevState.low_to_high) {
+              setCurrentSort('DESC');
+              return {
+                ...prevState,
+                high_to_low: true,
+                low_to_high: false,
+              };
+            } else {
+              setCurrentSort('ASC');
+              return {
+                ...prevState,
+                high_to_low: false,
+                low_to_high: true,
+              };
+            }
+          default:
+            return prevState;
+        }
+      },
+      {
+        high_to_low: false,
+        low_to_high: true,
+      },
   );
 
   // Hooks for managing store list
@@ -150,7 +173,7 @@ export default function SearchScreen({navigation}) {
   const [loadingMore, setLoadingMore] = useState(false);
   const [loading, setLoading] = useState(true);
   const pageTokenRef = useRef();
- // const storesRef = useRef([]);
+  // const storesRef = useRef([]);
   const [stores, setStores] = useState([]);
   //Initial useEffect to load in data
   useEffect(() => {
@@ -268,7 +291,7 @@ export default function SearchScreen({navigation}) {
         );
       }
       return storeData;
-      }
+    }
 
     if (refresh) {
       setLoading(true);
@@ -294,15 +317,15 @@ export default function SearchScreen({navigation}) {
       return null;
     }
     return (
-      <View
-        style={{
-          position: 'relative',
-          width: width,
-          height: 100,
-          justifyContent: 'center'
-        }}>
-        <ActivityIndicator size="large" color={"blue"}/>
-      </View>
+        <View
+            style={{
+              position: 'relative',
+              width: width,
+              height: 100,
+              justifyContent: 'center'
+            }}>
+          <ActivityIndicator size="small" color="pink"/>
+        </View>
     );
   };
 
@@ -337,113 +360,118 @@ export default function SearchScreen({navigation}) {
   )
 
   // Render return
-  return !loading ? (
-    <View style={styles.MainContainer}>
-      <View style={{alignItems: 'center', justifyContent: 'center'}}>
-        <Text style={styles.sendASmile}>Send A Smile</Text>
-        <Text style={styles.text}>A UniSelfCare Program</Text>
-      </View>
-      <View style={{width: '100%',
-        height: 0,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor : 'blue'
+  return  (
+      <View style={styles.MainContainer}>
+        <View style={{alignItems: 'center', justifyContent: 'center'}}>
+          <Text style={styles.sendASmile}>Send A Smile</Text>
+          <Text style={styles.text}>A UniSelfCare Program</Text>
+        </View>
+        <View style={{width: '100%',
+          height: 0,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor : 'blue'
         }}>
-        <FastImage
-            source={ImageList.Smile}
-            style={{alignSelf: 'center',
-            height: 300,
-            width: 400,
-              marginLeft: 20,
-              marginBottom: 10,
-            }}
-            resizeMode={FastImage.resizeMode.contain}
-        />
-      </View>
-
-      <View style={styles.FilterSortMenuContainer}>
-        <Button title="Filter" onPress={toggleFilterOverlay} buttonStyle={{backgroundColor : 'transparent'}} titleStyle={{color : 'black'}}/>
-
-        <Button title="Sort" onPress={toggleSortOverlay} buttonStyle={{backgroundColor : 'transparent'}} titleStyle={{color : 'black'}}/>
-      </View>
-      <Overlay
-          onBackdropPress={toggleFilterOverlay}
-          overlayStyle={styles.filterMenu}
-          isVisible={filterVisible}
-      >
-        <View>
-          <CheckBox
-              title="BLM"
-              checkedIcon="dot-circle-o"
-              uncheckedIcon="circle-o"
-              checked={filterOption["BLM"]}
-              onPress={() => filterDispatch({type:'BLM'})}
-          />
-          <CheckBox
-              title="Mental Health"
-              checkedIcon="dot-circle-o"
-              uncheckedIcon="circle-o"
-              checked={filterOption["mental_health"]}
-              onPress={() => filterDispatch({type:'Mental Health'})}
-          />
-          <CheckBox
-              title="Cancer"
-              checkedIcon="dot-circle-o"
-              uncheckedIcon="circle-o"
-              checked={filterOption["cancer"]}
-              onPress={() => filterDispatch({type:'Cancer'})}
+          <FastImage
+              source={ImageList.Smile}
+              style={{alignSelf: 'center',
+                height: 300,
+                width: 400,
+                marginLeft: 20,
+                marginBottom: 10,
+              }}
+              resizeMode={FastImage.resizeMode.contain}
           />
         </View>
-      </Overlay>
-      <Overlay
-          isVisible={sortVisible}
-          onBackdropPress={toggleSortOverlay}
-          overlayStyle={styles.sortMenu}>
-        <View>
-          <CheckBox
-              checked={sortOption.high_to_low}
-              title='Prices High to Low'
-              onPress={() => sortDispatch({type:'HIGH_TO_LOW'})}
-              checkedIcon="dot-circle-o"
-              uncheckedIcon="circle-o"
-          />
-          <CheckBox
-              checked={sortOption.low_to_high}
-              title='Prices Low to High'
-              onPress={() => sortDispatch({type:'LOW_TO_HIGH'})}
-              checkedIcon="dot-circle-o"
-              uncheckedIcon="circle-o"
-          />
+
+        <View style={styles.FilterSortMenuContainer}>
+          <Button title="Filter" onPress={toggleFilterOverlay} buttonStyle={{backgroundColor : 'transparent'}} titleStyle={{color : 'black'}}/>
+
+          <Button title="Sort" onPress={toggleSortOverlay} buttonStyle={{backgroundColor : 'transparent'}} titleStyle={{color : 'black'}}/>
         </View>
-      </Overlay>
-<<<<<<< HEAD
-      <View style={{flex:1,alignItems:'center',justifyContent:'center', backgroundColor: 'blue', width: 300}}>
-=======
-      <View style={{flex:1,alignItems:'center',justifyContent:'center',width:300}}>
->>>>>>> alex
-        <FlatList
-            data={stores}
-            renderItem={_renderItem}
-            onEndReached={_handleLoadMore}
-            onEndReachedThreshold={0.5}
-            keyExtractor={_keyExtractor}
-            initialNumToRender={6}
-            ListFooterComponent={_renderFooter}
-            getItemLayout={(data, index) => (
-                {length: 150, offset: 150 * index, index}
-            )}
-        />
+        <Overlay
+            onBackdropPress={toggleFilterOverlay}
+            overlayStyle={styles.filterMenu}
+            isVisible={filterVisible}
+        >
+          <View>
+            <CheckBox
+                title="BLM"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={filterOption["BLM"]}
+                onPress={() => filterDispatch({type:'BLM'})}
+            />
+            <CheckBox
+                title="Mental Health"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={filterOption["mental_health"]}
+                onPress={() => filterDispatch({type:'Mental Health'})}
+            />
+            <CheckBox
+                title="Cancer"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={filterOption["cancer"]}
+                onPress={() => filterDispatch({type:'Cancer'})}
+            />
+            <CheckBox
+                title="COVID-19"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={filterOption["covid_19"]}
+                onPress={() => filterDispatch({type:'COVID-19'})}
+            />
+          </View>
+        </Overlay>
+        <Overlay
+            isVisible={sortVisible}
+            onBackdropPress={toggleSortOverlay}
+            overlayStyle={styles.sortMenu}>
+          <View>
+            <CheckBox
+                checked={sortOption.high_to_low}
+                title='Prices High to Low'
+                onPress={() => sortDispatch({type:'HIGH_TO_LOW'})}
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+            />
+            <CheckBox
+                checked={sortOption.low_to_high}
+                title='Prices Low to High'
+                onPress={() => sortDispatch({type:'LOW_TO_HIGH'})}
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+            />
+          </View>
+        </Overlay>
+        {
+          !loading ?
+              <View style={{flex:1,alignItems:'center',justifyContent:'center',width:300}}>
+                <FlatList
+                    data={stores}
+                    renderItem={_renderItem}
+                    onEndReached={_handleLoadMore}
+                    onEndReachedThreshold={0.5}
+                    keyExtractor={_keyExtractor}
+                    initialNumToRender={5}
+                    ListFooterComponent={_renderFooter}
+                    getItemLayout={(data, index) => (
+                        {length: 150, offset: 150 * index, index}
+                    )}
+                />
+              </View>
+              :
+              <View style={{flex:1,alignItems:'center',justifyContent:'center',alignSelf: 'stretch'}}>
+                <ActivityIndicator color="pink" size="small"/>
+                <Text>Loading</Text>
+
+              </View>
+
+        }
       </View>
-
-
-
-    </View>
-  ) : (
-    <View>
-      <Text style={{alignSelf: 'center'}}>Loading Stores</Text>
-      <ActivityIndicator />
-    </View>
-  );
+  )
 }
 const styles = StyleSheet.create({
   MainContainer: {
