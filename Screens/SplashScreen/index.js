@@ -1,63 +1,45 @@
-import React, {useContext} from 'react';
-import {View, Text, StyleSheet, Dimensions} from 'react-native';
+import React from 'react';
+import {View, Text, StyleSheet, ActivityIndicator} from 'react-native';
 
 import FastImage from 'react-native-fast-image';
 import ImageList from '../../media/ImageStore';
 
 
-const {width, height} = Dimensions.get('window');
+export default function SplashScreen({navigation}) {
+    return (
+        <View style={styles.MainContainer}>
+            <View style={styles.txtContainer}>
+                <ActivityIndicator color='pink' size="large"/>
+                <Text> Please Wait...</Text>
+            </View>
+            <View style={styles.imageContainer}>
+                <FastImage
+                    source={ImageList.Hands_cropped}
+                    style={{width: '100%', height: 130, }}
+                    resizeMode={FastImage.resizeMode.contain}
+                />
+            </View>
 
-export default function SplashScreen({navigation}){
-  return(
-      <View style={styles.MainContainer}>
-          <View style={styles.txtContainer}>
-            <Text style = {styles.txt}>  Please Wait...</Text>
-          </View>
-          <View style={styles.image}>
-            <FastImage
-              style={{width: '100%', height: 660}}
-              source={ImageList.HandsCenter}
-              resizeMode={FastImage.resizeMode.stretch}
-            />
-          </View>
-      </View>
-  )
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
-
     MainContainer: {
-        flex:1,
-//        position:'absolute',
+        flex: 1,
         alignItems: 'center',
-//        justifyContent: 'center',
         backgroundColor: 'white',
-        width: width,
-        height: height,
     },
-    txtContainter:{
-        flex:1,
-        marginTop:40,
-        height:30,
-        width:100,
-        justifyContent:'center',
-        alignItems:'center',
-        bottom:5,
+    txtContainer: {
+        height: '50%',
+        width: '100%',
+        justifyContent: 'flex-end',
+        alignItems: 'center'
     },
-    txt:{
-      justifyContent:'center',
-      alignItems:'center',
-      marginTop:50,
-      height:20,
-      width:100,
-    },
-    image:{
-      position:'absolute',
-      bottom:0,
-      alignItems:'center',
-      width:width,
-      height:650,
-      marginBottom:5,
+    imageContainer:{
+        height: '50%',
+        width: '100%',
+        justifyContent: 'flex-end',
+        alignItems: 'center'
     }
-
 });

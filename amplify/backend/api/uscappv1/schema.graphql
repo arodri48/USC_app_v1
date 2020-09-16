@@ -17,17 +17,17 @@ type Store
   )
 {
   id: ID!
-  goodsType: String
-  storeName: String
-  stateLocation: String
-  website: String
-  cause: String
-  PricePoint: String
-  bio: String
-  image: String
-  featured: String
+  goodsType: String!
+  storeName: String!
+  stateLocation: String!
+  website: String!
+  cause: String!
+  PricePoint: String!
+  bio: String!
+  image: String!
+  featured: String!
+  listAll: String!
 }
-
 
 type urlClicked @model(subscriptions: null)
   @key(

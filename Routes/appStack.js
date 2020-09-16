@@ -15,8 +15,16 @@ const RootStack = createStackNavigator();
 function Root() {
   return (
     <RootStack.Navigator>
-      <RootStack.Screen name="SearchScreen" component={SearchScreen} options={{headerShown: false}}/>
-      <RootStack.Screen name="StoreScreen" component={StoreScreen} options={{headerShown: false}}/>
+      <RootStack.Screen
+        name="SearchScreen"
+        component={SearchScreen}
+        options={{headerShown: false}}
+      />
+      <RootStack.Screen
+        name="StoreScreen"
+        component={StoreScreen}
+        options={{headerShown: false}}
+      />
     </RootStack.Navigator>
   );
 }
@@ -61,4 +69,6 @@ export default function AppStack() {
       </MainStack.Navigator>
     </NavigationContainer>
   );
+
+
 }
