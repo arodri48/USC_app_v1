@@ -1,5 +1,13 @@
 import React, {useEffect, useReducer, useRef, useState} from 'react';
-import {ActivityIndicator, Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Dimensions,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {API, graphqlOperation} from 'aws-amplify';
 import {listAllStoresByPrice} from '../../src/graphql/queries';
 import FastImage from 'react-native-fast-image';
@@ -9,11 +17,6 @@ import ImageList from 'USC_app_v1/media/ImageStore';
 const {width} = Dimensions.get('window');
 
 export default function SearchScreen({navigation}) {
-
-
-
-
-
   // Hooks for filter values
   const [filterVisible, setFilterVisible] = useState(false);
   const causeRef = useRef('');
@@ -43,7 +46,7 @@ export default function SearchScreen({navigation}) {
                 mental_health: false,
                 BLM: true,
                 cancer: false,
-                covid_19: false
+                covid_19: false,
               };
             }
           case 'Mental Health':
@@ -59,45 +62,43 @@ export default function SearchScreen({navigation}) {
                 ...prevState,
                 mental_health: true,
                 BLM: false,
-                cancer : false,
-                covid_19: false
+                cancer: false,
+                covid_19: false,
               };
             }
           case 'Cancer':
-            if (prevState.cancer){
+            if (prevState.cancer) {
               setCurrentCause('');
-              return{
+              return {
                 ...prevState,
                 cancer: false,
               };
-            }
-            else {
+            } else {
               setCurrentCause('Cancer');
               return {
                 ...prevState,
                 cancer: true,
                 BLM: false,
                 mental_health: false,
-                covid_19: false
-              }
+                covid_19: false,
+              };
             }
           case 'COVID-19':
-            if (prevState.covid_19){
+            if (prevState.covid_19) {
               setCurrentCause('');
               return {
                 ...prevState,
-                covid_19: false
+                covid_19: false,
               };
-            }
-            else{
+            } else {
               setCurrentCause('COVID-19');
               return {
                 ...prevState,
                 covid_19: true,
                 cancer: false,
                 BLM: false,
-                mental_health: false
-              }
+                mental_health: false,
+              };
             }
 
           default:
@@ -108,13 +109,13 @@ export default function SearchScreen({navigation}) {
         BLM: false,
         mental_health: false,
         cancer: false,
-        covid_19: false
+        covid_19: false,
       },
   );
 
   // Hooks for sort values
   const [sortVisible, setSortVisible] = useState(false);
-  const sortRef = useRef("ASC");
+  const sortRef = useRef('ASC');
   const toggleSortOverlay = () => {
     setSortVisible(!sortVisible);
     if (sortRef.current !== currentSort) {
@@ -179,115 +180,115 @@ export default function SearchScreen({navigation}) {
   useEffect(() => {
     async function fetchStores() {
       let storeData;
-      if (causeRef.current !== ''){
+      if (causeRef.current !== '') {
         storeData = API.graphql(
             graphqlOperation(listAllStoresByPrice, {
               limit: 15,
-              listAll: "Y",
+              listAll: 'Y',
               sortDirection: sortRef.current,
               filter: {
                 cause: {
-                  eq: causeRef.current
-                }
-              }
-            })
+                  eq: causeRef.current,
+                },
+              },
+            }),
         );
-      }
-      else{
+      } else {
         storeData = API.graphql(
             graphqlOperation(listAllStoresByPrice, {
               limit: 15,
-              listAll: "Y",
-              sortDirection: sortRef.current
-            })
+              listAll: 'Y',
+              sortDirection: sortRef.current,
+            }),
         );
       }
       return storeData;
     }
-    fetchStores().then((storeData) => {
-      pageTokenRef.current = storeData.data.listAllStoresByPrice.nextToken;
-      setStores(storeData.data.listAllStoresByPrice.items);
-      setLoading(false);
-    }).catch((err) => {
-      console.log(err);
-    });
+    fetchStores()
+        .then((storeData) => {
+          pageTokenRef.current = storeData.data.listAllStoresByPrice.nextToken;
+          setStores(storeData.data.listAllStoresByPrice.items);
+          setLoading(false);
+        })
+        .catch((err) => {
+          //console.log(err);
+        });
   }, []);
 
   // useEffect for loading more
   useEffect(() => {
     async function fetchStores() {
       let storeData;
-      if (causeRef.current !== ''){
+      if (causeRef.current !== '') {
         storeData = API.graphql(
             graphqlOperation(listAllStoresByPrice, {
               nextToken: pageTokenRef.current,
               limit: 15,
-              listAll: "Y",
+              listAll: 'Y',
               sortDirection: sortRef.current,
               filter: {
                 cause: {
-                  eq: causeRef.current
-                }
-              }
-            })
+                  eq: causeRef.current,
+                },
+              },
+            }),
         );
-      }
-      else{
+      } else {
         storeData = API.graphql(
             graphqlOperation(listAllStoresByPrice, {
               nextToken: pageTokenRef.current,
               limit: 15,
-              listAll: "Y",
-              sortDirection: sortRef.current
-            })
+              listAll: 'Y',
+              sortDirection: sortRef.current,
+            }),
         );
       }
       return storeData;
     }
 
     if (loadingMore) {
-      console.log("this ran")
-      fetchStores().then((storeData) => {
-        console.log(storeData);
-        pageTokenRef.current = storeData.data.listAllStoresByPrice.nextToken;
-        console.log(pageTokenRef.current);
-        const newStores = storeData.data.listAllStoresByPrice.items;
-        console.log(newStores);
-        setStores( [...stores, ...newStores]);
-        setLoading(false);
-        setLoadingMore(false);
-      }).catch((err) => {
-        console.log(err);
-      });
+      //console.log('this ran');
+      fetchStores()
+          .then((storeData) => {
+            //console.log(storeData);
+            pageTokenRef.current = storeData.data.listAllStoresByPrice.nextToken;
+            //console.log(pageTokenRef.current);
+            const newStores = storeData.data.listAllStoresByPrice.items;
+            //console.log(newStores);
+            setStores([...stores, ...newStores]);
+            setLoading(false);
+            setLoadingMore(false);
+          })
+          .catch((err) => {
+            //console.log(err);
+          });
     }
   }, [loadingMore, pageTokenRef]); // Functions called upon by render
-
 
   // useEffect function to do a new query once new options are selected (will run when a menu closes, since refresh will be set to true)
   useEffect(() => {
     async function fetchStores() {
       let storeData;
-      if (causeRef.current !== ''){
+      if (causeRef.current !== '') {
         storeData = API.graphql(
             graphqlOperation(listAllStoresByPrice, {
               limit: 15,
-              listAll: "Y",
+              listAll: 'Y',
               sortDirection: sortRef.current,
               filter: {
                 cause: {
-                  eq: causeRef.current
-                }
-              }
-            })
+                  eq: causeRef.current,
+                },
+              },
+            }),
         );
-      }
-      else{
+      } else {
         storeData = API.graphql(
             graphqlOperation(listAllStoresByPrice, {
               limit: 15,
-              listAll: "Y",
-              sortDirection: sortRef.current
-            })
+              listAll: 'Y',
+              sortDirection: sortRef.current,
+            }),
         );
       }
       return storeData;
@@ -295,22 +296,20 @@ export default function SearchScreen({navigation}) {
 
     if (refresh) {
       setLoading(true);
-      fetchStores().then((storeData) => {
-        pageTokenRef.current = storeData.data.listAllStoresByPrice.nextToken;
-        setStores(storeData.data.listAllStoresByPrice.items);
-        setLoading(false);
-        setRefresh(false);
-      }).catch((err) => {
-        console.log(err);
-      });
+      fetchStores()
+          .then((storeData) => {
+            pageTokenRef.current = storeData.data.listAllStoresByPrice.nextToken;
+            setStores(storeData.data.listAllStoresByPrice.items);
+            setLoading(false);
+            setRefresh(false);
+          })
+          .catch((err) => {
+            //console.log(err);
+          });
     }
   }, [refresh, pageTokenRef]);
 
-
-
-
   const _keyExtractor = (obj) => obj.id.toString();
-
 
   const _renderFooter = () => {
     if (!loadingMore) {
@@ -322,59 +321,78 @@ export default function SearchScreen({navigation}) {
               position: 'relative',
               width: width,
               height: 100,
-              justifyContent: 'center'
+              justifyContent: 'center',
             }}>
-          <ActivityIndicator size="small" color="pink"/>
+          <ActivityIndicator size="small" color="pink" />
         </View>
     );
   };
 
   const _handleLoadMore = () => {
-    if ((pageTokenRef.current !== null) && !loadingMore){
-      console.log("Loading more");
+    if (pageTokenRef.current !== null && !loadingMore) {
+      //console.log('Loading more');
       setLoadingMore(true);
-
     }
   };
 
   const _renderItem = ({item}) => (
       <TouchableOpacity
-          style={{backgroundColor: 'pink', width:300, height:150, marginBottom: 20, alignItems:'center', alignContent:'center', justifyContent:'center', borderRadius: 30}}
-          onPress={() => {navigation.navigate("StoreScreen", item)}}
-      >
-        <View style={{flexDirection: 'row', width: 250, height: 120, alignItems: 'center', justifyContent: 'space-between'}}>
+          style={{
+            backgroundColor: 'pink',
+            width: 300,
+            height: 150,
+            marginBottom: 20,
+            alignItems: 'center',
+            alignContent: 'center',
+            justifyContent: 'center',
+            borderRadius: 30,
+          }}
+          onPress={() => {
+            navigation.navigate('StoreScreen', item);
+          }}>
+        <View
+            style={{
+              flexDirection: 'row',
+              width: 250,
+              height: 120,
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
           <FastImage
               style={{width: 100, height: 100}}
               source={{
-                uri: item["image"],
+                uri: item.image,
               }}
               resizeMode={FastImage.resizeMode.contain}
           />
-          <View style={{justifyContent: 'space-between',width:120, height: 80}}>
-            <Text>{item["storeName"]}</Text>
-            <Text>{item["PricePoint"]}</Text>
-            <Text>{item["cause"]}</Text>
+          <View style={{justifyContent: 'space-between', width: 120, height: 80}}>
+            <Text>{item.storeName}</Text>
+            <Text>{item.PricePoint}</Text>
+            <Text>{item.cause}</Text>
           </View>
         </View>
       </TouchableOpacity>
-  )
+  );
 
   // Render return
-  return  (
+  return (
       <View style={styles.MainContainer}>
         <View style={{alignItems: 'center', justifyContent: 'center'}}>
           <Text style={styles.sendASmile}>Send A Smile</Text>
           <Text style={styles.text}>A UniSelfCare Program</Text>
         </View>
-        <View style={{width: '100%',
-          height: 0,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor : 'blue'
-        }}>
+        <View
+            style={{
+              width: '100%',
+              height: 0,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'blue',
+            }}>
           <FastImage
               source={ImageList.Smile}
-              style={{alignSelf: 'center',
+              style={{
+                alignSelf: 'center',
                 height: 300,
                 width: 400,
                 marginLeft: 20,
@@ -385,43 +403,52 @@ export default function SearchScreen({navigation}) {
         </View>
 
         <View style={styles.FilterSortMenuContainer}>
-          <Button title="Filter" onPress={toggleFilterOverlay} buttonStyle={{backgroundColor : 'transparent'}} titleStyle={{color : 'black'}}/>
+          <Button
+              title="Filter"
+              onPress={toggleFilterOverlay}
+              buttonStyle={{backgroundColor: 'transparent'}}
+              titleStyle={{color: 'black'}}
+          />
 
-          <Button title="Sort" onPress={toggleSortOverlay} buttonStyle={{backgroundColor : 'transparent'}} titleStyle={{color : 'black'}}/>
+          <Button
+              title="Sort"
+              onPress={toggleSortOverlay}
+              buttonStyle={{backgroundColor: 'transparent'}}
+              titleStyle={{color: 'black'}}
+          />
         </View>
         <Overlay
             onBackdropPress={toggleFilterOverlay}
             overlayStyle={styles.filterMenu}
-            isVisible={filterVisible}
-        >
+            isVisible={filterVisible}>
           <View>
             <CheckBox
                 title="BLM"
                 checkedIcon="dot-circle-o"
                 uncheckedIcon="circle-o"
-                checked={filterOption["BLM"]}
-                onPress={() => filterDispatch({type:'BLM'})}
+                checked={filterOption.BLM}
+                onPress={() => filterDispatch({type: 'BLM'})}
             />
             <CheckBox
                 title="Mental Health"
                 checkedIcon="dot-circle-o"
                 uncheckedIcon="circle-o"
-                checked={filterOption["mental_health"]}
-                onPress={() => filterDispatch({type:'Mental Health'})}
+                checked={filterOption.mental_health}
+                onPress={() => filterDispatch({type: 'Mental Health'})}
             />
             <CheckBox
                 title="Cancer"
                 checkedIcon="dot-circle-o"
                 uncheckedIcon="circle-o"
-                checked={filterOption["cancer"]}
-                onPress={() => filterDispatch({type:'Cancer'})}
+                checked={filterOption.cancer}
+                onPress={() => filterDispatch({type: 'Cancer'})}
             />
             <CheckBox
                 title="COVID-19"
                 checkedIcon="dot-circle-o"
                 uncheckedIcon="circle-o"
-                checked={filterOption["covid_19"]}
-                onPress={() => filterDispatch({type:'COVID-19'})}
+                checked={filterOption.covid_19}
+                onPress={() => filterDispatch({type: 'COVID-19'})}
             />
           </View>
         </Overlay>
@@ -432,46 +459,57 @@ export default function SearchScreen({navigation}) {
           <View>
             <CheckBox
                 checked={sortOption.high_to_low}
-                title='Prices High to Low'
-                onPress={() => sortDispatch({type:'HIGH_TO_LOW'})}
+                title="Prices High to Low"
+                onPress={() => sortDispatch({type: 'HIGH_TO_LOW'})}
                 checkedIcon="dot-circle-o"
                 uncheckedIcon="circle-o"
             />
             <CheckBox
                 checked={sortOption.low_to_high}
-                title='Prices Low to High'
-                onPress={() => sortDispatch({type:'LOW_TO_HIGH'})}
+                title="Prices Low to High"
+                onPress={() => sortDispatch({type: 'LOW_TO_HIGH'})}
                 checkedIcon="dot-circle-o"
                 uncheckedIcon="circle-o"
             />
           </View>
         </Overlay>
-        {
-          !loading ?
-              <View style={{flex:1,alignItems:'center',justifyContent:'center',width:300}}>
-                <FlatList
-                    data={stores}
-                    renderItem={_renderItem}
-                    onEndReached={_handleLoadMore}
-                    onEndReachedThreshold={0.5}
-                    keyExtractor={_keyExtractor}
-                    initialNumToRender={5}
-                    ListFooterComponent={_renderFooter}
-                    getItemLayout={(data, index) => (
-                        {length: 150, offset: 150 * index, index}
-                    )}
-                />
-              </View>
-              :
-              <View style={{flex:1,alignItems:'center',justifyContent:'center',alignSelf: 'stretch'}}>
-                <ActivityIndicator color="pink" size="small"/>
-                <Text>Loading</Text>
-
-              </View>
-
-        }
+        {!loading ? (
+            <View
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 300,
+                }}>
+              <FlatList
+                  data={stores}
+                  renderItem={_renderItem}
+                  onEndReached={_handleLoadMore}
+                  onEndReachedThreshold={0.5}
+                  keyExtractor={_keyExtractor}
+                  initialNumToRender={6}
+                  ListFooterComponent={_renderFooter}
+                  getItemLayout={(data, index) => ({
+                    length: 150,
+                    offset: 150 * index,
+                    index,
+                  })}
+              />
+            </View>
+        ) : (
+            <View
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  alignSelf: 'stretch',
+                }}>
+              <ActivityIndicator color="pink" size="small" />
+              <Text>Loading</Text>
+            </View>
+        )}
       </View>
-  )
+  );
 }
 const styles = StyleSheet.create({
   MainContainer: {
@@ -506,8 +544,7 @@ const styles = StyleSheet.create({
   text: {
     color: '#535358',
     fontSize: 12,
-    marginTop: -10
+    marginTop: -10,
   },
 });
 
-// TODO:  create objects , then test and restyle
