@@ -15,9 +15,9 @@ export default function SplashScreen({navigation}){
           </View>
           <View style={styles.image}>
             <FastImage
-              style={{width: '100%', height: 660}}
+              style={{width: '100%', height:'100%', paddingBottom:0, bottom:0}}
               source={ImageList.HandsCenter}
-              resizeMode={FastImage.resizeMode.stretch}
+              resizeMode={FastImage.resizeMode.contain}
             />
           </View>
       </View>
@@ -28,36 +28,39 @@ const styles = StyleSheet.create({
 
     MainContainer: {
         flex:1,
-//        position:'absolute',
         alignItems: 'center',
-//        justifyContent: 'center',
+  //      justifyContent: 'center',
         backgroundColor: 'white',
-        width: width,
-        height: height,
+  //      width: width,
+  //      height: height,
+  //      paddingBottom:0,
+  //      bottom:0,
     },
     txtContainter:{
-        flex:1,
-        marginTop:40,
+        position:'absolute',
         height:30,
-        width:100,
+        width:'100%',
         justifyContent:'center',
         alignItems:'center',
-        bottom:5,
+        paddingTop:100,
+        paddingBottom:0,
     },
     txt:{
       justifyContent:'center',
       alignItems:'center',
-      marginTop:50,
-      height:20,
+      marginTop:200,
+      height:30,
       width:100,
     },
     image:{
       position:'absolute',
       bottom:0,
+      justifyContent: 'center',
       alignItems:'center',
-      width:width,
-      height:650,
-      marginBottom:5,
+      width:'100%',
+      height:'50%',
+      paddingBottom:0,
+      bottom:0,
     }
 
 });
