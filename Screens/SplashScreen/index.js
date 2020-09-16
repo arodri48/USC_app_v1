@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {View, Text, StyleSheet, Dimensions} from 'react-native';
+import {View, Text, StyleSheet, Dimensions, ActivityIndicator} from 'react-native';
 
 import FastImage from 'react-native-fast-image';
 import ImageList from '../../media/ImageStore';
@@ -10,15 +10,17 @@ export default function SplashScreen({navigation}) {
   return (
     <View style={styles.MainContainer}>
       <View style={styles.txtContainer}>
+        <ActivityIndicator color='pink' size="large"/>
         <Text style={styles.txt}> Please Wait...</Text>
       </View>
-      <View style={styles.image}>
+      <View style={styles.imageContainer}>
         <FastImage
-          style={{width: '100%', height: '100%', paddingBottom: 0, bottom: 0}}
-          source={ImageList.HandsCenter}
-          resizeMode={FastImage.resizeMode.contain}
+            source={ImageList.Hands_cropped}
+            style={{width: '100%', height: 130, }}
+            resizeMode={FastImage.resizeMode.contain}
         />
       </View>
+
     </View>
   );
 }
@@ -27,36 +29,18 @@ const styles = StyleSheet.create({
   MainContainer: {
     flex: 1,
     alignItems: 'center',
-    //      justifyContent: 'center',
     backgroundColor: 'white',
-    //      width: width,
-    //      height: height,
-    //      paddingBottom:0,
-    //      bottom:0,
   },
-  txtContainter: {
-    position: 'absolute',
-    height: 30,
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: 100,
-    paddingBottom: 0,
-  },
-  txt: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 200,
-    height: 30,
-    width: 100,
-  },
-  image: {
-    position: 'absolute',
-    bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
+  txtContainer: {
     height: '50%',
-    paddingBottom: 0,
+    width: '100%',
+    justifyContent: 'flex-end',
+    alignItems: 'center'
   },
+  imageContainer:{
+    height: '50%',
+    width: '100%',
+    justifyContent: 'flex-end',
+    alignItems: 'center'
+  }
 });

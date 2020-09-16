@@ -43,7 +43,7 @@ export default function AppStack() {
     };
     bootstrapAsync();
   }, [dispatch]);
-  /*
+
   return (
     <NavigationContainer>
       <MainStack.Navigator>
@@ -69,16 +69,6 @@ export default function AppStack() {
       </MainStack.Navigator>
     </NavigationContainer>
   );
- */
-  return (
-    <NavigationContainer>
-      <MainStack.Navigator>
-        <MainStack.Screen
-          name="SplashScreen"
-          component={SplashScreen}
-          options={{headerShown: false}}
-        />
-      </MainStack.Navigator>
-    </NavigationContainer>
-  );
+
+
 }
