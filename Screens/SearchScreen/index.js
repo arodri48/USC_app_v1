@@ -487,7 +487,7 @@ export default function SearchScreen({navigation}) {
             onEndReached={_handleLoadMore}
             onEndReachedThreshold={0.5}
             keyExtractor={_keyExtractor}
-            initialNumToRender={5}
+            initialNumToRender={6}
             ListFooterComponent={_renderFooter}
             getItemLayout={(data, index) => ({
               length: 150,
