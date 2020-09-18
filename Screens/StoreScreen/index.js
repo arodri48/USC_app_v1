@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -9,7 +9,6 @@ import {
     ScrollView
 } from 'react-native';
 import {Button} from 'react-native-elements';
-import {InfoContext} from '../../Provider/InfoProvider';
 import {API, graphqlOperation} from 'aws-amplify';
 import {createUrlClicked} from 'USC_app_v1/src/graphql/mutations';
 
@@ -19,30 +18,18 @@ const {width, height} = Dimensions.get('window');
 
 
 export default function StoreScreen({route, navigation}) {
-  /*
-  const {
-    storeName,
-    storeID,
-    stateLocation,
-    bio,
-    price,
-    website,
-    goodsType,
-    image,
-    cause,
-  } = useContext(InfoContext);
-   */
-  const {storeName, id, stateLocation, bio, PricePoint, website, goodsType, image, cause} = route.params;
+
+  const {storeName, id, bio, PricePoint, website, goodsType, image} = route.params;
 
 
   const URL_Component = ({website_URL, storeID_code}) => {
     async function _handleURL() {
       // create graphQL entry for website and then open URL
       try {
-        const urlAPI = await API.graphql(
-          graphqlOperation(createUrlClicked, {input: {storeID: storeID_code, listAll: "Y"}}),
+        await API.graphql(
+            graphqlOperation(createUrlClicked, {input: {storeID: storeID_code, listAll: "Y"}}),
         );
-        //console.log(urlAPI);
+//console.log(urlAPI);
         await Linking.openURL(website_URL);
       } catch (err) {
         //console.log('Error opening URL');
@@ -54,32 +41,18 @@ export default function StoreScreen({route, navigation}) {
       </TouchableWithoutFeedback>
     );
   };
-  /*
-  const _handleExit = () => {
-    setStoreNameValue('');
-    setStoreIDValue('');
-    setStoreLocationValue('');
-    setBioValue('');
-    setPriceValue('');
-    setWebsiteValue('');
-    setGoodsTypeValue('');
-    setImageValue('');
-    setCauseValue('')
-    navigation.navigate('SearchScreen');
-  };
-  */
   return(
       <View style={styles.MainContainer}>
         <View style={styles.info}>
-          <Button
-              onPress={() => navigation.navigate('SearchScreen')}
-              title="X"
-              buttonStyle={styles.CancelButton}
-          />
-          <View style={{alignItems: 'center', justifyContent: 'center'}}>
-            <View style={{ justifyContent: 'center', alignItems: 'center'}}>
+            <Button
+                onPress={() => navigation.navigate('SearchScreen')}
+                title="X"
+                buttonStyle={styles.CancelButton}
+                containerStyle={styles.buttonContainer}
+            />
+            <View style={styles.imageContainer}>
               <FastImage
-                  style={{width: 300, height: 100}}
+                  style={styles.imageStyle}
                   source={{uri: image}}
                   resizeMode={FastImage.resizeMode.contain}
               />
@@ -87,22 +60,24 @@ export default function StoreScreen({route, navigation}) {
             <Text style={styles.ShopName}>{storeName} </Text>
             <Text style={styles.support}>{goodsType}</Text>
             <URL_Component website_URL={website} storeID_code={id} />
-
             <Text style={styles.origin}>{PricePoint} </Text>
-            <ScrollView style={{ width: '80%', height: '60%'}}>
+            <ScrollView style={styles.bioContainer}>
               <Text style={styles.service}>{bio}</Text>
-
             </ScrollView>
-
-
-          </View>
         </View>
       </View>
   )
-
 }
 
 const styles = StyleSheet.create({
+  imageContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  imageStyle: {
+    width: 300,
+    height: 100,
+  },
   MainContainer: {
     position: 'absolute',
     alignItems: 'center',
@@ -111,17 +86,25 @@ const styles = StyleSheet.create({
     width: width,
     height: height,
   },
+  buttonContainer: {
+    alignSelf: 'flex-start',
+  },
+  bioContainer: {
+    width: '80%',
+    height: '60%',
+  },
 
   info: {
     backgroundColor: '#FFC0CB',
     borderColor: '#FFC0CB',
     paddingVertical: 5,
     borderTopWidth: 1,
-    marginTop: 5,
-    marginBottom: 10,
+    marginBottom: 20,
     borderRadius: 15,
     width: '90%',
     height: '90%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   //To be implemeted later
   ShopName: {
@@ -147,10 +130,9 @@ const styles = StyleSheet.create({
   CancelButton: {
     position: 'relative',
     backgroundColor: 'transparent',
-    width: 30,
-    height: 30,
-    marginLeft: 10,
-    marginTop: 5,
+    width: 40,
+    height: 40,
+    marginLeft: 5,
     alignItems: 'center',
     justifyContent: 'center',
   },

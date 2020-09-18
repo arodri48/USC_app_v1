@@ -9,28 +9,18 @@ export default function WelcomeScreen({navigation}) {
   const {dispatch} = useContext(AuthContext);
   return (
     <View style={styles.MainContainer}>
-      <View style={{alignItems: 'center', justifyContent: 'center',  paddingTop: 100}}>
+      <View style={styles.logoParentContainer}>
         <Text style={styles.sendASmile}>Send A Smile</Text>
         <Text style={styles.usc_text}>A UniSelfCare Program</Text>
-          <View style={{width: '100%',
-              height: 0,
-              justifyContent: 'center',
-              alignItems: 'center',
-          }}>
+          <View style={styles.smileContainer}>
               <FastImage
                   source={ImageList.Smile}
-                  style={{alignSelf: 'center',
-                      height: 400,
-                      width: 800,
-                      marginLeft: 30,
-                      marginBottom: 0,
-
-                  }}
+                  style={styles.smileLogo}
                   resizeMode={FastImage.resizeMode.contain}
               />
           </View>
       </View>
-        <View style={{alignItems: 'center', justifyContent: 'space-around',  width: '100%', height: 230}}>
+        <View style={styles.introButtonContainer}>
             <Text style={styles.text}>
                 Covid 19 has changed the way of{'\n'} life for many people. We have
                 {'\n'}
@@ -50,7 +40,7 @@ export default function WelcomeScreen({navigation}) {
       <View style={styles.bottomView}>
         <FastImage
           source={ImageList.Hands_cropped}
-          style={{width: '100%', height: 130, }}
+          style={styles.handsImage}
           resizeMode={FastImage.resizeMode.contain}
         />
       </View>
@@ -99,4 +89,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
 
   },
+    logoParentContainer: {alignItems: 'center', justifyContent: 'center',  paddingTop: 100},
+    smileContainer: {width: '100%',
+        height: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    smileLogo: {alignSelf: 'center',
+        height: 400,
+        width: 800,
+        marginLeft: 30,
+        marginBottom: 0,
+
+    },
+    introButtonContainer: {alignItems: 'center', justifyContent: 'space-around',  width: '100%', height: 230},
+    handsImage:{
+        width: '100%', height: 130,
+    }
 });

@@ -46,7 +46,7 @@ export default function SearchScreen({navigation}) {
                 mental_health: false,
                 BLM: true,
                 cancer: false,
-                covid_19: false,
+                  woman_led: false,
               };
             }
           case 'Mental Health':
@@ -63,7 +63,7 @@ export default function SearchScreen({navigation}) {
                 mental_health: true,
                 BLM: false,
                 cancer: false,
-                covid_19: false,
+                  woman_led: false,
               };
             }
           case 'Cancer':
@@ -80,21 +80,21 @@ export default function SearchScreen({navigation}) {
                 cancer: true,
                 BLM: false,
                 mental_health: false,
-                covid_19: false,
+                  woman_led: false,
               };
             }
-          case 'COVID-19':
-            if (prevState.covid_19) {
+          case 'Woman Led':
+            if (prevState.woman_led) {
               setCurrentCause('');
               return {
                 ...prevState,
-                covid_19: false,
+                  woman_led: false,
               };
             } else {
-              setCurrentCause('COVID-19');
+              setCurrentCause('Woman Led');
               return {
                 ...prevState,
-                covid_19: true,
+                  woman_led: true,
                 cancer: false,
                 BLM: false,
                 mental_health: false,
@@ -109,7 +109,7 @@ export default function SearchScreen({navigation}) {
         BLM: false,
         mental_health: false,
         cancer: false,
-        covid_19: false,
+        woman_led: false,
       },
   );
 
@@ -337,35 +337,20 @@ export default function SearchScreen({navigation}) {
 
   const _renderItem = ({item}) => (
       <TouchableOpacity
-          style={{
-            backgroundColor: 'pink',
-            width: 300,
-            height: 150,
-            marginBottom: 20,
-            alignItems: 'center',
-            alignContent: 'center',
-            justifyContent: 'center',
-            borderRadius: 30,
-          }}
+          style={styles.itemContainer}
           onPress={() => {
             navigation.navigate('StoreScreen', item);
           }}>
         <View
-            style={{
-              flexDirection: 'row',
-              width: 250,
-              height: 120,
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}>
+            style={styles.storeContainer}>
           <FastImage
-              style={{width: 100, height: 100}}
+              style={styles.storeImage}
               source={{
                 uri: item.image,
               }}
               resizeMode={FastImage.resizeMode.contain}
           />
-          <View style={{justifyContent: 'space-between', width: 120, height: 80}}>
+          <View style={styles.storeText}>
             <Text>{item.storeName}</Text>
             <Text>{item.PricePoint}</Text>
             <Text>{item.cause}</Text>
@@ -377,27 +362,15 @@ export default function SearchScreen({navigation}) {
   // Render return
   return (
       <View style={styles.MainContainer}>
-        <View style={{alignItems: 'center', justifyContent: 'center'}}>
+        <View style={styles.textHeaderContainer}>
           <Text style={styles.sendASmile}>Send A Smile</Text>
           <Text style={styles.text}>A UniSelfCare Program</Text>
         </View>
         <View
-            style={{
-              width: '100%',
-              height: 0,
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: 'blue',
-            }}>
+            style={styles.smileContainer}>
           <FastImage
               source={ImageList.Smile}
-              style={{
-                alignSelf: 'center',
-                height: 300,
-                width: 400,
-                marginLeft: 20,
-                marginBottom: 10,
-              }}
+              style={styles.smileImage}
               resizeMode={FastImage.resizeMode.contain}
           />
         </View>
@@ -406,15 +379,15 @@ export default function SearchScreen({navigation}) {
           <Button
               title="Filter"
               onPress={toggleFilterOverlay}
-              buttonStyle={{backgroundColor: 'transparent'}}
-              titleStyle={{color: 'black'}}
+              buttonStyle={styles.filterSortButtonStyle}
+              titleStyle={styles.filterSortTitleStyle}
           />
 
           <Button
               title="Sort"
               onPress={toggleSortOverlay}
-              buttonStyle={{backgroundColor: 'transparent'}}
-              titleStyle={{color: 'black'}}
+              buttonStyle={styles.filterSortButtonStyle}
+              titleStyle={styles.filterSortTitleStyle}
           />
         </View>
         <Overlay
@@ -445,11 +418,11 @@ export default function SearchScreen({navigation}) {
                 onPress={() => filterDispatch({type: 'Cancer'})}
             />
             <CheckBox
-                title="COVID-19"
+                title="Woman Led"
                 checkedIcon="dot-circle-o"
                 uncheckedIcon="circle-o"
-                checked={filterOption.covid_19}
-                onPress={() => filterDispatch({type: 'COVID-19'})}
+                checked={filterOption.woman_led}
+                onPress={() => filterDispatch({type: 'Woman Led'})}
             />
           </View>
         </Overlay>
@@ -477,12 +450,7 @@ export default function SearchScreen({navigation}) {
         </Overlay>
         {!loading ? (
             <View
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 300,
-                }}>
+                style={styles.listParentContainer}>
               <FlatList
                   data={stores}
                   renderItem={_renderItem}
@@ -500,12 +468,7 @@ export default function SearchScreen({navigation}) {
             </View>
         ) : (
             <View
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  alignSelf: 'stretch',
-                }}>
+                style={styles.loadingContainer}>
               <ActivityIndicator color="pink" size="small" />
               <Text>Loading</Text>
             </View>
@@ -514,6 +477,57 @@ export default function SearchScreen({navigation}) {
   );
 }
 const styles = StyleSheet.create({
+    filterSortTitleStyle: {
+        color: 'black',
+    },
+    filterSortButtonStyle: {
+        backgroundColor: 'transparent',
+    },
+    itemContainer: {
+        backgroundColor: 'pink',
+        width: 300,
+        height: 150,
+        marginBottom: 20,
+        alignItems: 'center',
+        alignContent: 'center',
+        justifyContent: 'center',
+        borderRadius: 30,
+    },
+    storeContainer: {
+        flexDirection: 'row',
+        width: 250,
+        height: 120,
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    storeImage:{width: 100, height: 100},
+    storeText: {justifyContent: 'space-between', width: 120, height: 80},
+    textHeaderContainer: {alignItems: 'center', justifyContent: 'center'},
+    smileContainer: {
+        width: '100%',
+        height: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    smileImage: {
+        alignSelf: 'center',
+        height: 300,
+        width: 380,
+        marginLeft: 20,
+        marginBottom: 10,
+    },
+    listParentContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 300,
+    },
+    loadingContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'stretch',
+    },
   MainContainer: {
     flex: 1,
     alignItems: 'center',
@@ -524,9 +538,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     position: 'relative',
     width: '100%',
-    marginTop: 18,
     justifyContent: 'space-between',
     alignItems: 'center',
+      backgroundColor: 'transparent'
   },
   filterMenu: {
     height: 400,
@@ -538,14 +552,14 @@ const styles = StyleSheet.create({
   },
   sendASmile: {
     color: '#fcc6df',
-    fontSize: 25,
+    fontSize: 28,
     fontWeight: 'bold',
     paddingBottom: 0,
     fontFamily: 'Raleway-SemiBold',
   },
   text: {
     color: '#535358',
-    fontSize: 12,
+    fontSize: 9,
     marginTop: -10,
   },
 });
