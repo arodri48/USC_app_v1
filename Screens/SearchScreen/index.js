@@ -393,7 +393,7 @@ export default function SearchScreen({navigation}) {
               style={{
                 alignSelf: 'center',
                 height: 300,
-                width: 400,
+                width: 380,
                 marginLeft: 20,
                 marginBottom: 10,
               }}
@@ -537,14 +537,14 @@ const styles = StyleSheet.create({
   },
   sendASmile: {
     color: '#fcc6df',
-    fontSize: 25,
+    fontSize: 28,
     fontWeight: 'bold',
     paddingBottom: 0,
     fontFamily: 'Raleway-SemiBold',
   },
   text: {
     color: '#535358',
-    fontSize: 12,
+    fontSize: 9,
     marginTop: -10,
   },
 });
