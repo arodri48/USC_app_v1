@@ -15,7 +15,7 @@ export default function SplashScreen({navigation}) {
             <View style={styles.imageContainer}>
                 <FastImage
                     source={ImageList.Hands_cropped}
-                    style={{width: '100%', height: 130, }}
+                    style={styles.imageStyle}
                     resizeMode={FastImage.resizeMode.contain}
                 />
             </View>
@@ -41,5 +41,9 @@ const styles = StyleSheet.create({
         width: '100%',
         justifyContent: 'flex-end',
         alignItems: 'center'
+    },
+    imageStyle: {
+        width: '100%',
+        height: 130,
     }
 });
