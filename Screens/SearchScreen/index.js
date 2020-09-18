@@ -384,10 +384,9 @@ export default function SearchScreen({navigation}) {
         <View
             style={{
               width: '100%',
-              height: 0,
+              height: 10,
               justifyContent: 'center',
               alignItems: 'center',
-              backgroundColor: 'blue',
             }}>
           <FastImage
               source={ImageList.Smile}
