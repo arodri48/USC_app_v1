@@ -46,7 +46,7 @@ export default function SearchScreen({navigation}) {
                 mental_health: false,
                 BLM: true,
                 cancer: false,
-                covid_19: false,
+                  woman_led: false,
               };
             }
           case 'Mental Health':
@@ -63,7 +63,7 @@ export default function SearchScreen({navigation}) {
                 mental_health: true,
                 BLM: false,
                 cancer: false,
-                covid_19: false,
+                  woman_led: false,
               };
             }
           case 'Cancer':
@@ -80,21 +80,21 @@ export default function SearchScreen({navigation}) {
                 cancer: true,
                 BLM: false,
                 mental_health: false,
-                covid_19: false,
+                  woman_led: false,
               };
             }
-          case 'COVID-19':
-            if (prevState.covid_19) {
+          case 'Woman Led':
+            if (prevState.woman_led) {
               setCurrentCause('');
               return {
                 ...prevState,
-                covid_19: false,
+                  woman_led: false,
               };
             } else {
-              setCurrentCause('COVID-19');
+              setCurrentCause('Woman Led');
               return {
                 ...prevState,
-                covid_19: true,
+                  woman_led: true,
                 cancer: false,
                 BLM: false,
                 mental_health: false,
@@ -109,7 +109,7 @@ export default function SearchScreen({navigation}) {
         BLM: false,
         mental_health: false,
         cancer: false,
-        covid_19: false,
+        woman_led: false,
       },
   );
 
@@ -445,11 +445,11 @@ export default function SearchScreen({navigation}) {
                 onPress={() => filterDispatch({type: 'Cancer'})}
             />
             <CheckBox
-                title="COVID-19"
+                title="Woman Led"
                 checkedIcon="dot-circle-o"
                 uncheckedIcon="circle-o"
-                checked={filterOption.covid_19}
-                onPress={() => filterDispatch({type: 'COVID-19'})}
+                checked={filterOption.woman_led}
+                onPress={() => filterDispatch({type: 'Woman Led'})}
             />
           </View>
         </Overlay>
