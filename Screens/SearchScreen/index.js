@@ -211,7 +211,7 @@ export default function SearchScreen({navigation}) {
           setLoading(false);
         })
         .catch((err) => {
-          //console.log(err);
+          console.log(err);
         });
   }, []);
 

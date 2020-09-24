@@ -1,33 +1,33 @@
 {
-	"api": {
-		"uscappv1": {
-			"service": "AppSync",
-			"providerPlugin": "awscloudformation",
-			"output": {
-				"authConfig": {
-					"defaultAuthentication": {
-						"authenticationType": "API_KEY",
-						"apiKeyConfig": {
-							"apiKeyExpirationDays": 7,
-							"description": "store information about store and when user clicks on link"
-						}
-					},
-					"additionalAuthenticationProviders": []
-				}
-			}
-		}
-	},
-	"auth": {
-		"uscappv191e6e20d": {
-			"service": "Cognito",
-			"providerPlugin": "awscloudformation",
-			"dependsOn": []
-		}
-	},
-	"storage": {
-		"USCstoreimages": {
-			"service": "S3",
-			"providerPlugin": "awscloudformation"
-		}
-	}
+  "api": {
+    "uscappv1": {
+      "service": "AppSync",
+      "providerPlugin": "awscloudformation",
+      "output": {
+        "authConfig": {
+          "defaultAuthentication": {
+            "authenticationType": "API_KEY",
+            "apiKeyConfig": {
+              "apiKeyExpirationDays": 365,
+              "description": "new key for accessing stores and clicks"
+            }
+          },
+          "additionalAuthenticationProviders": []
+        }
+      }
+    }
+  },
+  "auth": {
+    "uscappv191e6e20d": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": []
+    }
+  },
+  "storage": {
+    "USCstoreimages": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation"
+    }
+  }
 }
