@@ -6,30 +6,38 @@ import {
   StyleSheet,
   Linking,
   TouchableWithoutFeedback,
-    ScrollView
+  ScrollView,
 } from 'react-native';
 import {Button} from 'react-native-elements';
 import {API, graphqlOperation} from 'aws-amplify';
 import {createUrlClicked} from 'USC_app_v1/src/graphql/mutations';
 
 import FastImage from 'react-native-fast-image';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const {width, height} = Dimensions.get('window');
 
-
 export default function StoreScreen({route, navigation}) {
-
-  const {storeName, id, bio, PricePoint, website, goodsType, image} = route.params;
-
+  const {
+    storeName,
+    id,
+    bio,
+    PricePoint,
+    website,
+    goodsType,
+    image,
+  } = route.params;
 
   const URL_Component = ({website_URL, storeID_code}) => {
     async function _handleURL() {
       // create graphQL entry for website and then open URL
       try {
         await API.graphql(
-            graphqlOperation(createUrlClicked, {input: {storeID: storeID_code, listAll: "Y"}}),
+          graphqlOperation(createUrlClicked, {
+            input: {storeID: storeID_code, listAll: 'Y'},
+          }),
         );
-//console.log(urlAPI);
+        //console.log(urlAPI);
         await Linking.openURL(website_URL);
       } catch (err) {
         //console.log('Error opening URL');
@@ -41,32 +49,32 @@ export default function StoreScreen({route, navigation}) {
       </TouchableWithoutFeedback>
     );
   };
-  return(
-      <View style={styles.MainContainer}>
-        <View style={styles.info}>
-            <Button
-                onPress={() => navigation.navigate('SearchScreen')}
-                title="X"
-                buttonStyle={styles.CancelButton}
-                containerStyle={styles.buttonContainer}
-            />
-            <View style={styles.imageContainer}>
-              <FastImage
-                  style={styles.imageStyle}
-                  source={{uri: image}}
-                  resizeMode={FastImage.resizeMode.contain}
-              />
-            </View>
-            <Text style={styles.ShopName}>{storeName} </Text>
-            <Text style={styles.support}>{goodsType}</Text>
-            <URL_Component website_URL={website} storeID_code={id} />
-            <Text style={styles.origin}>{PricePoint} </Text>
-            <ScrollView style={styles.bioContainer}>
-              <Text style={styles.service}>{bio}</Text>
-            </ScrollView>
+  return (
+    <SafeAreaView style={styles.MainContainer}>
+      <View style={styles.info}>
+        <Button
+          onPress={() => navigation.navigate('SearchScreen')}
+          title="X"
+          buttonStyle={styles.CancelButton}
+          containerStyle={styles.buttonContainer}
+        />
+        <View style={styles.imageContainer}>
+          <FastImage
+            style={styles.imageStyle}
+            source={{uri: image}}
+            resizeMode={FastImage.resizeMode.contain}
+          />
         </View>
+        <Text style={styles.ShopName}>{storeName} </Text>
+        <Text style={styles.support}>{goodsType}</Text>
+        <URL_Component website_URL={website} storeID_code={id} />
+        <Text style={styles.origin}>{PricePoint} </Text>
+        <ScrollView style={styles.bioContainer}>
+          <Text style={styles.service}>{bio}</Text>
+        </ScrollView>
       </View>
-  )
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
