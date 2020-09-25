@@ -18,6 +18,12 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 const {width} = Dimensions.get('window');
 
 export default function SearchScreen({navigation}) {
+  function objectMap(object, mapFn) {
+    return Object.keys(object).reduce(function (result, key) {
+      result[key] = mapFn(key);
+      return result;
+    }, {});
+  }
   // Hooks for filter values
   const [filterVisible, setFilterVisible] = useState(false);
   const causeRef = useRef('');
@@ -42,13 +48,9 @@ export default function SearchScreen({navigation}) {
             };
           } else {
             setCurrentCause('BLM');
-            return {
-              ...prevState,
-              mental_health: false,
-              BLM: true,
-              cancer: false,
-              woman_led: false,
-            };
+            return objectMap(prevState, function (key) {
+              return key === 'BLM';
+            });
           }
         case 'Mental Health':
           if (prevState.mental_health) {
@@ -59,13 +61,9 @@ export default function SearchScreen({navigation}) {
             };
           } else {
             setCurrentCause('Mental Health');
-            return {
-              ...prevState,
-              mental_health: true,
-              BLM: false,
-              cancer: false,
-              woman_led: false,
-            };
+            return objectMap(prevState, function (key) {
+              return key === 'mental_health';
+            });
           }
         case 'Cancer':
           if (prevState.cancer) {
@@ -76,13 +74,9 @@ export default function SearchScreen({navigation}) {
             };
           } else {
             setCurrentCause('Cancer');
-            return {
-              ...prevState,
-              cancer: true,
-              BLM: false,
-              mental_health: false,
-              woman_led: false,
-            };
+            return objectMap(prevState, function (key) {
+              return key === 'cancer';
+            });
           }
         case 'Woman Led':
           if (prevState.woman_led) {
@@ -93,13 +87,9 @@ export default function SearchScreen({navigation}) {
             };
           } else {
             setCurrentCause('Woman Led');
-            return {
-              ...prevState,
-              woman_led: true,
-              cancer: false,
-              BLM: false,
-              mental_health: false,
-            };
+            return objectMap(prevState, function (key) {
+              return key === 'woman_led';
+            });
           }
 
         default:
@@ -317,13 +307,7 @@ export default function SearchScreen({navigation}) {
       return null;
     }
     return (
-      <View
-        style={{
-          position: 'relative',
-          width: width,
-          height: 100,
-          justifyContent: 'center',
-        }}>
+      <View style={styles.footerStyle}>
         <ActivityIndicator size="small" color="pink" />
       </View>
     );
@@ -558,5 +542,11 @@ const styles = StyleSheet.create({
     color: '#535358',
     fontSize: 9,
     marginTop: -10,
+  },
+  footerStyle: {
+    position: 'relative',
+    width: width,
+    height: 100,
+    justifyContent: 'center',
   },
 });
