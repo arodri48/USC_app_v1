@@ -122,14 +122,12 @@ export default function SearchScreen({navigation}) {
           if (prevState.high_to_low) {
             setCurrentSort('ASC');
             return {
-              ...prevState,
               high_to_low: false,
               low_to_high: true,
             };
           } else {
             setCurrentSort('DESC');
             return {
-              ...prevState,
               high_to_low: true,
               low_to_high: false,
             };
@@ -138,14 +136,12 @@ export default function SearchScreen({navigation}) {
           if (prevState.low_to_high) {
             setCurrentSort('DESC');
             return {
-              ...prevState,
               high_to_low: true,
               low_to_high: false,
             };
           } else {
             setCurrentSort('ASC');
             return {
-              ...prevState,
               high_to_low: false,
               low_to_high: true,
             };
@@ -482,7 +478,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   storeImage: {width: 100, height: 100},
-  storeText: {justifyContent: 'space-between', width: 120, height: 80},
+  storeText: {justifyContent: 'space-between', width: 120, height: 100,},
   textHeaderContainer: {alignItems: 'center', justifyContent: 'center'},
   smileContainer: {
     width: '100%',

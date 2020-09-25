@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Linking,
   TouchableWithoutFeedback,
-  ScrollView,
+  ScrollView, TouchableOpacity,
 } from 'react-native';
 import {Button} from 'react-native-elements';
 import {API, graphqlOperation} from 'aws-amplify';
@@ -44,9 +44,9 @@ export default function StoreScreen({route, navigation}) {
       }
     }
     return (
-      <TouchableWithoutFeedback onPress={() => _handleURL()}>
+      <TouchableOpacity onPress={() => _handleURL()}>
         <Text style={styles.ShopUrl}>{website_URL}</Text>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     );
   };
   return (
@@ -106,7 +106,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFC0CB',
     borderColor: '#FFC0CB',
     paddingVertical: 5,
-    borderTopWidth: 1,
     marginBottom: 20,
     borderRadius: 15,
     width: '90%',
