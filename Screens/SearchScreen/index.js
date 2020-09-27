@@ -26,20 +26,88 @@ export default function SearchScreen({navigation}) {
     }, {});
   }
   // Hooks for filter values
+  const [filterApply, setFilterApply] = useState(false);
+  const [filterCancel, setFilterCancel] = useState(false);
   const [filterVisible, setFilterVisible] = useState(false);
   const causeRef = useRef('');
   const toggleFilterOverlay = () => {
     setFilterVisible(!filterVisible);
-    if (causeRef.current !== currentCause) {
-      causeRef.current = currentCause;
-      setRefresh(true);
+    if (causeRef.current !== currentCause){
+      if (filterApply){
+        causeRef.current = currentCause;
+        setFilterApply(false);
+
+        setRefresh(true);
+      }
+      else{
+        if (causeRef.current !== ''){
+          filterDispatch({type: filter_reset_dict[causeRef.current]});
+        }
+        else{
+          filterDispatch({type:'CLEAR_ALL'});
+        }
+        setFilterCancel(false);
+      }
+    }
+    else{
+      if (filterApply){
+        setFilterApply(false);
+      }
+      else{
+        setFilterCancel(false);
+      }
     }
   };
+  /*
+  useEffect(() => {
+    if (!filterVisible){
+
+    }
+  }, [filterVisible])
+   */
+  const filter_reset_dict = {
+    'BLM': 'CANCEL_RESET_TO_BLM',
+    'Mental Health': 'CANCEL_RESET_TO_MENTAL_HEALTH',
+    'Cancer': 'CANCEL_RESET_TO_CANCER',
+    'Woman Led': 'CANCEL_RESET_TO_WOMAN_LED'
+  }
   const [currentCause, setCurrentCause] = useState('');
   // Hooks for filter options
   const [filterOption, filterDispatch] = useReducer(
     (prevState, action) => {
       switch (action.type) {
+        case 'CANCEL_RESET_TO_BLM':
+          setCurrentCause('BLM');
+          return {
+            BLM: true,
+            mental_health: false,
+            cancer: false,
+            woman_led: false,
+          }
+        case 'CANCEL_RESET_TO_MENTAL_HEALTH':
+          setCurrentCause('Mental Health');
+          return {
+            BLM: false,
+            mental_health: true,
+            cancer: false,
+            woman_led: false,
+          }
+        case 'CANCEL_RESET_TO_CANCER':
+          setCurrentCause('Cancer');
+          return {
+            BLM: false,
+            mental_health: false,
+            cancer: true,
+            woman_led: false,
+          }
+        case 'CANCEL_RESET_TO_WOMAN_LED':
+          setCurrentCause('Woman Led')
+          return {
+            BLM: false,
+            mental_health: false,
+            cancer: false,
+            woman_led: true,
+          }
         case 'BLM':
           if (prevState.BLM) {
             setCurrentCause('');
@@ -92,6 +160,15 @@ export default function SearchScreen({navigation}) {
               return key === 'woman_led';
             });
           }
+        case 'CLEAR_ALL':
+          setCurrentCause('');
+          console.log("Really is clearing all")
+          return {
+            BLM: false,
+            mental_health: false,
+            cancer: false,
+            woman_led: false,
+          }
 
         default:
           return prevState;
@@ -106,19 +183,53 @@ export default function SearchScreen({navigation}) {
   );
 
   // Hooks for sort values
+  const [sortApply, setSortApply] = useState(false);
+  const [sortCancel, setSortCancel] = useState(false);
   const [sortVisible, setSortVisible] = useState(false);
   const sortRef = useRef('ASC');
   const toggleSortOverlay = () => {
     setSortVisible(!sortVisible);
-    if (sortRef.current !== currentSort) {
-      sortRef.current = currentSort;
-      setRefresh(true);
+    if (sortRef.current !== currentSort){
+      if (sortApply){
+        sortRef.current = currentSort;
+        setSortApply(false);
+        setRefresh(true);
+      }
+      else{
+        sortDispatch({type: sort_reset_dict[sortRef.current]});
+        setSortCancel(false);
+      }
     }
+    else {
+      if (sortApply){
+        setSortApply(false);
+      }
+      else{
+        setSortCancel(false);
+      }
+    }
+
   };
+  const sort_reset_dict = {
+    'ASC': 'CANCEL_RESET_TO_LOW_TO_HIGH',
+    'DESC': 'CANCEL_RESET_TO_HIGH_TO_LOW'
+  }
   const [currentSort, setCurrentSort] = useState('ASC');
   const [sortOption, sortDispatch] = useReducer(
     (prevState, action) => {
       switch (action.type) {
+        case 'CANCEL_RESET_TO_LOW_TO_HIGH':
+          setCurrentSort('ASC');
+          return {
+            high_to_low: false,
+            low_to_high: true,
+          };
+        case 'CANCEL_RESET_TO_HIGH_TO_LOW':
+          setCurrentSort('DESC');
+          return {
+            high_to_low: true,
+            low_to_high: false
+          };
         case 'HIGH_TO_LOW':
           if (prevState.high_to_low) {
             setCurrentSort('ASC');
@@ -329,7 +440,7 @@ export default function SearchScreen({navigation}) {
           source={{
             uri: item.image,
           }}
-          resizeMode={FastImage.resizeMode.contain}
+          resizeMode={FastImage.resizeMode.cover}
         />
         <View style={styles.storeText}>
           <Text>{item.storeName}</Text>
@@ -340,18 +451,37 @@ export default function SearchScreen({navigation}) {
     </TouchableOpacity>
   );
 
+  const onPressSortApply = () => {
+    setSortApply(true);
+  }
+  const onPressSortCancel = () => {
+    setSortCancel(true);
+  }
+  useEffect(() => {
+    if (sortApply || sortCancel){
+      toggleSortOverlay();
+    }
+  }, [sortApply, sortCancel]);
+
+  const onPressFilterApply = () => {
+    setFilterApply(true);
+  }
+  const onPressFilterCancel = () => {
+    setFilterCancel(true);
+  }
+  useEffect(() => {
+    if (filterApply || filterCancel){
+      toggleFilterOverlay();
+    }
+  }, [filterApply, filterCancel]);
   // Render return
   return (
     <SafeAreaView style={styles.MainContainer}>
-      <View style={styles.textHeaderContainer}>
-        <Text style={styles.sendASmile}>Send A Smile</Text>
-        <Text style={styles.text}>A UniSelfCare Program</Text>
-      </View>
       <View style={styles.smileContainer}>
         <FastImage
-          source={ImageList.Smile}
-          style={styles.smileImage}
-          resizeMode={FastImage.resizeMode.contain}
+            source={ImageList.full_send_a_smile_logo}
+            style={styles.smileImage}
+            resizeMode={FastImage.resizeMode.contain}
         />
       </View>
 
@@ -371,61 +501,75 @@ export default function SearchScreen({navigation}) {
         />
       </View>
       <Overlay
-        onBackdropPress={toggleFilterOverlay}
+        onBackdropPress={onPressFilterCancel}
         overlayStyle={styles.filterMenu}
         isVisible={filterVisible}>
-        <View>
-          <Text>Filter By Cause</Text>
-          <CheckBox
-            title="BLM"
-            checkedIcon="dot-circle-o"
-            uncheckedIcon="circle-o"
-            checked={filterOption.BLM}
-            onPress={() => filterDispatch({type: 'BLM'})}
-          />
-          <CheckBox
-            title="Mental Health"
-            checkedIcon="dot-circle-o"
-            uncheckedIcon="circle-o"
-            checked={filterOption.mental_health}
-            onPress={() => filterDispatch({type: 'Mental Health'})}
-          />
-          <CheckBox
-            title="Cancer"
-            checkedIcon="dot-circle-o"
-            uncheckedIcon="circle-o"
-            checked={filterOption.cancer}
-            onPress={() => filterDispatch({type: 'Cancer'})}
-          />
-          <CheckBox
-            title="Woman Led"
-            checkedIcon="dot-circle-o"
-            uncheckedIcon="circle-o"
-            checked={filterOption.woman_led}
-            onPress={() => filterDispatch({type: 'Woman Led'})}
-          />
+        <View style={styles.overlayContainer}>
+          <View >
+            <Text style={styles.filterText}>Filter By Cause</Text>
+            <CheckBox
+                title="BLM"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={filterOption.BLM}
+                onPress={() => filterDispatch({type: 'BLM'})}
+            />
+            <CheckBox
+                title="Mental Health"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={filterOption.mental_health}
+                onPress={() => filterDispatch({type: 'Mental Health'})}
+            />
+            <CheckBox
+                title="Cancer"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={filterOption.cancer}
+                onPress={() => filterDispatch({type: 'Cancer'})}
+            />
+            <CheckBox
+                title="Woman Led"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={filterOption.woman_led}
+                onPress={() => filterDispatch({type: 'Woman Led'})}
+            />
+          </View>
+          <View style={styles.buttonRowContainer}>
+            <Button title='Cancel' onPress={onPressFilterCancel}/>
+            <Button title='Apply' onPress={onPressFilterApply}/>
+          </View>
         </View>
+
       </Overlay>
       <Overlay
         isVisible={sortVisible}
         onBackdropPress={toggleSortOverlay}
         overlayStyle={styles.sortMenu}>
-        <View>
-          <Text>Sort By Price</Text>
-          <CheckBox
-            checked={sortOption.high_to_low}
-            title="Prices High to Low"
-            onPress={() => sortDispatch({type: 'HIGH_TO_LOW'})}
-            checkedIcon="dot-circle-o"
-            uncheckedIcon="circle-o"
-          />
-          <CheckBox
-            checked={sortOption.low_to_high}
-            title="Prices Low to High"
-            onPress={() => sortDispatch({type: 'LOW_TO_HIGH'})}
-            checkedIcon="dot-circle-o"
-            uncheckedIcon="circle-o"
-          />
+        <View style={styles.overlayContainer}>
+          <View>
+            <Text style={styles.filterText}>Sort By Price</Text>
+            <CheckBox
+                checked={sortOption.high_to_low}
+                title="Prices High to Low"
+                onPress={() => sortDispatch({type: 'HIGH_TO_LOW'})}
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+            />
+            <CheckBox
+                checked={sortOption.low_to_high}
+                title="Prices Low to High"
+                onPress={() => sortDispatch({type: 'LOW_TO_HIGH'})}
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+            />
+          </View>
+
+          <View style={styles.buttonRowContainer}>
+            <Button title='Cancel' onPress={onPressSortCancel}/>
+            <Button title='Apply' onPress={onPressSortApply}/>
+          </View>
         </View>
       </Overlay>
       {!loading ? (
@@ -455,6 +599,11 @@ export default function SearchScreen({navigation}) {
   );
 }
 const styles = StyleSheet.create({
+  buttonRowContainer: {width: '50%', height:50, justifyContent: 'space-around', alignItems: 'center', flexDirection: 'row', alignSelf: 'flex-end'},
+  overlayContainer: {
+    flex:1,
+    justifyContent: 'space-between'
+  },
   filterSortTitleStyle: {
     color: 'black',
   },
@@ -483,16 +632,16 @@ const styles = StyleSheet.create({
   textHeaderContainer: {alignItems: 'center', justifyContent: 'center'},
   smileContainer: {
     width: '100%',
-    height: 10,
+    height: 60,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingTop: 35
   },
   smileImage: {
     alignSelf: 'center',
-    height: 300,
-    width: 380,
-    marginLeft: 20,
-    marginBottom: 10,
+    height: 60,
+    width: '100%',
+
   },
   listParentContainer: {
     flex: 1,
@@ -545,4 +694,7 @@ const styles = StyleSheet.create({
     height: 100,
     justifyContent: 'center',
   },
+  filterText: {
+    fontSize: 19,
+  }
 });

@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   ScrollView, TouchableOpacity,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
 import {Button} from 'react-native-elements';
 import {API, graphqlOperation} from 'aws-amplify';
 import {createUrlClicked} from 'USC_app_v1/src/graphql/mutations';
@@ -54,7 +55,13 @@ export default function StoreScreen({route, navigation}) {
       <View style={styles.info}>
         <Button
           onPress={() => navigation.navigate('SearchScreen')}
-          title="X"
+          icon={
+            <Icon
+                name="arrow-left"
+                size={30}
+                color="white"
+            />
+            }
           buttonStyle={styles.CancelButton}
           containerStyle={styles.buttonContainer}
         />
@@ -137,7 +144,7 @@ const styles = StyleSheet.create({
   CancelButton: {
     position: 'relative',
     backgroundColor: 'transparent',
-    width: 40,
+    width: 50,
     height: 40,
     marginLeft: 5,
     alignItems: 'center',

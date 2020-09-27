@@ -11,24 +11,19 @@ export default function WelcomeScreen({navigation}) {
   return (
     <SafeAreaView style={styles.MainContainer}>
       <View style={styles.logoParentContainer}>
-        <Text style={styles.sendASmile}>Send A Smile</Text>
-        <Text style={styles.usc_text}>A UniSelfCare Program</Text>
-        <View style={styles.smileContainer}>
-          <FastImage
-            source={ImageList.Smile}
+        <FastImage
+            source={ImageList.full_send_a_smile_logo}
             style={styles.smileLogo}
             resizeMode={FastImage.resizeMode.contain}
-          />
-        </View>
+        />
       </View>
-      <View style={styles.introButtonContainer}>
         <Text style={styles.text}>
-          Covid 19 has changed the way of{'\n'} life for many people. We have
-          {'\n'}
-          suffered as a result and are still on{'\n'} our way to normalcy. Let's
-          help{'\n'}
-          out our local businesses and take{'\n'} care of ourselves and loved
-          ones.
+          The COVID-19 pandemic has changed the way of life for all of us.
+          During these times of uncertainty, it is important to connect with our
+          loved ones and support important social causes. Select ‘Begin’ to discover
+          online shops advocating for important causes and send a care package and gift
+          to loved ones through their website. These online shops donate a percentage of
+          sales to important social causes and charities. Let’s Send a Smile together!
         </Text>
         <Button
           title="Begin"
@@ -36,7 +31,6 @@ export default function WelcomeScreen({navigation}) {
           buttonStyle={styles.buttonStyle}
           titleStyle={styles.buttonText}
         />
-      </View>
 
       <View style={styles.bottomView}>
         <FastImage
@@ -49,17 +43,6 @@ export default function WelcomeScreen({navigation}) {
   );
 }
 const styles = StyleSheet.create({
-  sendASmile: {
-    color: '#FCC6DF',
-    fontSize: 45,
-    fontFamily: Platform.OS === "ios" ? 'Raleway-SemiBold' : 'raleway_semibold.ttf',
-    paddingBottom: 0,
-  },
-  usc_text: {
-    color: '#535358',
-    fontSize: 14,
-    marginTop: -10,
-  },
   text: {
     color: '#535358',
     fontSize: 18,
@@ -81,6 +64,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: 'white',
+
   },
   bottomView: {
     width: '100%',
@@ -91,27 +75,18 @@ const styles = StyleSheet.create({
   logoParentContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 100,
-  },
-  smileContainer: {
     width: '100%',
-    height: 0,
+    height: 200,
+  },
+
+  smileLogo: {
+    height: 90,
+    width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 150
   },
-  smileLogo: {
-    alignSelf: 'center',
-    height: 400,
-    width: 800,
-    marginLeft: 30,
-    marginBottom: 0,
-  },
-  introButtonContainer: {
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    width: '100%',
-    height: 230,
-  },
+
   handsImage: {
     width: '100%',
     height: 130,
