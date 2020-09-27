@@ -52,8 +52,7 @@ const styles = StyleSheet.create({
   sendASmile: {
     color: '#FCC6DF',
     fontSize: 45,
-    fontWeight: 'bold',
-    fontFamily: Platform.OS === "ios" ? 'Raleway-SemiBold' : 'Raleway-SemiBold.ttf',
+    fontFamily: Platform.OS === "ios" ? 'Raleway-SemiBold' : 'raleway_semibold.ttf',
     paddingBottom: 0,
   },
   usc_text: {
