@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+    Platform
 } from 'react-native';
 import {API, graphqlOperation} from 'aws-amplify';
 import {listAllStoresByPrice} from '../../src/graphql/queries';
@@ -532,7 +533,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     paddingBottom: 0,
-    fontFamily: 'Raleway-SemiBold',
+    fontFamily: Platform.OS === "ios" ? 'Raleway-SemiBold' : 'Raleway-SemiBold.ttf',
   },
   text: {
     color: '#535358',

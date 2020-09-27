@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {AuthContext} from '../../Provider/AuthProvider';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Platform} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {Button} from 'react-native-elements';
 import ImageList from 'USC_app_v1/media/ImageStore';
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     color: '#FCC6DF',
     fontSize: 45,
     fontWeight: 'bold',
-    fontFamily: 'Raleway-SemiBold',
+    fontFamily: Platform.OS === "ios" ? 'Raleway-SemiBold' : 'Raleway-SemiBold.ttf',
     paddingBottom: 0,
   },
   usc_text: {
