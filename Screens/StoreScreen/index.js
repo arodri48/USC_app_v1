@@ -5,7 +5,6 @@ import {
   Dimensions,
   StyleSheet,
   Linking,
-  TouchableWithoutFeedback,
   ScrollView, TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
@@ -45,7 +44,7 @@ export default function StoreScreen({route, navigation}) {
       }
     }
     return (
-      <TouchableOpacity onPress={() => _handleURL()}>
+      <TouchableOpacity style={styles.urlContainer} onPress={() => _handleURL()}>
         <Text style={styles.ShopUrl}>{website_URL}</Text>
       </TouchableOpacity>
     );
@@ -85,6 +84,10 @@ export default function StoreScreen({route, navigation}) {
 }
 
 const styles = StyleSheet.create({
+  urlContainer: {
+    width:'90%',
+    alignItems: 'center',
+  },
   imageContainer: {
     justifyContent: 'center',
     alignItems: 'center',

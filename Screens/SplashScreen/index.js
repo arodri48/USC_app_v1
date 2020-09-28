@@ -1,6 +1,5 @@
 import React from 'react';
 import {View, Text, StyleSheet, ActivityIndicator} from 'react-native';
-
 import FastImage from 'react-native-fast-image';
 import ImageList from '../../media/ImageStore';
 import {SafeAreaView} from 'react-native-safe-area-context';
