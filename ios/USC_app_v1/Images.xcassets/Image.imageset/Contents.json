@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "transparentLogoApp_sharpened.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "transparentLogoApp_sharpened_1_2000x660.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "transparentLogoApp_sharpened_2_3000x990.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
