@@ -48,7 +48,6 @@ export default function SearchScreen({navigation}) {
       if (filterApply) {
         causeRef.current = currentCause;
         setFilterApply(false);
-
         setRefresh(true);
       } else {
         if (causeRef.current !== '') {
@@ -56,10 +55,6 @@ export default function SearchScreen({navigation}) {
         } else {
           filterDispatch({type: 'CLEAR_ALL'});
         }
-      }
-    } else {
-      if (filterApply) {
-        setFilterApply(false);
       }
     }
   }, [currentCause, filterApply, filter_reset_dict]);
@@ -70,36 +65,24 @@ export default function SearchScreen({navigation}) {
       switch (action.type) {
         case 'CANCEL_RESET_TO_BLM':
           setCurrentCause('BLM');
-          return {
-            BLM: true,
-            mental_health: false,
-            cancer: false,
-            woman_led: false,
-          };
+          return objectMap(prevState, function (key) {
+            return key === 'BLM';
+          });
         case 'CANCEL_RESET_TO_MENTAL_HEALTH':
           setCurrentCause('Mental Health');
-          return {
-            BLM: false,
-            mental_health: true,
-            cancer: false,
-            woman_led: false,
-          };
+          return objectMap(prevState, function (key) {
+            return key === 'mental_health';
+          });
         case 'CANCEL_RESET_TO_CANCER':
           setCurrentCause('Cancer');
-          return {
-            BLM: false,
-            mental_health: false,
-            cancer: true,
-            woman_led: false,
-          };
+          return objectMap(prevState, function (key) {
+            return key === 'cancer';
+          });
         case 'CANCEL_RESET_TO_WOMAN_LED':
           setCurrentCause('Woman Led');
-          return {
-            BLM: false,
-            mental_health: false,
-            cancer: false,
-            woman_led: true,
-          };
+          return objectMap(prevState, function (key) {
+            return key === 'woman_led';
+          });
         case 'BLM':
           if (prevState.BLM) {
             setCurrentCause('');
@@ -154,7 +137,7 @@ export default function SearchScreen({navigation}) {
           }
         case 'CLEAR_ALL':
           setCurrentCause('');
-          console.log('Really is clearing all');
+          //console.log('Really is clearing all');
           return {
             BLM: false,
             mental_health: false,
@@ -192,10 +175,6 @@ export default function SearchScreen({navigation}) {
         setRefresh(true);
       } else {
         sortDispatch({type: sort_reset_dict[sortRef.current]});
-      }
-    } else {
-      if (sortApply) {
-        setSortApply(false);
       }
     }
   }, [currentSort, sortApply, sort_reset_dict]);
@@ -263,9 +242,8 @@ export default function SearchScreen({navigation}) {
   //Initial useEffect to load in data
   useEffect(() => {
     async function fetchStores() {
-      let storeData;
       if (causeRef.current !== '') {
-        storeData = API.graphql(
+        return API.graphql(
           graphqlOperation(listAllStoresByPrice, {
             limit: 15,
             listAll: 'Y',
@@ -278,7 +256,7 @@ export default function SearchScreen({navigation}) {
           }),
         );
       } else {
-        storeData = API.graphql(
+        return API.graphql(
           graphqlOperation(listAllStoresByPrice, {
             limit: 15,
             listAll: 'Y',
@@ -286,7 +264,6 @@ export default function SearchScreen({navigation}) {
           }),
         );
       }
-      return storeData;
     }
     fetchStores()
       .then((storeData) => {
@@ -295,16 +272,15 @@ export default function SearchScreen({navigation}) {
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
       });
   }, []);
 
   // useEffect for loading more
   useEffect(() => {
     async function fetchStores() {
-      let storeData;
       if (causeRef.current !== '') {
-        storeData = API.graphql(
+        return API.graphql(
           graphqlOperation(listAllStoresByPrice, {
             nextToken: pageTokenRef.current,
             limit: 15,
@@ -318,7 +294,7 @@ export default function SearchScreen({navigation}) {
           }),
         );
       } else {
-        storeData = API.graphql(
+        return API.graphql(
           graphqlOperation(listAllStoresByPrice, {
             nextToken: pageTokenRef.current,
             limit: 15,
@@ -327,7 +303,6 @@ export default function SearchScreen({navigation}) {
           }),
         );
       }
-      return storeData;
     }
 
     if (loadingMore) {
@@ -353,9 +328,8 @@ export default function SearchScreen({navigation}) {
   // useEffect function to do a new query once new options are selected (will run when a menu closes, since refresh will be set to true)
   useEffect(() => {
     async function fetchStores() {
-      let storeData;
       if (causeRef.current !== '') {
-        storeData = API.graphql(
+        return API.graphql(
           graphqlOperation(listAllStoresByPrice, {
             limit: 15,
             listAll: 'Y',
@@ -368,7 +342,7 @@ export default function SearchScreen({navigation}) {
           }),
         );
       } else {
-        storeData = API.graphql(
+        return API.graphql(
           graphqlOperation(listAllStoresByPrice, {
             limit: 15,
             listAll: 'Y',
@@ -376,7 +350,6 @@ export default function SearchScreen({navigation}) {
           }),
         );
       }
-      return storeData;
     }
 
     if (refresh) {
@@ -445,6 +418,7 @@ export default function SearchScreen({navigation}) {
   useEffect(() => {
     if (sortApply) {
       toggleSortOverlay();
+      setSortApply(false);
     }
   }, [sortApply, toggleSortOverlay]);
 
@@ -457,6 +431,7 @@ export default function SearchScreen({navigation}) {
   useEffect(() => {
     if (filterApply) {
       toggleFilterOverlay();
+      setFilterApply(false);
     }
   }, [filterApply, toggleFilterOverlay]);
   // Render return
