@@ -5,7 +5,8 @@ import {
   Dimensions,
   StyleSheet,
   Linking,
-  ScrollView, TouchableOpacity,
+  ScrollView,
+  TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import {Button} from 'react-native-elements';
@@ -44,7 +45,9 @@ export default function StoreScreen({route, navigation}) {
       }
     }
     return (
-      <TouchableOpacity style={styles.urlContainer} onPress={() => _handleURL()}>
+      <TouchableOpacity
+        style={styles.urlContainer}
+        onPress={() => _handleURL()}>
         <Text style={styles.ShopUrl}>{website_URL}</Text>
       </TouchableOpacity>
     );
@@ -54,13 +57,7 @@ export default function StoreScreen({route, navigation}) {
       <View style={styles.info}>
         <Button
           onPress={() => navigation.navigate('SearchScreen')}
-          icon={
-            <Icon
-                name="arrow-left"
-                size={30}
-                color="white"
-            />
-            }
+          icon={<Icon name="arrow-left" size={30} color="white" />}
           buttonStyle={styles.CancelButton}
           containerStyle={styles.buttonContainer}
         />
@@ -85,7 +82,7 @@ export default function StoreScreen({route, navigation}) {
 
 const styles = StyleSheet.create({
   urlContainer: {
-    width:'90%',
+    width: '90%',
     alignItems: 'center',
   },
   imageContainer: {
@@ -136,13 +133,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     fontSize: 14,
-  },
-  ShopLoc: {
-    marginTop: 15,
-    fontWeight: 'bold', //'700' Bold, '800' Heavy, '900' Black
-    fontSize: 15,
-    marginBottom: 5,
-    color: 'black',
   },
   CancelButton: {
     position: 'relative',

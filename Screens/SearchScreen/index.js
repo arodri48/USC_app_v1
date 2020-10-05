@@ -595,13 +595,11 @@ const styles = StyleSheet.create({
   },
   storeImage: {width: 100, height: 100},
   storeText: {justifyContent: 'space-around', width: 120, height: 100},
-  textHeaderContainer: {alignItems: 'center', justifyContent: 'center'},
   smileContainer: {
     width: '100%',
-    height: 60,
-    justifyContent: 'center',
+    height: 70,
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    paddingTop: 35,
   },
   smileImage: {
     alignSelf: 'center',
@@ -642,18 +640,6 @@ const styles = StyleSheet.create({
     height: 400,
     width: 400,
   },
-  sendASmile: {
-    color: '#fcc6df',
-    fontSize: 28,
-    paddingBottom: 0,
-    fontFamily:
-      Platform.OS === 'ios' ? 'Raleway-SemiBold' : 'raleway_semibold.ttf',
-  },
-  text: {
-    color: '#535358',
-    fontSize: 9,
-    marginTop: -10,
-  },
   footerStyle: {
     position: 'relative',
     width: width,
@@ -662,5 +648,6 @@ const styles = StyleSheet.create({
   },
   filterText: {
     fontSize: 19,
+    paddingLeft: 12,
   },
 });

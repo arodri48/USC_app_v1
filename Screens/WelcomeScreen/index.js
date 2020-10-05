@@ -12,25 +12,26 @@ export default function WelcomeScreen({navigation}) {
     <SafeAreaView style={styles.MainContainer}>
       <View style={styles.logoParentContainer}>
         <FastImage
-            source={ImageList.full_send_a_smile_logo}
-            style={styles.smileLogo}
-            resizeMode={FastImage.resizeMode.contain}
+          source={ImageList.full_send_a_smile_logo}
+          style={styles.smileLogo}
+          resizeMode={FastImage.resizeMode.contain}
         />
       </View>
-        <Text style={styles.text}>
-          The COVID-19 pandemic has changed the way of life for all of us.
-          During these times of uncertainty, it is important to connect with our
-          loved ones and support important social causes. Select ‘Begin’ to discover
-          online shops advocating for important causes and send a care package and gift
-          to loved ones through their website. These online shops donate a percentage of
-          sales to important social causes and charities. Let’s Send a Smile together!
-        </Text>
-        <Button
-          title="Begin"
-          onPress={() => dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'})}
-          buttonStyle={styles.buttonStyle}
-          titleStyle={styles.buttonText}
-        />
+      <Text style={styles.text}>
+        The COVID-19 pandemic has changed the way of life for all of us. During
+        these times of uncertainty, it is important to connect with our loved
+        ones and support important social causes. Select ‘Begin’ to discover
+        online shops advocating for important causes and send a care package and
+        gift to loved ones through their website. These online shops donate a
+        percentage of sales to important social causes and charities. Let’s Send
+        a Smile together!
+      </Text>
+      <Button
+        title="Begin"
+        onPress={() => dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'})}
+        buttonStyle={styles.buttonStyle}
+        titleStyle={styles.buttonText}
+      />
 
       <View style={styles.bottomView}>
         <FastImage
@@ -64,7 +65,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: 'white',
-
   },
   bottomView: {
     width: '100%',
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   },
   logoParentContainer: {
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     width: '100%',
     height: 200,
   },
@@ -84,7 +84,6 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 150
   },
 
   handsImage: {
