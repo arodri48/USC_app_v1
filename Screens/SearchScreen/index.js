@@ -471,6 +471,7 @@ export default function SearchScreen({navigation}) {
               title="BLM"
               checkedIcon="dot-circle-o"
               uncheckedIcon="circle-o"
+              checkedColor="#AF8DB3"
               checked={filterOption.BLM}
               onPress={() => filterDispatch({type: 'BLM'})}
             />
@@ -478,6 +479,7 @@ export default function SearchScreen({navigation}) {
               title="Mental Health"
               checkedIcon="dot-circle-o"
               uncheckedIcon="circle-o"
+              checkedColor="#AF8DB3"
               checked={filterOption.mental_health}
               onPress={() => filterDispatch({type: 'Mental Health'})}
             />
@@ -485,6 +487,7 @@ export default function SearchScreen({navigation}) {
               title="Cancer"
               checkedIcon="dot-circle-o"
               uncheckedIcon="circle-o"
+              checkedColor="#AF8DB3"
               checked={filterOption.cancer}
               onPress={() => filterDispatch({type: 'Cancer'})}
             />
@@ -492,13 +495,14 @@ export default function SearchScreen({navigation}) {
               title="Woman Led"
               checkedIcon="dot-circle-o"
               uncheckedIcon="circle-o"
+              checkedColor="#AF8DB3"
               checked={filterOption.woman_led}
               onPress={() => filterDispatch({type: 'Woman Led'})}
             />
           </View>
           <View style={styles.buttonRowContainer}>
-            <Button title="Cancel" onPress={onPressFilterCancel} />
-            <Button title="Apply" onPress={onPressFilterApply} />
+            <Button title="Cancel" buttonStyle={styles.applyCancelButtonStyle} onPress={onPressFilterCancel} />
+            <Button title="Apply" buttonStyle={styles.applyCancelButtonStyle} onPress={onPressFilterApply} />
           </View>
         </View>
       </Overlay>
@@ -515,6 +519,7 @@ export default function SearchScreen({navigation}) {
               onPress={() => sortDispatch({type: 'HIGH_TO_LOW'})}
               checkedIcon="dot-circle-o"
               uncheckedIcon="circle-o"
+              checkedColor="#AF8DB3"
             />
             <CheckBox
               checked={sortOption.low_to_high}
@@ -522,12 +527,17 @@ export default function SearchScreen({navigation}) {
               onPress={() => sortDispatch({type: 'LOW_TO_HIGH'})}
               checkedIcon="dot-circle-o"
               uncheckedIcon="circle-o"
+              checkedColor="#AF8DB3"
             />
           </View>
 
           <View style={styles.buttonRowContainer}>
-            <Button title="Cancel" onPress={onPressSortCancel} />
-            <Button title="Apply" onPress={onPressSortApply} />
+            <Button title="Cancel" buttonStyle={styles.applyCancelButtonStyle} onPress={onPressSortCancel} />
+            <Button
+              title="Apply"
+              buttonStyle={styles.applyCancelButtonStyle}
+              onPress={onPressSortApply}
+            />
           </View>
         </View>
       </Overlay>
@@ -575,6 +585,9 @@ const styles = StyleSheet.create({
   },
   filterSortButtonStyle: {
     backgroundColor: 'transparent',
+  },
+  applyCancelButtonStyle: {
+    backgroundColor: '#AF8DB3',
   },
   itemContainer: {
     backgroundColor: 'pink',
