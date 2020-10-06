@@ -399,7 +399,7 @@ export default function SearchScreen({navigation}) {
           source={{
             uri: item.image,
           }}
-          resizeMode={FastImage.resizeMode.cover}
+          resizeMode={FastImage.resizeMode.contain}
         />
         <View style={styles.storeText}>
           <Text>{item.storeName}</Text>
