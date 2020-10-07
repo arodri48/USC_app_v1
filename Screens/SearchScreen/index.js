@@ -13,7 +13,6 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Platform,
 } from 'react-native';
 import {API, graphqlOperation} from 'aws-amplify';
 import {listAllStoresByPrice} from '../../src/graphql/queries';
@@ -501,8 +500,16 @@ export default function SearchScreen({navigation}) {
             />
           </View>
           <View style={styles.buttonRowContainer}>
-            <Button title="Cancel" buttonStyle={styles.applyCancelButtonStyle} onPress={onPressFilterCancel} />
-            <Button title="Apply" buttonStyle={styles.applyCancelButtonStyle} onPress={onPressFilterApply} />
+            <Button
+              title="Cancel"
+              buttonStyle={styles.applyCancelButtonStyle}
+              onPress={onPressFilterCancel}
+            />
+            <Button
+              title="Apply"
+              buttonStyle={styles.applyCancelButtonStyle}
+              onPress={onPressFilterApply}
+            />
           </View>
         </View>
       </Overlay>
@@ -532,7 +539,11 @@ export default function SearchScreen({navigation}) {
           </View>
 
           <View style={styles.buttonRowContainer}>
-            <Button title="Cancel" buttonStyle={styles.applyCancelButtonStyle} onPress={onPressSortCancel} />
+            <Button
+              title="Cancel"
+              buttonStyle={styles.applyCancelButtonStyle}
+              onPress={onPressSortCancel}
+            />
             <Button
               title="Apply"
               buttonStyle={styles.applyCancelButtonStyle}

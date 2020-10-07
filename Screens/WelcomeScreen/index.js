@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {AuthContext} from '../../Provider/AuthProvider';
-import {View, Text, StyleSheet, Platform} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {Button} from 'react-native-elements';
 import ImageList from 'USC_app_v1/media/ImageStore';
@@ -18,12 +18,10 @@ export default function WelcomeScreen({navigation}) {
         />
       </View>
       <Text style={styles.text}>
-        The COVID-19 pandemic has changed the way of life for all of us. During
-        these times of uncertainty, it is important to connect with our loved
-        ones and support important social causes. Select ‘Begin’ to discover
-        online shops advocating for important causes and send a care package and
-        gift to loved ones through their website. These online shops donate a
-        percentage of sales to important social causes and charities. Let’s Send
+        Select ‘Begin’ to discover online shops with unique themes such as
+        mental health, BLM, cancer awareness, and women-led online shops. After
+        selecting a shop, you can go on their website and can find unique
+        products and gifts for you, your loved ones, and friends. Let’s all Send
         a Smile together!
       </Text>
       <Button
@@ -49,6 +47,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     paddingTop: 10,
     textAlign: 'center',
+    width: '90%',
   },
   buttonStyle: {
     borderRadius: 40,
