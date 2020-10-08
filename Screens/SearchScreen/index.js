@@ -8,7 +8,7 @@ import React, {
 import {
   ActivityIndicator,
   Dimensions,
-  FlatList,
+  FlatList, ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -41,11 +41,26 @@ export default function SearchScreen({navigation}) {
     'Woman Led': 'CANCEL_RESET_TO_WOMAN_LED',
   };
   const [currentCause, setCurrentCause] = useState('');
+
+  const categoryRef = useRef('');
+  const [currentCategory, setCurrentCategory] = useState('');
+
+  const filter_category_reset_dict = {
+    Stationary: 'CANCEL_RESET_TO_STATIONARY',
+    Gifts: 'CANCEL_RESET_TO_GIFTS',
+    Clothing: 'CANCEL_RESET_TO_CLOTHING',
+    'Skincare/Beauty': 'CANCEL_RESET_TO_SKINCARE_BEAUTY',
+  };
+
   const toggleFilterOverlay = useCallback(() => {
     setFilterVisible((s) => !s);
-    if (causeRef.current !== currentCause) {
+    if (
+      causeRef.current !== currentCause ||
+      categoryRef.current !== currentCategory
+    ) {
       if (filterApply) {
         causeRef.current = currentCause;
+        categoryRef.current = currentCategory;
         setFilterApply(false);
         setRefresh(true);
       } else {
@@ -54,9 +69,22 @@ export default function SearchScreen({navigation}) {
         } else {
           filterDispatch({type: 'CLEAR_ALL'});
         }
+        if (categoryRef.current !== '') {
+          filterCategoryDispatch({
+            type: filter_category_reset_dict[categoryRef.current],
+          });
+        } else {
+          filterCategoryDispatch({type: 'CLEAR_ALL'});
+        }
       }
     }
-  }, [currentCause, filterApply, filter_reset_dict]);
+  }, [
+    currentCause,
+    currentCategory,
+    filterApply,
+    filter_reset_dict,
+    filter_category_reset_dict,
+  ]);
 
   // Hooks for filter options
   const [filterOption, filterDispatch] = useReducer(
@@ -156,6 +184,96 @@ export default function SearchScreen({navigation}) {
     },
   );
 
+  const [filterCategoryOption, filterCategoryDispatch] = useReducer(
+    (prevState, action) => {
+      switch (action.type) {
+        case 'CANCEL_RESET_TO_STATIONARY':
+          setCurrentCategory('Stationary');
+          return objectMap(prevState, function (key) {
+            return key === 'stationary';
+          });
+        case 'CANCEL_RESET_TO_GIFTS':
+          setCurrentCategory('Gifts');
+          return objectMap(prevState, function (key) {
+            return key === 'gifts';
+          });
+        case 'CANCEL_RESET_TO_CLOTHING':
+          setCurrentCategory('Clothing');
+          return objectMap(prevState, function (key) {
+            return key === 'clothing';
+          });
+        case 'CANCEL_RESET_TO_SKINCARE_BEAUTY':
+          setCurrentCategory('Skincare/Beauty');
+          return objectMap(prevState, function (key) {
+            return key === 'skincare_beauty';
+          });
+        case 'Stationary':
+          if (prevState.stationary) {
+            setCurrentCategory('');
+            return {
+              ...prevState,
+              stationary: false,
+            };
+          } else {
+            setCurrentCategory('Stationary');
+            return objectMap(prevState, function (key) {
+              return key === 'stationary';
+            });
+          }
+        case 'Gifts':
+          if (prevState.gifts) {
+            setCurrentCategory('');
+            return {
+              ...prevState,
+              gifts: false,
+            };
+          } else {
+            setCurrentCategory('Gifts');
+            return objectMap(prevState, function (key) {
+              return key === 'gifts';
+            });
+          }
+        case 'Clothing':
+          if (prevState.clothing) {
+            setCurrentCategory('');
+            return {
+              ...prevState,
+              clothing: false,
+            };
+          } else {
+            setCurrentCategory('Clothing');
+            return objectMap(prevState, function (key) {
+              return key === 'clothing';
+            });
+          }
+        case 'Skincare_Beauty':
+          if (prevState.skincare_beauty) {
+            setCurrentCategory('');
+            return {
+              ...prevState,
+              skincare_beauty: false,
+            };
+          } else {
+            setCurrentCategory('Skincare/Beauty');
+            return objectMap(prevState, function (key) {
+              return key === 'skincare_beauty';
+            });
+          }
+        case 'CLEAR_ALL':
+          setCurrentCategory('');
+          return {
+            stationary: false,
+            gifts: false,
+            clothing: false,
+            skincare_beauty: false,
+          };
+        default:
+          return prevState;
+      }
+    },
+    {stationary: false, gifts: false, clothing: false, skincare_beauty: false},
+  );
+
   // Hooks for sort values
   const [sortApply, setSortApply] = useState(false);
   const [sortVisible, setSortVisible] = useState(false);
@@ -241,7 +359,7 @@ export default function SearchScreen({navigation}) {
   //Initial useEffect to load in data
   useEffect(() => {
     async function fetchStores() {
-      if (causeRef.current !== '') {
+      if (causeRef.current !== '' && categoryRef.current !== '') {
         return API.graphql(
           graphqlOperation(listAllStoresByPrice, {
             limit: 15,
@@ -250,6 +368,35 @@ export default function SearchScreen({navigation}) {
             filter: {
               cause: {
                 eq: causeRef.current,
+              },
+              goodsType: {
+                eq: categoryRef.current,
+              },
+            },
+          }),
+        );
+      } else if (causeRef.current !== '') {
+        return API.graphql(
+          graphqlOperation(listAllStoresByPrice, {
+            limit: 15,
+            listAll: 'Y',
+            sortDirection: sortRef.current,
+            filter: {
+              cause: {
+                eq: causeRef.current,
+              },
+            },
+          }),
+        );
+      } else if (categoryRef.current !== '') {
+        return API.graphql(
+          graphqlOperation(listAllStoresByPrice, {
+            limit: 15,
+            listAll: 'Y',
+            sortDirection: sortRef.current,
+            filter: {
+              goodsType: {
+                eq: categoryRef.current,
               },
             },
           }),
@@ -278,7 +425,7 @@ export default function SearchScreen({navigation}) {
   // useEffect for loading more
   useEffect(() => {
     async function fetchStores() {
-      if (causeRef.current !== '') {
+      if (causeRef.current !== '' && categoryRef.current !== '') {
         return API.graphql(
           graphqlOperation(listAllStoresByPrice, {
             nextToken: pageTokenRef.current,
@@ -288,6 +435,37 @@ export default function SearchScreen({navigation}) {
             filter: {
               cause: {
                 eq: causeRef.current,
+              },
+              goodsType: {
+                eq: categoryRef.current,
+              },
+            },
+          }),
+        );
+      } else if (causeRef.current !== '') {
+        return API.graphql(
+          graphqlOperation(listAllStoresByPrice, {
+            nextToken: pageTokenRef.current,
+            limit: 15,
+            listAll: 'Y',
+            sortDirection: sortRef.current,
+            filter: {
+              cause: {
+                eq: causeRef.current,
+              },
+            },
+          }),
+        );
+      } else if (categoryRef.current !== '') {
+        return API.graphql(
+          graphqlOperation(listAllStoresByPrice, {
+            nextToken: pageTokenRef.current,
+            limit: 15,
+            listAll: 'Y',
+            sortDirection: sortRef.current,
+            filter: {
+              goodsType: {
+                eq: categoryRef.current,
               },
             },
           }),
@@ -327,7 +505,7 @@ export default function SearchScreen({navigation}) {
   // useEffect function to do a new query once new options are selected (will run when a menu closes, since refresh will be set to true)
   useEffect(() => {
     async function fetchStores() {
-      if (causeRef.current !== '') {
+      if (causeRef.current !== '' && categoryRef.current !== '') {
         return API.graphql(
           graphqlOperation(listAllStoresByPrice, {
             limit: 15,
@@ -336,6 +514,36 @@ export default function SearchScreen({navigation}) {
             filter: {
               cause: {
                 eq: causeRef.current,
+              },
+              goodsType: {
+                eq: categoryRef.current,
+              },
+            },
+          }),
+        );
+      } else if (causeRef.current !== '') {
+        return API.graphql(
+          graphqlOperation(listAllStoresByPrice, {
+            limit: 15,
+            listAll: 'Y',
+            sortDirection: sortRef.current,
+            filter: {
+              cause: {
+                eq: causeRef.current,
+              },
+            },
+          }),
+        );
+      } else if (categoryRef.current !== '') {
+
+        return API.graphql(
+          graphqlOperation(listAllStoresByPrice, {
+            limit: 15,
+            listAll: 'Y',
+            sortDirection: sortRef.current,
+            filter: {
+              goodsType: {
+                eq: categoryRef.current,
               },
             },
           }),
@@ -401,8 +609,9 @@ export default function SearchScreen({navigation}) {
           resizeMode={FastImage.resizeMode.contain}
         />
         <View style={styles.storeText}>
-          <Text>{item.storeName}</Text>
-          <Text>{item.cause}</Text>
+          <Text>Name: {item.storeName}</Text>
+          <Text>Category: {item.goodsType}</Text>
+          <Text>Cause: {item.cause}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -464,7 +673,7 @@ export default function SearchScreen({navigation}) {
         overlayStyle={styles.filterMenu}
         isVisible={filterVisible}>
         <View style={styles.overlayContainer}>
-          <View>
+          <ScrollView>
             <Text style={styles.filterText}>Filter By Cause</Text>
             <CheckBox
               title="BLM"
@@ -498,7 +707,40 @@ export default function SearchScreen({navigation}) {
               checked={filterOption.woman_led}
               onPress={() => filterDispatch({type: 'Woman Led'})}
             />
-          </View>
+            <Text style={styles.filterText}>Filter By Category</Text>
+            <CheckBox
+              title="Stationary"
+              checkedIcon="dot-circle-o"
+              uncheckedIcon="circle-o"
+              checkedColor="#AF8DB3"
+              checked={filterCategoryOption.stationary}
+              onPress={() => filterCategoryDispatch({type: 'Stationary'})}
+            />
+            <CheckBox
+              title="Gifts"
+              checkedIcon="dot-circle-o"
+              uncheckedIcon="circle-o"
+              checkedColor="#AF8DB3"
+              checked={filterCategoryOption.gifts}
+              onPress={() => filterCategoryDispatch({type: 'Gifts'})}
+            />
+            <CheckBox
+              title="Clothing"
+              checkedIcon="dot-circle-o"
+              uncheckedIcon="circle-o"
+              checkedColor="#AF8DB3"
+              checked={filterCategoryOption.clothing}
+              onPress={() => filterCategoryDispatch({type: 'Clothing'})}
+            />
+            <CheckBox
+              title="Skincare/Beauty"
+              checkedIcon="dot-circle-o"
+              uncheckedIcon="circle-o"
+              checkedColor="#AF8DB3"
+              checked={filterCategoryOption.skincare_beauty}
+              onPress={() => filterCategoryDispatch({type: 'Skincare_Beauty'})}
+            />
+          </ScrollView>
           <View style={styles.buttonRowContainer}>
             <Button
               title="Cancel"
@@ -618,7 +860,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   storeImage: {width: 100, height: 100},
-  storeText: {justifyContent: 'space-around', width: 120, height: 100},
+  storeText: {justifyContent: 'space-around', width: 140, height: 120},
   smileContainer: {
     width: '100%',
     height: 70,
@@ -669,6 +911,7 @@ const styles = StyleSheet.create({
     width: width,
     height: 100,
     justifyContent: 'center',
+    alignItems: 'center',
   },
   filterText: {
     fontSize: 19,
