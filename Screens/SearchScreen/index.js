@@ -8,7 +8,8 @@ import React, {
 import {
   ActivityIndicator,
   Dimensions,
-  FlatList, ScrollView,
+  FlatList,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -535,7 +536,6 @@ export default function SearchScreen({navigation}) {
           }),
         );
       } else if (categoryRef.current !== '') {
-
         return API.graphql(
           graphqlOperation(listAllStoresByPrice, {
             limit: 15,
@@ -763,17 +763,17 @@ export default function SearchScreen({navigation}) {
           <View>
             <Text style={styles.filterText}>Sort By Price</Text>
             <CheckBox
-              checked={sortOption.high_to_low}
-              title="Prices High to Low"
-              onPress={() => sortDispatch({type: 'HIGH_TO_LOW'})}
+              checked={sortOption.low_to_high}
+              title="Low to High"
+              onPress={() => sortDispatch({type: 'LOW_TO_HIGH'})}
               checkedIcon="dot-circle-o"
               uncheckedIcon="circle-o"
               checkedColor="#AF8DB3"
             />
             <CheckBox
-              checked={sortOption.low_to_high}
-              title="Prices Low to High"
-              onPress={() => sortDispatch({type: 'LOW_TO_HIGH'})}
+              checked={sortOption.high_to_low}
+              title="High to Low"
+              onPress={() => sortDispatch({type: 'HIGH_TO_LOW'})}
               checkedIcon="dot-circle-o"
               uncheckedIcon="circle-o"
               checkedColor="#AF8DB3"
@@ -899,12 +899,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   filterMenu: {
-    height: 400,
-    width: 400,
+    height: '75%',
+    width: '100%',
   },
   sortMenu: {
-    height: 400,
-    width: 400,
+    height: '75%',
+    width: '100%',
   },
   footerStyle: {
     position: 'relative',
