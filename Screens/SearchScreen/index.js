@@ -35,25 +35,25 @@ export default function SearchScreen({navigation}) {
   const [filterApply, setFilterApply] = useState(false);
   const [filterVisible, setFilterVisible] = useState(false);
   const causeRef = useRef('');
-  const filter_reset_dict = {
-    BLM: 'CANCEL_RESET_TO_BLM',
-    'Mental Health': 'CANCEL_RESET_TO_MENTAL_HEALTH',
-    Cancer: 'CANCEL_RESET_TO_CANCER',
-    'Woman Led': 'CANCEL_RESET_TO_WOMAN_LED',
-  };
+
   const [currentCause, setCurrentCause] = useState('');
 
   const categoryRef = useRef('');
   const [currentCategory, setCurrentCategory] = useState('');
 
-  const filter_category_reset_dict = {
-    Stationary: 'CANCEL_RESET_TO_STATIONARY',
-    Gifts: 'CANCEL_RESET_TO_GIFTS',
-    Clothing: 'CANCEL_RESET_TO_CLOTHING',
-    'Skincare/Beauty': 'CANCEL_RESET_TO_SKINCARE_BEAUTY',
-  };
-
   const toggleFilterOverlay = useCallback(() => {
+    const filter_reset_dict = {
+      BLM: 'CANCEL_RESET_TO_BLM',
+      'Mental Health': 'CANCEL_RESET_TO_MENTAL_HEALTH',
+      Cancer: 'CANCEL_RESET_TO_CANCER',
+      'Woman Led': 'CANCEL_RESET_TO_WOMAN_LED',
+    };
+    const filter_category_reset_dict = {
+      Stationary: 'CANCEL_RESET_TO_STATIONARY',
+      Gifts: 'CANCEL_RESET_TO_GIFTS',
+      Clothing: 'CANCEL_RESET_TO_CLOTHING',
+      'Skincare/Beauty': 'CANCEL_RESET_TO_SKINCARE_BEAUTY',
+    };
     setFilterVisible((s) => !s);
     if (
       causeRef.current !== currentCause ||
@@ -79,13 +79,7 @@ export default function SearchScreen({navigation}) {
         }
       }
     }
-  }, [
-    currentCause,
-    currentCategory,
-    filterApply,
-    filter_reset_dict,
-    filter_category_reset_dict,
-  ]);
+  }, [currentCause, currentCategory, filterApply]);
 
   // Hooks for filter options
   const [filterOption, filterDispatch] = useReducer(
@@ -279,12 +273,13 @@ export default function SearchScreen({navigation}) {
   const [sortApply, setSortApply] = useState(false);
   const [sortVisible, setSortVisible] = useState(false);
   const sortRef = useRef('ASC');
-  const sort_reset_dict = {
-    ASC: 'CANCEL_RESET_TO_LOW_TO_HIGH',
-    DESC: 'CANCEL_RESET_TO_HIGH_TO_LOW',
-  };
+
   const [currentSort, setCurrentSort] = useState('ASC');
   const toggleSortOverlay = useCallback(() => {
+    const sort_reset_dict = {
+      ASC: 'CANCEL_RESET_TO_LOW_TO_HIGH',
+      DESC: 'CANCEL_RESET_TO_HIGH_TO_LOW',
+    };
     setSortVisible((s) => !s);
     if (sortRef.current !== currentSort) {
       if (sortApply) {
@@ -295,7 +290,7 @@ export default function SearchScreen({navigation}) {
         sortDispatch({type: sort_reset_dict[sortRef.current]});
       }
     }
-  }, [currentSort, sortApply, sort_reset_dict]);
+  }, [currentSort, sortApply]);
 
   const [sortOption, sortDispatch] = useReducer(
     (prevState, action) => {
