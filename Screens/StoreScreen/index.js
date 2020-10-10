@@ -27,6 +27,7 @@ export default function StoreScreen({route, navigation}) {
     website,
     goodsType,
     image,
+    cause,
   } = route.params;
 
   const URL_Component = ({website_URL, storeID_code}) => {
@@ -45,11 +46,14 @@ export default function StoreScreen({route, navigation}) {
       }
     }
     return (
-      <TouchableOpacity
-        style={styles.urlContainer}
-        onPress={() => _handleURL()}>
-        <Text style={styles.ShopUrl}>{website_URL}</Text>
-      </TouchableOpacity>
+      <View style={styles.websiteComponentStyle}>
+        <Text style={{fontWeight: 'bold'}}>Website: </Text>
+        <TouchableOpacity
+          style={styles.urlContainer}
+          onPress={() => _handleURL()}>
+          <Text style={styles.ShopUrl}>{website_URL}</Text>
+        </TouchableOpacity>
+      </View>
     );
   };
   return (
@@ -69,11 +73,22 @@ export default function StoreScreen({route, navigation}) {
           />
         </View>
         <Text style={styles.ShopName}>{storeName} </Text>
-        <Text style={styles.support}>{goodsType}</Text>
+        <View style={styles.websiteComponentStyle}>
+          <Text style={{fontWeight: 'bold'}}>Category: </Text>
+          <Text>{goodsType}</Text>
+        </View>
+        <View style={styles.websiteComponentStyle}>
+          <Text style={{fontWeight: 'bold'}}>Cause: </Text>
+          <Text>{cause}</Text>
+        </View>
         <URL_Component website_URL={website} storeID_code={id} />
-        <Text style={styles.origin}>{PricePoint} </Text>
+        <View style={styles.websiteComponentStyle}>
+          <Text style={{fontWeight: 'bold'}}>Price: </Text>
+          <Text>{PricePoint}</Text>
+        </View>
         <ScrollView style={styles.bioContainer}>
-          <Text style={styles.service}>{bio}</Text>
+          <Text style={styles.service}>Info:</Text>
+          <Text>{bio}</Text>
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -81,9 +96,21 @@ export default function StoreScreen({route, navigation}) {
 }
 
 const styles = StyleSheet.create({
+  websiteComponentStyle: {
+    flexDirection: 'row',
+    marginTop: 5,
+    marginBottom: 5,
+    width: '80%',
+    justifyContent: 'center',
+  },
   urlContainer: {
-    width: '90%',
+    flexShrink: 1,
+  },
+  ShopUrl: {
+    color: '#FFFFFF',
     alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: 14,
   },
   imageContainer: {
     justifyContent: 'center',
@@ -126,14 +153,9 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 35,
     textAlign: 'center',
+    width: '80%',
   },
-  ShopUrl: {
-    marginTop: 5,
-    color: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: 14,
-  },
+
   CancelButton: {
     position: 'relative',
     backgroundColor: 'transparent',
@@ -150,6 +172,7 @@ const styles = StyleSheet.create({
   service: {
     marginTop: 5,
     marginBottom: 5,
+    fontWeight: 'bold',
   },
   support: {
     marginTop: 5,

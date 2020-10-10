@@ -604,7 +604,7 @@ export default function SearchScreen({navigation}) {
           resizeMode={FastImage.resizeMode.contain}
         />
         <View style={styles.storeText}>
-          <Text>Name: {item.storeName}</Text>
+          <Text>Shop Name: {item.storeName}</Text>
           <Text>Category: {item.goodsType}</Text>
           <Text>Cause: {item.cause}</Text>
         </View>
@@ -854,7 +854,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  storeImage: {width: 100, height: 100},
+  storeImage: {width: 100, height: 100, backgroundColor: 'white'},
   storeText: {justifyContent: 'space-around', width: 140, height: 120},
   smileContainer: {
     width: '100%',
