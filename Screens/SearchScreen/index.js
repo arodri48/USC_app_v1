@@ -43,7 +43,7 @@ export default function SearchScreen({navigation}) {
 
   const toggleFilterOverlay = useCallback(() => {
     const filter_reset_dict = {
-      BLM: 'CANCEL_RESET_TO_BLM',
+      'Black-Owned': 'CANCEL_RESET_TO_BLM',
       'Mental Health': 'CANCEL_RESET_TO_MENTAL_HEALTH',
       Cancer: 'CANCEL_RESET_TO_CANCER',
       'Woman Led': 'CANCEL_RESET_TO_WOMAN_LED',
