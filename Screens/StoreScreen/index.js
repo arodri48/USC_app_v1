@@ -87,8 +87,11 @@ export default function StoreScreen({route, navigation}) {
           <Text>{PricePoint}</Text>
         </View>
         <ScrollView style={styles.bioContainer}>
-          <Text style={styles.service}>Info:</Text>
-          <Text>{bio}</Text>
+          <Text>
+            <Text style={styles.service}>Info: </Text>
+            <Text>{bio}</Text>
+          </Text>
+
         </ScrollView>
       </View>
     </SafeAreaView>

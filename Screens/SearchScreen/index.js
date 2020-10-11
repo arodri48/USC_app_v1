@@ -604,9 +604,18 @@ export default function SearchScreen({navigation}) {
           resizeMode={FastImage.resizeMode.contain}
         />
         <View style={styles.storeText}>
-          <Text>Shop Name: {item.storeName}</Text>
-          <Text>Category: {item.goodsType}</Text>
-          <Text>Cause: {item.cause}</Text>
+          <Text>
+            <Text style={styles.boldText}>Shop Name: </Text>
+            <Text>{item.storeName}</Text>
+          </Text>
+          <Text>
+            <Text style={styles.boldText}>Category: </Text>
+            <Text>{item.goodsType}</Text>
+          </Text>
+          <Text>
+            <Text style={styles.boldText}>Cause: </Text>
+            <Text>{item.cause}</Text>
+          </Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -669,39 +678,6 @@ export default function SearchScreen({navigation}) {
         isVisible={filterVisible}>
         <View style={styles.overlayContainer}>
           <ScrollView>
-            <Text style={styles.filterText}>Filter By Cause</Text>
-            <CheckBox
-              title="BLM"
-              checkedIcon="dot-circle-o"
-              uncheckedIcon="circle-o"
-              checkedColor="#AF8DB3"
-              checked={filterOption.BLM}
-              onPress={() => filterDispatch({type: 'BLM'})}
-            />
-            <CheckBox
-              title="Mental Health"
-              checkedIcon="dot-circle-o"
-              uncheckedIcon="circle-o"
-              checkedColor="#AF8DB3"
-              checked={filterOption.mental_health}
-              onPress={() => filterDispatch({type: 'Mental Health'})}
-            />
-            <CheckBox
-              title="Cancer"
-              checkedIcon="dot-circle-o"
-              uncheckedIcon="circle-o"
-              checkedColor="#AF8DB3"
-              checked={filterOption.cancer}
-              onPress={() => filterDispatch({type: 'Cancer'})}
-            />
-            <CheckBox
-              title="Woman Led"
-              checkedIcon="dot-circle-o"
-              uncheckedIcon="circle-o"
-              checkedColor="#AF8DB3"
-              checked={filterOption.woman_led}
-              onPress={() => filterDispatch({type: 'Woman Led'})}
-            />
             <Text style={styles.filterText}>Filter By Category</Text>
             <CheckBox
               title="Stationary"
@@ -734,6 +710,39 @@ export default function SearchScreen({navigation}) {
               checkedColor="#AF8DB3"
               checked={filterCategoryOption.skincare_beauty}
               onPress={() => filterCategoryDispatch({type: 'Skincare_Beauty'})}
+            />
+            <Text style={styles.filterText}>Filter By Cause</Text>
+            <CheckBox
+              title="BLM"
+              checkedIcon="dot-circle-o"
+              uncheckedIcon="circle-o"
+              checkedColor="#AF8DB3"
+              checked={filterOption.BLM}
+              onPress={() => filterDispatch({type: 'BLM'})}
+            />
+            <CheckBox
+              title="Mental Health"
+              checkedIcon="dot-circle-o"
+              uncheckedIcon="circle-o"
+              checkedColor="#AF8DB3"
+              checked={filterOption.mental_health}
+              onPress={() => filterDispatch({type: 'Mental Health'})}
+            />
+            <CheckBox
+              title="Cancer"
+              checkedIcon="dot-circle-o"
+              uncheckedIcon="circle-o"
+              checkedColor="#AF8DB3"
+              checked={filterOption.cancer}
+              onPress={() => filterDispatch({type: 'Cancer'})}
+            />
+            <CheckBox
+              title="Woman Led"
+              checkedIcon="dot-circle-o"
+              uncheckedIcon="circle-o"
+              checkedColor="#AF8DB3"
+              checked={filterOption.woman_led}
+              onPress={() => filterDispatch({type: 'Woman Led'})}
             />
           </ScrollView>
           <View style={styles.buttonRowContainer}>
@@ -816,6 +825,9 @@ export default function SearchScreen({navigation}) {
   );
 }
 const styles = StyleSheet.create({
+  boldText: {
+    fontWeight: 'bold',
+  },
   buttonRowContainer: {
     width: '50%',
     height: 50,

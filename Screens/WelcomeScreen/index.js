@@ -17,13 +17,21 @@ export default function WelcomeScreen({navigation}) {
           resizeMode={FastImage.resizeMode.contain}
         />
       </View>
-      <Text style={styles.text}>
-        Select ‘Begin’ to discover online shops with unique themes such as
-        mental health, BLM, cancer awareness, and women-led online shops. After
-        selecting a shop, you can go on their website and can find unique
-        products and gifts for you, your loved ones, and friends. Let’s all Send
-        a Smile together!
-      </Text>
+      <View style={styles.infoView}>
+        <Text style={styles.text}>
+          Select ‘Begin’ to discover online shops with unique themes such as
+          mental health, BLM, cancer awareness, and women-led online shops.
+        </Text>
+        <Text style={styles.text}>
+          Press 'Filter' or 'Sort' to organize the online shops, then select a
+          shop to learn more.
+        </Text>
+        <Text style={styles.text}>
+          Send A Smile to yourself, loved ones, or friends by going to the
+          online shop's website and sending gifts!
+        </Text>
+      </View>
+
       <Button
         title="Begin"
         onPress={() => dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'})}
@@ -42,12 +50,11 @@ export default function WelcomeScreen({navigation}) {
   );
 }
 const styles = StyleSheet.create({
+  infoView: {width: '80%'},
   text: {
     color: '#535358',
     fontSize: 18,
     paddingTop: 10,
-    textAlign: 'center',
-    width: '90%',
   },
   buttonStyle: {
     borderRadius: 40,
