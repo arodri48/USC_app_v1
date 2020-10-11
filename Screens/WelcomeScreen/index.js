@@ -20,7 +20,8 @@ export default function WelcomeScreen({navigation}) {
       <View style={styles.infoView}>
         <Text style={styles.text}>
           Select ‘Begin’ to discover online shops with unique themes such as
-          mental health, BLM, cancer awareness, and women-led online shops.
+          mental health, cancer awareness, black-owned, and women-led online
+          shops.
         </Text>
         <Text style={styles.text}>
           Press 'Filter' or 'Sort' to organize the online shops, then select a

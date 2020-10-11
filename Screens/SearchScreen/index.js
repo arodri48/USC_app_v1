@@ -86,7 +86,7 @@ export default function SearchScreen({navigation}) {
     (prevState, action) => {
       switch (action.type) {
         case 'CANCEL_RESET_TO_BLM':
-          setCurrentCause('BLM');
+          setCurrentCause('Black-Owned');
           return objectMap(prevState, function (key) {
             return key === 'BLM';
           });
@@ -113,7 +113,7 @@ export default function SearchScreen({navigation}) {
               BLM: false,
             };
           } else {
-            setCurrentCause('BLM');
+            setCurrentCause('Black-Owned');
             return objectMap(prevState, function (key) {
               return key === 'BLM';
             });
@@ -713,7 +713,7 @@ export default function SearchScreen({navigation}) {
             />
             <Text style={styles.filterText}>Filter By Cause</Text>
             <CheckBox
-              title="BLM"
+              title="Black-Owned"
               checkedIcon="dot-circle-o"
               uncheckedIcon="circle-o"
               checkedColor="#AF8DB3"
