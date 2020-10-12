@@ -4,7 +4,7 @@ import FastImage from 'react-native-fast-image';
 import ImageList from '../../media/ImageStore';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
-export default function SplashScreen({navigation}) {
+export default function SplashScreen() {
   return (
     <SafeAreaView style={styles.MainContainer}>
       <View style={styles.txtContainer}>

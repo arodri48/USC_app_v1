@@ -91,7 +91,6 @@ export default function StoreScreen({route, navigation}) {
             <Text style={styles.service}>Info: </Text>
             <Text>{bio}</Text>
           </Text>
-
         </ScrollView>
       </View>
     </SafeAreaView>

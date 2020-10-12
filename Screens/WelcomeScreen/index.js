@@ -1,5 +1,4 @@
-import React, {useContext} from 'react';
-import {AuthContext} from '../../Provider/AuthProvider';
+import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {Button} from 'react-native-elements';
@@ -7,7 +6,6 @@ import ImageList from 'USC_app_v1/media/ImageStore';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 export default function WelcomeScreen({navigation}) {
-  const {dispatch} = useContext(AuthContext);
   return (
     <SafeAreaView style={styles.MainContainer}>
       <View style={styles.logoParentContainer}>
@@ -35,7 +33,7 @@ export default function WelcomeScreen({navigation}) {
 
       <Button
         title="Begin"
-        onPress={() => dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'})}
+        onPress={() => navigation.navigate('Root', {screen: 'SearchScreen'})}
         buttonStyle={styles.buttonStyle}
         titleStyle={styles.buttonText}
       />
