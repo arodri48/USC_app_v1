@@ -32,22 +32,6 @@ function Root() {
 }
 export default function AppStack() {
   const [firstLaunch, setFirstLaunch] = useState(null);
-  /*
-  const {state, dispatch} = useContext(AuthContext);
-  useEffect(() => {
-    const bootstrapAsync = async () => {
-      let userToken;
-
-      try {
-        userToken = await AsyncStorage.getItem('userToken');
-      } catch (e) {
-        // restoring token failed
-      }
-      dispatch({type: 'RESTORE_TOKEN', token: userToken});
-    };
-    bootstrapAsync();
-  }, [dispatch]);
-*/
   useEffect(() => {
     AsyncStorage.getItem('alreadyLaunched').then((value) => {
       if (value === null) {
@@ -105,33 +89,6 @@ export default function AppStack() {
       </NavigationContainer>
     );
   }
-  /*
-  return (
-    <NavigationContainer>
-      <MainStack.Navigator>
-        {firstLaunch === null ? (
-          <MainStack.Screen
-            name="SplashScreen"
-            component={SplashScreen}
-            options={{headerShown: false}}
-          />
-        ) : firstLaunch === true ? (
-          <MainStack.Screen
-            name="WelcomeScreen"
-            component={WelcomeScreen}
-            options={{headerShown: false}}
-          />
-        ) : (
-          <MainStack.Screen
-            name="Root"
-            component={Root}
-            options={{headerShown: false}}
-          />
-        )}
-      </MainStack.Navigator>
-    </NavigationContainer>
-  );
-   */
 }
 
 const styles = StyleSheet.create({
