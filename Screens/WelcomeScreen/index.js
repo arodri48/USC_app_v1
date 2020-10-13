@@ -33,7 +33,7 @@ export default function WelcomeScreen({navigation}) {
 
       <Button
         title="Begin"
-        onPress={() => navigation.navigate('Root', {screen: 'SearchScreen'})}
+        onPress={() => navigation.navigate('Root')}
         buttonStyle={styles.buttonStyle}
         titleStyle={styles.buttonText}
       />
