@@ -832,6 +832,8 @@ const styles = StyleSheet.create({
   },
   filterSortButtonStyle: {
     backgroundColor: 'transparent',
+    paddingLeft: 15,
+    paddingRight: 15
   },
   applyCancelButtonStyle: {
     backgroundColor: '#AF8DB3',

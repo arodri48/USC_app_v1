@@ -15,6 +15,7 @@ export default function WelcomeScreen({navigation}) {
           resizeMode={FastImage.resizeMode.contain}
         />
       </View>
+
       <View style={styles.infoView}>
         <Text style={styles.text}>
           Select ‘Begin’ to discover online shops with unique themes such as
@@ -49,11 +50,14 @@ export default function WelcomeScreen({navigation}) {
   );
 }
 const styles = StyleSheet.create({
-  infoView: {width: '80%'},
+  infoView: {
+    width: '85%',
+    height: '35%',
+    justifyContent: 'space-between',
+  },
   text: {
     color: '#535358',
     fontSize: 18,
-    paddingTop: 10,
   },
   buttonStyle: {
     borderRadius: 40,
@@ -73,15 +77,15 @@ const styles = StyleSheet.create({
   },
   bottomView: {
     width: '100%',
-    height: 150,
+    height: 160,
     justifyContent: 'flex-end',
-    alignItems: 'center',
+    alignItems: 'flex-end',
   },
   logoParentContainer: {
     alignItems: 'center',
     justifyContent: 'flex-end',
     width: '100%',
-    height: 200,
+    height: 180,
   },
 
   smileLogo: {
@@ -93,6 +97,8 @@ const styles = StyleSheet.create({
 
   handsImage: {
     width: '100%',
-    height: 130,
+    height: 125,
+    alignSelf: 'flex-end',
+    alignContent: 'flex-end',
   },
 });
