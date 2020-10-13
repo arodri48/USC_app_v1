@@ -407,15 +407,11 @@ export default function SearchScreen({navigation}) {
         );
       }
     }
-    fetchStores()
-      .then((storeData) => {
-        pageTokenRef.current = storeData.data.listAllStoresByPrice.nextToken;
-        setStores(storeData.data.listAllStoresByPrice.items);
-        setLoading(false);
-      })
-      .catch((err) => {
-        //console.log(err);
-      });
+    fetchStores().then((storeData) => {
+      pageTokenRef.current = storeData.data.listAllStoresByPrice.nextToken;
+      setStores(storeData.data.listAllStoresByPrice.items);
+      setLoading(false);
+    });
   }, []);
 
   // useEffect for loading more
@@ -480,21 +476,16 @@ export default function SearchScreen({navigation}) {
 
     if (loadingMore) {
       //console.log('this ran');
-      fetchStores()
-        .then((storeData) => {
-          //console.log(storeData);
-          pageTokenRef.current = storeData.data.listAllStoresByPrice.nextToken;
-          //console.log(pageTokenRef.current);
-          const newStores = storeData.data.listAllStoresByPrice.items;
-          //console.log(newStores);
-          setStores((prevStore) => [...prevStore, ...newStores]);
-          setLoading(false);
-          setLoadingMore(false);
-        })
-        // eslint-disable-next-line handle-callback-err
-        .catch((err) => {
-          //console.log(err);
-        });
+      fetchStores().then((storeData) => {
+        //console.log(storeData);
+        pageTokenRef.current = storeData.data.listAllStoresByPrice.nextToken;
+        //console.log(pageTokenRef.current);
+        const newStores = storeData.data.listAllStoresByPrice.items;
+        //console.log(newStores);
+        setStores((prevStore) => [...prevStore, ...newStores]);
+        setLoading(false);
+        setLoadingMore(false);
+      });
     }
   }, [loadingMore, pageTokenRef]); // Functions called upon by render
 
@@ -556,16 +547,12 @@ export default function SearchScreen({navigation}) {
 
     if (refresh) {
       setLoading(true);
-      fetchStores()
-        .then((storeData) => {
-          pageTokenRef.current = storeData.data.listAllStoresByPrice.nextToken;
-          setStores(storeData.data.listAllStoresByPrice.items);
-          setLoading(false);
-          setRefresh(false);
-        })
-        .catch((err) => {
-          //console.log(err);
-        });
+      fetchStores().then((storeData) => {
+        pageTokenRef.current = storeData.data.listAllStoresByPrice.nextToken;
+        setStores(storeData.data.listAllStoresByPrice.items);
+        setLoading(false);
+        setRefresh(false);
+      });
     }
   }, [refresh, pageTokenRef]);
 

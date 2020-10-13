@@ -47,7 +47,7 @@ export default function StoreScreen({route, navigation}) {
     }
     return (
       <View style={styles.websiteComponentStyle}>
-        <Text style={{fontWeight: 'bold'}}>Website: </Text>
+        <Text style={styles.boldText}>Website: </Text>
         <TouchableOpacity
           style={styles.urlContainer}
           onPress={() => _handleURL()}>
@@ -74,16 +74,16 @@ export default function StoreScreen({route, navigation}) {
         </View>
         <Text style={styles.ShopName}>{storeName} </Text>
         <View style={styles.websiteComponentStyle}>
-          <Text style={{fontWeight: 'bold'}}>Category: </Text>
+          <Text style={styles.boldText}>Category: </Text>
           <Text>{goodsType}</Text>
         </View>
         <View style={styles.websiteComponentStyle}>
-          <Text style={{fontWeight: 'bold'}}>Cause: </Text>
+          <Text style={styles.boldText}>Cause: </Text>
           <Text>{cause}</Text>
         </View>
         <URL_Component website_URL={website} storeID_code={id} />
         <View style={styles.websiteComponentStyle}>
-          <Text style={{fontWeight: 'bold'}}>Price: </Text>
+          <Text style={styles.boldText}>Price: </Text>
           <Text>{PricePoint}</Text>
         </View>
         <ScrollView style={styles.bioContainer}>
@@ -179,5 +179,8 @@ const styles = StyleSheet.create({
   support: {
     marginTop: 5,
     marginBottom: 5,
+  },
+  boldText: {
+    fontWeight: 'bold',
   },
 });
