@@ -49,7 +49,7 @@ export default function WelcomeScreen({navigation}) {
     </SafeAreaView>
   );
 }
-const styles = StyleSheet.create({
+const styles2 = StyleSheet.create({
   infoView: {
     width: '85%',
     height: '35%',

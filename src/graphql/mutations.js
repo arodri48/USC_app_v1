@@ -18,6 +18,7 @@ export const createStore = /* GraphQL */ `
       image
       featured
       listAll
+      discountCode
       createdAt
       updatedAt
     }
@@ -40,6 +41,7 @@ export const updateStore = /* GraphQL */ `
       image
       featured
       listAll
+      discountCode
       createdAt
       updatedAt
     }
@@ -62,6 +64,7 @@ export const deleteStore = /* GraphQL */ `
       image
       featured
       listAll
+      discountCode
       createdAt
       updatedAt
     }
@@ -90,6 +93,7 @@ export const createUrlClicked = /* GraphQL */ `
         image
         featured
         listAll
+        discountCode
         createdAt
         updatedAt
       }
@@ -119,6 +123,7 @@ export const updateUrlClicked = /* GraphQL */ `
         image
         featured
         listAll
+        discountCode
         createdAt
         updatedAt
       }
@@ -148,6 +153,7 @@ export const deleteUrlClicked = /* GraphQL */ `
         image
         featured
         listAll
+        discountCode
         createdAt
         updatedAt
       }

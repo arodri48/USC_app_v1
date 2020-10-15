@@ -21,6 +21,7 @@ import FastImage from 'react-native-fast-image';
 import {Button, CheckBox, Overlay} from 'react-native-elements';
 import ImageList from 'USC_app_v1/media/ImageStore';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 const {width} = Dimensions.get('window');
 
@@ -45,19 +46,20 @@ export default function SearchScreen({navigation}) {
     const filter_reset_dict = {
       'Black-Owned': 'CANCEL_RESET_TO_BLM',
       'Mental Health': 'CANCEL_RESET_TO_MENTAL_HEALTH',
-      Cancer: 'CANCEL_RESET_TO_CANCER',
-      'Woman Led': 'CANCEL_RESET_TO_WOMAN_LED',
+      'Cancer Awareness': 'CANCEL_RESET_TO_CANCER',
+      'Woman-Owned': 'CANCEL_RESET_TO_WOMAN_LED',
+      'Self-Care': 'CANCEL_RESET_TO_SELF_CARE',
     };
     const filter_category_reset_dict = {
-      Stationary: 'CANCEL_RESET_TO_STATIONARY',
+      'Planners/Notebooks': 'CANCEL_RESET_TO_STATIONARY',
       Gifts: 'CANCEL_RESET_TO_GIFTS',
-      Clothing: 'CANCEL_RESET_TO_CLOTHING',
-      'Skincare/Beauty': 'CANCEL_RESET_TO_SKINCARE_BEAUTY',
+      Apparel: 'CANCEL_RESET_TO_APPAREL',
+      'Beauty/Wellness': 'CANCEL_RESET_TO_BEAUTY_WELLNESS',
     };
     setFilterVisible((s) => !s);
     if (
-      causeRef.current !== currentCause ||
-      categoryRef.current !== currentCategory
+      categoryRef.current !== currentCategory ||
+      causeRef.current !== currentCause
     ) {
       if (filterApply) {
         causeRef.current = currentCause;
@@ -96,15 +98,33 @@ export default function SearchScreen({navigation}) {
             return key === 'mental_health';
           });
         case 'CANCEL_RESET_TO_CANCER':
-          setCurrentCause('Cancer');
+          setCurrentCause('Cancer Awareness');
           return objectMap(prevState, function (key) {
             return key === 'cancer';
           });
         case 'CANCEL_RESET_TO_WOMAN_LED':
-          setCurrentCause('Woman Led');
+          setCurrentCause('Woman-Owned');
           return objectMap(prevState, function (key) {
             return key === 'woman_led';
           });
+        case 'CANCEL_RESET_TO_SELF_CARE':
+          setCurrentCause('Self-Care');
+          return objectMap(prevState, function (key) {
+            return key === 'self_care';
+          });
+        case 'Self-Care':
+          if (prevState.self_care) {
+            setCurrentCause('');
+            return {
+              ...prevState,
+              self_care: false,
+            };
+          } else {
+            setCurrentCause('Self-Care');
+            return objectMap(prevState, function (key) {
+              return key === 'self_care';
+            });
+          }
         case 'BLM':
           if (prevState.BLM) {
             setCurrentCause('');
@@ -139,7 +159,7 @@ export default function SearchScreen({navigation}) {
               cancer: false,
             };
           } else {
-            setCurrentCause('Cancer');
+            setCurrentCause('Cancer Awareness');
             return objectMap(prevState, function (key) {
               return key === 'cancer';
             });
@@ -152,7 +172,7 @@ export default function SearchScreen({navigation}) {
               woman_led: false,
             };
           } else {
-            setCurrentCause('Woman Led');
+            setCurrentCause('Woman-Owned');
             return objectMap(prevState, function (key) {
               return key === 'woman_led';
             });
@@ -160,12 +180,9 @@ export default function SearchScreen({navigation}) {
         case 'CLEAR_ALL':
           setCurrentCause('');
           //console.log('Really is clearing all');
-          return {
-            BLM: false,
-            mental_health: false,
-            cancer: false,
-            woman_led: false,
-          };
+          return objectMap(prevState, function (key) {
+            return false;
+          });
 
         default:
           return prevState;
@@ -176,6 +193,7 @@ export default function SearchScreen({navigation}) {
       mental_health: false,
       cancer: false,
       woman_led: false,
+      self_care: false,
     },
   );
 
@@ -183,7 +201,7 @@ export default function SearchScreen({navigation}) {
     (prevState, action) => {
       switch (action.type) {
         case 'CANCEL_RESET_TO_STATIONARY':
-          setCurrentCategory('Stationary');
+          setCurrentCategory('Planners/Notebooks');
           return objectMap(prevState, function (key) {
             return key === 'stationary';
           });
@@ -192,17 +210,17 @@ export default function SearchScreen({navigation}) {
           return objectMap(prevState, function (key) {
             return key === 'gifts';
           });
-        case 'CANCEL_RESET_TO_CLOTHING':
-          setCurrentCategory('Clothing');
+        case 'CANCEL_RESET_TO_APPAREL':
+          setCurrentCategory('Apparel');
           return objectMap(prevState, function (key) {
             return key === 'clothing';
           });
-        case 'CANCEL_RESET_TO_SKINCARE_BEAUTY':
-          setCurrentCategory('Skincare/Beauty');
+        case 'CANCEL_RESET_TO_BEAUTY_WELLNESS':
+          setCurrentCategory('Beauty/Wellness');
           return objectMap(prevState, function (key) {
             return key === 'skincare_beauty';
           });
-        case 'Stationary':
+        case 'Planners/Notebooks':
           if (prevState.stationary) {
             setCurrentCategory('');
             return {
@@ -210,7 +228,7 @@ export default function SearchScreen({navigation}) {
               stationary: false,
             };
           } else {
-            setCurrentCategory('Stationary');
+            setCurrentCategory('Planners/Notebooks');
             return objectMap(prevState, function (key) {
               return key === 'stationary';
             });
@@ -228,7 +246,7 @@ export default function SearchScreen({navigation}) {
               return key === 'gifts';
             });
           }
-        case 'Clothing':
+        case 'Apparel':
           if (prevState.clothing) {
             setCurrentCategory('');
             return {
@@ -236,12 +254,12 @@ export default function SearchScreen({navigation}) {
               clothing: false,
             };
           } else {
-            setCurrentCategory('Clothing');
+            setCurrentCategory('Apparel');
             return objectMap(prevState, function (key) {
               return key === 'clothing';
             });
           }
-        case 'Skincare_Beauty':
+        case 'Beauty_Wellness':
           if (prevState.skincare_beauty) {
             setCurrentCategory('');
             return {
@@ -249,19 +267,16 @@ export default function SearchScreen({navigation}) {
               skincare_beauty: false,
             };
           } else {
-            setCurrentCategory('Skincare/Beauty');
+            setCurrentCategory('Beauty/Wellness');
             return objectMap(prevState, function (key) {
               return key === 'skincare_beauty';
             });
           }
         case 'CLEAR_ALL':
           setCurrentCategory('');
-          return {
-            stationary: false,
-            gifts: false,
-            clothing: false,
-            skincare_beauty: false,
-          };
+          return objectMap(prevState, function (key) {
+            return false;
+          });
         default:
           return prevState;
       }
@@ -633,16 +648,60 @@ export default function SearchScreen({navigation}) {
       setFilterApply(false);
     }
   }, [filterApply, toggleFilterOverlay]);
+
+  const [helpVisible, setHelpVisible] = useState(false);
   // Render return
   return (
     <SafeAreaView style={styles.MainContainer}>
       <View style={styles.smileContainer}>
+        <View style={styles.counterView} />
         <FastImage
           source={ImageList.full_send_a_smile_logo}
           style={styles.smileImage}
           resizeMode={FastImage.resizeMode.contain}
         />
+        <Button
+          icon={<Icon size={30} color="black" name="questioncircle" />}
+          buttonStyle={styles.help_button}
+          onPress={() => setHelpVisible(true)}
+        />
       </View>
+      <Overlay
+        isVisible={helpVisible}
+        onBackdropPress={() => setHelpVisible(false)}
+        overlayStyle={styles.help_overlay}>
+        <View style={styles.center_items}>
+          <View style={styles.top_help_view}>
+            <Text style={styles.whiteText}>Not sure how to begin?</Text>
+            <Button
+              icon={<Icon size={20} color="black" name="close" />}
+              buttonStyle={styles.close_help}
+              onPress={() => setHelpVisible(false)}
+            />
+          </View>
+          <View style={styles.width_90}>
+            <Text style={styles.whiteText}>
+              - Click our Filter feature on the left
+            </Text>
+            <Text style={styles.whiteText}>- Select one Product type</Text>
+            <Text style={styles.whiteText}>
+              - Select one Cause of your choosing
+            </Text>
+            <Text style={styles.whiteText}>
+              - Scroll through our list of Businesses
+            </Text>
+            <Text style={styles.whiteText}>
+              - Tap the pink box of the business of your choice
+            </Text>
+            <Text style={styles.whiteText}>
+              - Follow the link at the top of the business profile
+            </Text>
+            <Text style={styles.whiteText}>
+              - Choose a gift and Send A Smile to someone in your life!
+            </Text>
+          </View>
+        </View>
+      </Overlay>
 
       <View style={styles.FilterSortMenuContainer}>
         <Button
@@ -667,12 +726,14 @@ export default function SearchScreen({navigation}) {
           <ScrollView>
             <Text style={styles.filterText}>Filter By Category</Text>
             <CheckBox
-              title="Stationary"
+              title="Planners/Notebooks"
               checkedIcon="dot-circle-o"
               uncheckedIcon="circle-o"
               checkedColor="#AF8DB3"
               checked={filterCategoryOption.stationary}
-              onPress={() => filterCategoryDispatch({type: 'Stationary'})}
+              onPress={() =>
+                filterCategoryDispatch({type: 'Planners/Notebooks'})
+              }
             />
             <CheckBox
               title="Gifts"
@@ -683,20 +744,20 @@ export default function SearchScreen({navigation}) {
               onPress={() => filterCategoryDispatch({type: 'Gifts'})}
             />
             <CheckBox
-              title="Clothing"
+              title="Apparel"
               checkedIcon="dot-circle-o"
               uncheckedIcon="circle-o"
               checkedColor="#AF8DB3"
               checked={filterCategoryOption.clothing}
-              onPress={() => filterCategoryDispatch({type: 'Clothing'})}
+              onPress={() => filterCategoryDispatch({type: 'Apparel'})}
             />
             <CheckBox
-              title="Skincare/Beauty"
+              title="Beauty/Wellness"
               checkedIcon="dot-circle-o"
               uncheckedIcon="circle-o"
               checkedColor="#AF8DB3"
               checked={filterCategoryOption.skincare_beauty}
-              onPress={() => filterCategoryDispatch({type: 'Skincare_Beauty'})}
+              onPress={() => filterCategoryDispatch({type: 'Beauty_Wellness'})}
             />
             <Text style={styles.filterText}>Filter By Cause</Text>
             <CheckBox
@@ -716,7 +777,7 @@ export default function SearchScreen({navigation}) {
               onPress={() => filterDispatch({type: 'Mental Health'})}
             />
             <CheckBox
-              title="Cancer"
+              title="Cancer Awareness"
               checkedIcon="dot-circle-o"
               uncheckedIcon="circle-o"
               checkedColor="#AF8DB3"
@@ -724,12 +785,20 @@ export default function SearchScreen({navigation}) {
               onPress={() => filterDispatch({type: 'Cancer'})}
             />
             <CheckBox
-              title="Woman Led"
+              title="Woman-Owned"
               checkedIcon="dot-circle-o"
               uncheckedIcon="circle-o"
               checkedColor="#AF8DB3"
               checked={filterOption.woman_led}
               onPress={() => filterDispatch({type: 'Woman Led'})}
+            />
+            <CheckBox
+              checked={filterOption.self_care}
+              onPress={() => filterDispatch({type: 'Self-Care'})}
+              checkedColor="#AF8DB3"
+              uncheckedIcon="circle-o"
+              checkedIcon="dot-circle-o"
+              title="Self-Care"
             />
           </ScrollView>
           <View style={styles.buttonRowContainer}>
@@ -812,6 +881,39 @@ export default function SearchScreen({navigation}) {
   );
 }
 const styles = StyleSheet.create({
+  counterView: {width: 50, height: 40},
+  help_button: {
+    width: 50,
+    height: 40,
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  help_overlay: {
+    width: '90%',
+    backgroundColor: '#8bafaf',
+    borderRadius: 10,
+  },
+  center_items: {alignItems: 'center'},
+  top_help_view: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    alignItems: 'center',
+  },
+  close_help: {
+    width: 40,
+    height: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
+  width_90: {
+    width: '90%',
+  },
+  whiteText: {
+    color: 'white',
+  },
   boldText: {
     fontWeight: 'bold',
   },
@@ -833,7 +935,7 @@ const styles = StyleSheet.create({
   filterSortButtonStyle: {
     backgroundColor: 'transparent',
     paddingLeft: 15,
-    paddingRight: 15
+    paddingRight: 15,
   },
   applyCancelButtonStyle: {
     backgroundColor: '#AF8DB3',
@@ -856,17 +958,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   storeImage: {width: 100, height: 100, backgroundColor: 'white'},
-  storeText: {justifyContent: 'space-around', width: 140, height: 120},
+  storeText: {justifyContent: 'space-around', width: 140, height: 130},
   smileContainer: {
+    flexDirection: 'row',
     width: '100%',
     height: 70,
-    justifyContent: 'flex-end',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
   },
   smileImage: {
-    alignSelf: 'center',
-    height: 60,
-    width: '100%',
+    alignSelf: 'flex-end',
+    height: '90%',
+    width: '60%',
   },
   listParentContainer: {
     flex: 1,
@@ -896,11 +999,15 @@ const styles = StyleSheet.create({
   },
   filterMenu: {
     height: '75%',
-    width: '100%',
+    width: '90%',
+    backgroundColor: '#8bafaf',
+    borderRadius: 10,
   },
   sortMenu: {
     height: '75%',
-    width: '100%',
+    width: '90%',
+    backgroundColor: '#8bafaf',
+    borderRadius: 10,
   },
   footerStyle: {
     position: 'relative',

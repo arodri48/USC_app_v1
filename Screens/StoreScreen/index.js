@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
@@ -28,6 +28,7 @@ export default function StoreScreen({route, navigation}) {
     goodsType,
     image,
     cause,
+    discountCode,
   } = route.params;
 
   const URL_Component = ({website_URL, storeID_code}) => {
@@ -81,6 +82,12 @@ export default function StoreScreen({route, navigation}) {
           <Text style={styles.boldText}>Cause: </Text>
           <Text>{cause}</Text>
         </View>
+        {discountCode !== null && (
+          <View style={styles.websiteComponentStyle}>
+            <Text style={styles.boldText}>Discount Code: </Text>
+            <Text selectable={true}>{discountCode}</Text>
+          </View>
+        )}
         <URL_Component website_URL={website} storeID_code={id} />
         <View style={styles.websiteComponentStyle}>
           <Text style={styles.boldText}>Price: </Text>
