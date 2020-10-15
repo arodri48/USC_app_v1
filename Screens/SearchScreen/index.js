@@ -881,10 +881,10 @@ export default function SearchScreen({navigation}) {
   );
 }
 const styles = StyleSheet.create({
-  counterView: {width: 50, height: 40},
+  counterView: {width: 50, height: 50},
   help_button: {
     width: 50,
-    height: 40,
+    height: 50,
     backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'center',
@@ -892,7 +892,7 @@ const styles = StyleSheet.create({
   help_overlay: {
     width: '90%',
     backgroundColor: '#8bafaf',
-    borderRadius: 10,
+    borderRadius: 20,
   },
   center_items: {alignItems: 'center'},
   top_help_view: {
@@ -1001,13 +1001,13 @@ const styles = StyleSheet.create({
     height: '75%',
     width: '90%',
     backgroundColor: '#8bafaf',
-    borderRadius: 10,
+    borderRadius: 20,
   },
   sortMenu: {
-    height: '75%',
+    height: '35%',
     width: '90%',
     backgroundColor: '#8bafaf',
-    borderRadius: 10,
+    borderRadius: 20,
   },
   footerStyle: {
     position: 'relative',
