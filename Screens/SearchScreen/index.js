@@ -759,7 +759,7 @@ export default function SearchScreen({navigation}) {
               checked={filterCategoryOption.skincare_beauty}
               onPress={() => filterCategoryDispatch({type: 'Beauty_Wellness'})}
             />
-            <Text style={styles.filterText}>Filter By Cause</Text>
+            <Text style={styles.filterText}>Filter By Cause/Theme</Text>
             <CheckBox
               title="Black-Owned"
               checkedIcon="dot-circle-o"
