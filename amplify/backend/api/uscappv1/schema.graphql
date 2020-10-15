@@ -27,6 +27,7 @@ type Store
   image: String!
   featured: String!
   listAll: String!
+  discountCode: String
 }
 
 type urlClicked @model(subscriptions: null)
