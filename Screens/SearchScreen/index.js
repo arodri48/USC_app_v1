@@ -685,7 +685,7 @@ export default function SearchScreen({navigation}) {
             </Text>
             <Text style={styles.whiteText}>- Select one Product type</Text>
             <Text style={styles.whiteText}>
-              - Select one Cause of your choosing
+              - Select one Cause/Theme of your choosing
             </Text>
             <Text style={styles.whiteText}>
               - Scroll through our list of Businesses
