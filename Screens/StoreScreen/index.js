@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   ShopUrl: {
-    color: '#FFFFFF',
+    color: 'blue',
     alignItems: 'center',
     justifyContent: 'center',
     fontSize: 14,
@@ -146,8 +146,8 @@ const styles = StyleSheet.create({
   },
 
   info: {
-    backgroundColor: '#FFC0CB',
-    borderColor: '#FFC0CB',
+    backgroundColor: '#BFE3B4',
+    borderColor: '#BFE3B4',
     paddingVertical: 5,
     marginBottom: 20,
     borderRadius: 15,

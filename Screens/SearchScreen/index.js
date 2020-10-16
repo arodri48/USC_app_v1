@@ -710,6 +710,7 @@ export default function SearchScreen({navigation}) {
           buttonStyle={styles.filterSortButtonStyle}
           titleStyle={styles.filterSortTitleStyle}
         />
+        <View style={styles.empty_view_filter_sort} />
 
         <Button
           title="Sort"
@@ -881,6 +882,7 @@ export default function SearchScreen({navigation}) {
   );
 }
 const styles = StyleSheet.create({
+  empty_view_filter_sort: {width: '55%', height: 10},
   counterView: {width: 50, height: 50},
   help_button: {
     width: 50,
@@ -930,18 +932,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   filterSortTitleStyle: {
-    color: 'black',
+    color: 'white',
   },
   filterSortButtonStyle: {
-    backgroundColor: 'transparent',
-    paddingLeft: 15,
-    paddingRight: 15,
+    backgroundColor: '#AF8DB3',
+    width: 60,
   },
   applyCancelButtonStyle: {
     backgroundColor: '#AF8DB3',
   },
   itemContainer: {
-    backgroundColor: 'pink',
+    backgroundColor: '#BFE3B4',
     width: 300,
     height: 150,
     marginBottom: 20,
@@ -993,9 +994,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     position: 'relative',
     width: '100%',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     backgroundColor: 'transparent',
+    paddingBottom: 5,
   },
   filterMenu: {
     height: '75%',
