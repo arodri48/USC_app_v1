@@ -88,9 +88,9 @@ export default function AppStack() {
 
         <View style={styles2.infoView}>
           <Text style={styles2.text}>
-            Select ‘Begin’ to discover online shops with unique themes such as
-            mental health, cancer awareness, black-owned shops, and women-led
-            shops.
+            Send A Smile aims to raise awareness for online shops with unique
+            causes and themes, such as mental health, cancer awareness,
+            black-owned shops, and women-led shops.
           </Text>
           <Text style={styles2.text}>
             Press 'Filter' or 'Sort' to organize the online shops, then select a
