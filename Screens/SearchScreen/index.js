@@ -571,7 +571,7 @@ export default function SearchScreen({navigation}) {
     }
   }, [refresh, pageTokenRef]);
 
-  const _keyExtractor = (obj) => obj.id.toString();
+  const _keyExtractor = useCallback((obj) => obj.id.toString(), []);
 
   const _renderFooter = () => {
     if (!loadingMore) {
@@ -591,36 +591,39 @@ export default function SearchScreen({navigation}) {
     }
   };
 
-  const _renderItem = ({item}) => (
-    <TouchableOpacity
-      style={styles.itemContainer}
-      onPress={() => {
-        navigation.navigate('StoreScreen', item);
-      }}>
-      <View style={styles.storeContainer}>
-        <FastImage
-          style={styles.storeImage}
-          source={{
-            uri: item.image,
-          }}
-          resizeMode={FastImage.resizeMode.contain}
-        />
-        <View style={styles.storeText}>
-          <Text>
-            <Text style={styles.boldText}>Shop Name: </Text>
-            <Text>{item.storeName}</Text>
-          </Text>
-          <Text>
-            <Text style={styles.boldText}>Category: </Text>
-            <Text>{item.goodsType}</Text>
-          </Text>
-          <Text>
-            <Text style={styles.boldText}>Cause: </Text>
-            <Text>{item.cause}</Text>
-          </Text>
+  const _renderItem = useCallback(
+    ({item}) => (
+      <TouchableOpacity
+        style={styles.itemContainer}
+        onPress={() => {
+          navigation.navigate('StoreScreen', item);
+        }}>
+        <View style={styles.storeContainer}>
+          <FastImage
+            style={styles.storeImage}
+            source={{
+              uri: item.image,
+            }}
+            resizeMode={FastImage.resizeMode.contain}
+          />
+          <View style={styles.storeText}>
+            <Text>
+              <Text style={styles.boldText}>Shop Name: </Text>
+              <Text>{item.storeName}</Text>
+            </Text>
+            <Text>
+              <Text style={styles.boldText}>Category: </Text>
+              <Text>{item.goodsType}</Text>
+            </Text>
+            <Text>
+              <Text style={styles.boldText}>Cause: </Text>
+              <Text>{item.cause}</Text>
+            </Text>
+          </View>
         </View>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    ),
+    [navigation],
   );
 
   const onPressSortApply = () => {
@@ -1021,5 +1024,6 @@ const styles = StyleSheet.create({
   filterText: {
     fontSize: 19,
     paddingLeft: 12,
+    color: 'white',
   },
 });

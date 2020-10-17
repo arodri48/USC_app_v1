@@ -62,7 +62,7 @@ export default function StoreScreen({route, navigation}) {
       <View style={styles.info}>
         <Button
           onPress={() => navigation.navigate('SearchScreen')}
-          icon={<Icon name="arrow-left" size={30} color="white" />}
+          icon={<Icon name="arrow-left" size={30} color="black" />}
           buttonStyle={styles.CancelButton}
           containerStyle={styles.buttonContainer}
         />
