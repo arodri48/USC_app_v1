@@ -908,10 +908,10 @@ const styles = StyleSheet.create({
   },
   close_help: {
     width: 40,
-    height: 30,
+    height: 35,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'transparent',
+    backgroundColor: 'transparent'
   },
   width_90: {
     width: '90%',
