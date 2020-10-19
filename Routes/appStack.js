@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {useEffect} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
-import WelcomeScreen from 'USC_app_v1/Screens/WelcomeScreen';
 import SearchScreen from 'USC_app_v1/Screens/SearchScreen';
 import StoreScreen from 'USC_app_v1/Screens/StoreScreen';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -10,6 +9,7 @@ import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import FastImage from 'react-native-fast-image';
 import ImageList from '../media/ImageStore';
+import {Button} from 'react-native-elements';
 
 const MainStack = createStackNavigator();
 const RootStack = createStackNavigator();
@@ -35,13 +35,17 @@ export default function AppStack() {
   useEffect(() => {
     AsyncStorage.getItem('alreadyLaunched').then((value) => {
       if (value === null) {
-        AsyncStorage.setItem('alreadyLaunched', 'true');
         setFirstLaunch(true);
       } else {
         setFirstLaunch(false);
       }
     });
   }, []);
+
+  const _onPressBegin = () => {
+    AsyncStorage.setItem('alreadyLaunched', 'true');
+    setFirstLaunch(false);
+  };
 
   if (firstLaunch === null) {
     return (
@@ -59,15 +63,10 @@ export default function AppStack() {
         </View>
       </SafeAreaView>
     );
-  } else if (firstLaunch === true) {
+  } else if (!firstLaunch) {
     return (
       <NavigationContainer>
         <MainStack.Navigator>
-          <MainStack.Screen
-            name="WelcomeScreen"
-            component={WelcomeScreen}
-            options={{headerShown: false}}
-          />
           <MainStack.Screen
             name="Root"
             component={Root}
@@ -78,15 +77,46 @@ export default function AppStack() {
     );
   } else {
     return (
-      <NavigationContainer>
-        <MainStack.Navigator>
-          <MainStack.Screen
-            name="Root"
-            component={Root}
-            options={{headerShown: false}}
+      <SafeAreaView style={styles2.MainContainer}>
+        <View style={styles2.logoParentContainer}>
+          <FastImage
+            source={ImageList.full_send_a_smile_logo}
+            style={styles2.smileLogo}
+            resizeMode={FastImage.resizeMode.contain}
           />
-        </MainStack.Navigator>
-      </NavigationContainer>
+        </View>
+
+        <View style={styles2.infoView}>
+          <Text style={styles2.text}>
+            Send A Smile aims to raise awareness for online shops with unique
+            causes and themes, such as mental health, cancer awareness,
+            black-owned shops, and women-led shops.
+          </Text>
+          <Text style={styles2.text}>
+            Press 'Filter' or 'Sort' to organize the online shops, then select a
+            shop to learn more.
+          </Text>
+          <Text style={styles2.text}>
+            Send A Smile to yourself, loved ones, or friends by going to the
+            online shop's website and sending gifts!
+          </Text>
+        </View>
+
+        <Button
+          title="Begin"
+          onPress={_onPressBegin}
+          buttonStyle={styles2.buttonStyle}
+          titleStyle={styles2.buttonText}
+        />
+
+        <View style={styles2.bottomView}>
+          <FastImage
+            source={ImageList.Hands_cropped}
+            style={styles2.handsImage}
+            resizeMode={FastImage.resizeMode.contain}
+          />
+        </View>
+      </SafeAreaView>
     );
   }
 }
@@ -112,5 +142,59 @@ const styles = StyleSheet.create({
   imageStyle: {
     width: '100%',
     height: 130,
+  },
+});
+
+const styles2 = StyleSheet.create({
+  infoView: {
+    width: '85%',
+    height: '35%',
+    justifyContent: 'space-between',
+  },
+  text: {
+    color: '#535358',
+    fontSize: 18,
+  },
+  buttonStyle: {
+    borderRadius: 40,
+    backgroundColor: '#AF8DB3',
+    padding: 10,
+    paddingHorizontal: 60,
+  },
+  buttonText: {
+    fontSize: 25,
+    color: 'white',
+  },
+  MainContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: 'white',
+  },
+  bottomView: {
+    width: '100%',
+    height: 160,
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+  },
+  logoParentContainer: {
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    width: '100%',
+    height: 180,
+  },
+
+  smileLogo: {
+    height: 90,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  handsImage: {
+    width: '100%',
+    height: 125,
+    alignSelf: 'flex-end',
+    alignContent: 'flex-end',
   },
 });

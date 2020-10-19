@@ -49,7 +49,7 @@ export default function WelcomeScreen({navigation}) {
     </SafeAreaView>
   );
 }
-const styles = StyleSheet.create({
+const styles2 = StyleSheet.create({
   infoView: {
     width: '85%',
     height: '35%',
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   },
   buttonStyle: {
     borderRadius: 40,
-    backgroundColor: '#FCC6DF',
+    backgroundColor: '#AF8DB3',
     padding: 10,
     paddingHorizontal: 60,
   },

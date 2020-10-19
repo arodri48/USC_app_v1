@@ -43,5 +43,3 @@ type urlClicked @model(subscriptions: null)
   updatedAt: AWSDateTime!
   store: Store @connection(fields: ["storeID"])
 }
-
-

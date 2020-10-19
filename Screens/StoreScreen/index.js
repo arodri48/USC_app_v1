@@ -28,6 +28,7 @@ export default function StoreScreen({route, navigation}) {
     goodsType,
     image,
     cause,
+    discountCode,
   } = route.params;
 
   const URL_Component = ({website_URL, storeID_code}) => {
@@ -61,7 +62,7 @@ export default function StoreScreen({route, navigation}) {
       <View style={styles.info}>
         <Button
           onPress={() => navigation.navigate('SearchScreen')}
-          icon={<Icon name="arrow-left" size={30} color="white" />}
+          icon={<Icon name="arrow-left" size={30} color="black" />}
           buttonStyle={styles.CancelButton}
           containerStyle={styles.buttonContainer}
         />
@@ -81,6 +82,12 @@ export default function StoreScreen({route, navigation}) {
           <Text style={styles.boldText}>Cause: </Text>
           <Text>{cause}</Text>
         </View>
+        {discountCode !== null && (
+          <View style={styles.websiteComponentStyle}>
+            <Text style={styles.boldText}>Discount Code: </Text>
+            <Text selectable={true}>{discountCode}</Text>
+          </View>
+        )}
         <URL_Component website_URL={website} storeID_code={id} />
         <View style={styles.websiteComponentStyle}>
           <Text style={styles.boldText}>Price: </Text>
@@ -109,7 +116,7 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   ShopUrl: {
-    color: '#FFFFFF',
+    color: 'blue',
     alignItems: 'center',
     justifyContent: 'center',
     fontSize: 14,
@@ -139,8 +146,8 @@ const styles = StyleSheet.create({
   },
 
   info: {
-    backgroundColor: '#FFC0CB',
-    borderColor: '#FFC0CB',
+    backgroundColor: '#BFE3B4',
+    borderColor: '#BFE3B4',
     paddingVertical: 5,
     marginBottom: 20,
     borderRadius: 15,
