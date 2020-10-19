@@ -946,7 +946,7 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     backgroundColor: '#BFE3B4',
-    width: 300,
+    width: 330,
     height: 150,
     marginBottom: 20,
     alignItems: 'center',
@@ -956,13 +956,13 @@ const styles = StyleSheet.create({
   },
   storeContainer: {
     flexDirection: 'row',
-    width: 250,
+    width: 280,
     height: 120,
     alignItems: 'center',
     justifyContent: 'space-between',
   },
   storeImage: {width: 100, height: 100, backgroundColor: 'white'},
-  storeText: {justifyContent: 'space-around', width: 140, height: 130},
+  storeText: {justifyContent: 'space-around', width: 170, height: 130,},
   smileContainer: {
     flexDirection: 'row',
     width: '100%',
@@ -979,7 +979,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    width: 300,
+    width: 330,
   },
   loadingContainer: {
     flex: 1,
