@@ -1,13 +1,13 @@
 import React, {
   useCallback,
   useEffect,
+  useMemo,
   useReducer,
   useRef,
   useState,
 } from 'react';
 import {
   ActivityIndicator,
-  Dimensions,
   FlatList,
   ScrollView,
   StyleSheet,
@@ -23,9 +23,24 @@ import ImageList from 'USC_app_v1/media/ImageStore';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/AntDesign';
 
-const {width} = Dimensions.get('window');
-
 export default function SearchScreen({navigation}) {
+  function isEquivalent(a, b) {
+    const aProps = Object.getOwnPropertyNames(a);
+    const bProps = Object.getOwnPropertyNames(b);
+    const aPropLen = aProps.length;
+    const bPropLen = bProps.length;
+    if (aPropLen !== bPropLen) {
+      return false;
+    }
+    let propName;
+    for (let i = 0; i !== aPropLen; ++i) {
+      propName = aProps[i];
+      if (a[propName] !== b[propName]) {
+        return false;
+      }
+    }
+    return true;
+  }
   function objectMap(object, mapFn) {
     return Object.keys(object).reduce(function (result, key) {
       result[key] = mapFn(key);
@@ -35,155 +50,81 @@ export default function SearchScreen({navigation}) {
   // Hooks for filter values
   const [filterApply, setFilterApply] = useState(false);
   const [filterVisible, setFilterVisible] = useState(false);
-  const causeRef = useRef('');
-
-  const [currentCause, setCurrentCause] = useState('');
-
+  const causeRef = useRef({
+    BLM: false,
+    mental_health: false,
+    cancer: false,
+    woman_led: false,
+    self_care: false,
+  });
   const categoryRef = useRef('');
   const [currentCategory, setCurrentCategory] = useState('');
-
-  const toggleFilterOverlay = useCallback(() => {
-    const filter_reset_dict = {
-      'Black-Owned': 'CANCEL_RESET_TO_BLM',
-      'Mental Health': 'CANCEL_RESET_TO_MENTAL_HEALTH',
-      'Cancer Awareness': 'CANCEL_RESET_TO_CANCER',
-      'Woman-Owned': 'CANCEL_RESET_TO_WOMAN_LED',
-      'Self-Care': 'CANCEL_RESET_TO_SELF_CARE',
-    };
-    const filter_category_reset_dict = {
-      'Planners/Notebooks': 'CANCEL_RESET_TO_STATIONARY',
-      Gifts: 'CANCEL_RESET_TO_GIFTS',
-      Apparel: 'CANCEL_RESET_TO_APPAREL',
-      'Beauty/Wellness': 'CANCEL_RESET_TO_BEAUTY_WELLNESS',
-    };
-    setFilterVisible((s) => !s);
-    if (
-      categoryRef.current !== currentCategory ||
-      causeRef.current !== currentCause
-    ) {
-      if (filterApply) {
-        causeRef.current = currentCause;
-        categoryRef.current = currentCategory;
-        setFilterApply(false);
-        setRefresh(true);
-      } else {
-        if (causeRef.current !== '') {
-          filterDispatch({type: filter_reset_dict[causeRef.current]});
-        } else {
-          filterDispatch({type: 'CLEAR_ALL'});
-        }
-        if (categoryRef.current !== '') {
-          filterCategoryDispatch({
-            type: filter_category_reset_dict[categoryRef.current],
-          });
-        } else {
-          filterCategoryDispatch({type: 'CLEAR_ALL'});
-        }
-      }
-    }
-  }, [currentCause, currentCategory, filterApply]);
-
   // Hooks for filter options
   const [filterOption, filterDispatch] = useReducer(
     (prevState, action) => {
       switch (action.type) {
-        case 'CANCEL_RESET_TO_BLM':
-          setCurrentCause('Black-Owned');
-          return objectMap(prevState, function (key) {
-            return key === 'BLM';
-          });
-        case 'CANCEL_RESET_TO_MENTAL_HEALTH':
-          setCurrentCause('Mental Health');
-          return objectMap(prevState, function (key) {
-            return key === 'mental_health';
-          });
-        case 'CANCEL_RESET_TO_CANCER':
-          setCurrentCause('Cancer Awareness');
-          return objectMap(prevState, function (key) {
-            return key === 'cancer';
-          });
-        case 'CANCEL_RESET_TO_WOMAN_LED':
-          setCurrentCause('Woman-Owned');
-          return objectMap(prevState, function (key) {
-            return key === 'woman_led';
-          });
-        case 'CANCEL_RESET_TO_SELF_CARE':
-          setCurrentCause('Self-Care');
-          return objectMap(prevState, function (key) {
-            return key === 'self_care';
-          });
+        case 'RESET':
+          return action.data;
         case 'Self-Care':
           if (prevState.self_care) {
-            setCurrentCause('');
             return {
               ...prevState,
               self_care: false,
             };
           } else {
-            setCurrentCause('Self-Care');
-            return objectMap(prevState, function (key) {
-              return key === 'self_care';
-            });
+            return {
+              ...prevState,
+              self_care: true,
+            };
           }
         case 'BLM':
           if (prevState.BLM) {
-            setCurrentCause('');
             return {
               ...prevState,
               BLM: false,
             };
           } else {
-            setCurrentCause('Black-Owned');
-            return objectMap(prevState, function (key) {
-              return key === 'BLM';
-            });
+            return {
+              ...prevState,
+              BLM: true,
+            };
           }
         case 'Mental Health':
           if (prevState.mental_health) {
-            setCurrentCause('');
             return {
               ...prevState,
               mental_health: false,
             };
           } else {
-            setCurrentCause('Mental Health');
-            return objectMap(prevState, function (key) {
-              return key === 'mental_health';
-            });
+            return {
+              ...prevState,
+              mental_health: true,
+            };
           }
         case 'Cancer':
           if (prevState.cancer) {
-            setCurrentCause('');
             return {
               ...prevState,
               cancer: false,
             };
           } else {
-            setCurrentCause('Cancer Awareness');
-            return objectMap(prevState, function (key) {
-              return key === 'cancer';
-            });
+            return {
+              ...prevState,
+              cancer: true,
+            };
           }
         case 'Woman Led':
           if (prevState.woman_led) {
-            setCurrentCause('');
             return {
               ...prevState,
               woman_led: false,
             };
           } else {
-            setCurrentCause('Woman-Owned');
-            return objectMap(prevState, function (key) {
-              return key === 'woman_led';
-            });
+            return {
+              ...prevState,
+              woman_led: true,
+            };
           }
-        case 'CLEAR_ALL':
-          setCurrentCause('');
-          //console.log('Really is clearing all');
-          return objectMap(prevState, function (key) {
-            return false;
-          });
-
         default:
           return prevState;
       }
@@ -196,6 +137,39 @@ export default function SearchScreen({navigation}) {
       self_care: false,
     },
   );
+
+  const toggleFilterOverlay = useCallback(() => {
+    const filter_category_reset_dict = {
+      'Planners/Notebooks': 'CANCEL_RESET_TO_STATIONARY',
+      Gifts: 'CANCEL_RESET_TO_GIFTS',
+      Apparel: 'CANCEL_RESET_TO_APPAREL',
+      'Beauty/Wellness': 'CANCEL_RESET_TO_BEAUTY_WELLNESS',
+    };
+    setFilterVisible((s) => !s);
+    if (
+      categoryRef.current !== currentCategory ||
+      !isEquivalent(causeRef.current, filterOption)
+    ) {
+      if (filterApply) {
+        causeRef.current = filterOption;
+        categoryRef.current = currentCategory;
+        setFilterApply(false);
+        setRefresh(true);
+      } else {
+        filterDispatch({
+          type: 'RESET',
+          data: causeRef.current,
+        });
+        if (categoryRef.current !== '') {
+          filterCategoryDispatch({
+            type: filter_category_reset_dict[categoryRef.current],
+          });
+        } else {
+          filterCategoryDispatch({type: 'CLEAR_ALL'});
+        }
+      }
+    }
+  }, [currentCategory, filterApply, filterOption]);
 
   const [filterCategoryOption, filterCategoryDispatch] = useReducer(
     (prevState, action) => {
@@ -364,53 +338,185 @@ export default function SearchScreen({navigation}) {
   const [refresh, setRefresh] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [loading, setLoading] = useState(true);
-  const pageTokenRef = useRef();
+  const pageTokenRef = useRef(null);
   // const storesRef = useRef([]);
   const [stores, setStores] = useState([]);
   //Initial useEffect to load in data
+  const cause_dictionary = useMemo(() => {
+    return {
+      BLM: 'Black-Owned',
+      mental_health: 'Mental Health',
+      cancer: 'Cancer Awareness',
+      woman_led: 'Woman-Owned',
+      self_care: 'Self-Care',
+    };
+  }, []);
+  const [firstRender, setFirstRender] = useState(true);
   useEffect(() => {
+    function create_aws_format_filter(obj) {
+      // create an empty array
+      const filter_options = [];
+      const aProps = Object.getOwnPropertyNames(obj);
+      let propName;
+      for (let i = 0, aPropLen = aProps.length; i !== aPropLen; ++i) {
+        propName = aProps[i];
+        if (obj[propName]) {
+          filter_options.push({cause: {eq: cause_dictionary[propName]}});
+        }
+      }
+      return {or: filter_options};
+    }
     async function fetchStores() {
-      if (causeRef.current !== '' && categoryRef.current !== '') {
-        return API.graphql(
+      const cause_filter_options = create_aws_format_filter(causeRef.current);
+      if (!loadingMore) {
+        // Fresh Inquiry
+        if (cause_filter_options.or.length !== 0) {
+          return API.graphql(
+            graphqlOperation(listAllStoresByPrice, {
+              limit: 15,
+              listAll: 'Y',
+              sortDirection: sortRef.current,
+              filter: cause_filter_options,
+            }),
+          );
+        } else {
+          return API.graphql(
+            graphqlOperation(listAllStoresByPrice, {
+              limit: 15,
+              listAll: 'Y',
+              sortDirection: sortRef.current,
+            }),
+          );
+        }
+      } else {
+        if (cause_filter_options.or.length !== 0) {
+          return API.graphql(
+            graphqlOperation(listAllStoresByPrice, {
+              nextToken: pageTokenRef.current,
+              limit: 15,
+              listAll: 'Y',
+              sortDirection: sortRef.current,
+              filter: cause_filter_options,
+            }),
+          );
+        } else {
+          return API.graphql(
+            graphqlOperation(listAllStoresByPrice, {
+              nextToken: pageTokenRef.current,
+              limit: 15,
+              listAll: 'Y',
+              sortDirection: sortRef.current,
+            }),
+          );
+        }
+      }
+    }
+    if (refresh) {
+      setLoading(true);
+      fetchStores().then((storeData) => {
+        //console.log(storeData.data.listAllStoresByPrice.nextToken);
+        pageTokenRef.current = storeData.data.listAllStoresByPrice.nextToken;
+        if (categoryRef.current !== '') {
+          setStores(
+            storeData.data.listAllStoresByPrice.items.filter(
+              (store) => store.goodsType === categoryRef.current,
+            ),
+          );
+        } else {
+          setStores(storeData.data.listAllStoresByPrice.items);
+        }
+        setLoading(false);
+        setRefresh(false);
+      });
+    } else if (loadingMore) {
+      fetchStores().then((storeData) => {
+        //console.log(storeData);
+        pageTokenRef.current = storeData.data.listAllStoresByPrice.nextToken;
+        //console.log(pageTokenRef.current);
+        if (categoryRef.current === '') {
+          const newStores = storeData.data.listAllStoresByPrice.items;
+          setStores((prevStore) => [...prevStore, ...newStores]);
+        } else {
+          const filteredStores = storeData.data.listAllStoresByPrice.items.filter(
+            (store) => store.goodsType === categoryRef.current,
+          );
+          setStores((prevStore) => [...prevStore, ...filteredStores]);
+        }
+        setLoading(false);
+        setLoadingMore(false);
+      });
+    } else if (firstRender) {
+      fetchStores().then((storeData) => {
+        pageTokenRef.current = storeData.data.listAllStoresByPrice.nextToken;
+        if (categoryRef.current !== '') {
+          setStores(
+            storeData.data.listAllStoresByPrice.items.filter(
+              (store) => store.goodsType === categoryRef.current,
+            ),
+          );
+        } else {
+          setStores(storeData.data.listAllStoresByPrice.items);
+        }
+        setLoading(false);
+      });
+      setFirstRender(false);
+    }
+  }, [refresh, loadingMore, firstRender, cause_dictionary]);
+  /*
+  useEffect(() => {
+    function create_aws_format_filter(obj) {
+      // create an empty array
+      const filter_options = [];
+      const aProps = Object.getOwnPropertyNames(obj);
+      const aPropLen = aProps.length;
+
+      let propName;
+      for (let i = 0; i !== aPropLen; ++i) {
+        propName = aProps[i];
+        if (obj[propName]) {
+          filter_options.push({cause: {eq: cause_dictionary[propName]}});
+        }
+      }
+      return {or: filter_options};
+    }
+    async function fetchStores() {
+      //first create an object that stores the filter causes that are true
+      console.log('initial useeffect is running');
+      const cause_filter_options = create_aws_format_filter(causeRef.current);
+      console.log(cause_filter_options);
+      // if the length of the object is 0, then don't feed anything to filter
+      // otherwise, feed the object into the filter
+      if (cause_filter_options.or.length !== 0 && categoryRef.current !== '') {
+        let result = API.graphql(
           graphqlOperation(listAllStoresByPrice, {
             limit: 15,
             listAll: 'Y',
             sortDirection: sortRef.current,
-            filter: {
-              cause: {
-                eq: causeRef.current,
-              },
-              goodsType: {
-                eq: categoryRef.current,
-              },
-            },
+            filter: cause_filter_options,
           }),
         );
-      } else if (causeRef.current !== '') {
+        return result.filter(
+          (store) => store.goodsType === categoryRef.current,
+        );
+      } else if (cause_filter_options.or.length !== 0) {
         return API.graphql(
           graphqlOperation(listAllStoresByPrice, {
             limit: 15,
             listAll: 'Y',
             sortDirection: sortRef.current,
-            filter: {
-              cause: {
-                eq: causeRef.current,
-              },
-            },
+            filter: cause_filter_options,
           }),
         );
       } else if (categoryRef.current !== '') {
-        return API.graphql(
+        let result = API.graphql(
           graphqlOperation(listAllStoresByPrice, {
             limit: 15,
             listAll: 'Y',
             sortDirection: sortRef.current,
-            filter: {
-              goodsType: {
-                eq: categoryRef.current,
-              },
-            },
           }),
+        );
+        return result.filter(
+          (store) => store.goodsType === categoryRef.current,
         );
       } else {
         return API.graphql(
@@ -427,55 +533,63 @@ export default function SearchScreen({navigation}) {
       setStores(storeData.data.listAllStoresByPrice.items);
       setLoading(false);
     });
-  }, []);
+  }, [cause_dictionary]);
 
   // useEffect for loading more
   useEffect(() => {
+    function create_aws_format_filter(obj) {
+      // create an empty array
+      const filter_options = [];
+      const aProps = Object.getOwnPropertyNames(obj);
+      const aPropLen = aProps.length;
+
+      let propName;
+      for (let i = 0; i !== aPropLen; ++i) {
+        propName = aProps[i];
+        if (obj[propName]) {
+          filter_options.push({cause: {eq: cause_dictionary[propName]}});
+        }
+      }
+      return {or: filter_options};
+    }
     async function fetchStores() {
-      if (causeRef.current !== '' && categoryRef.current !== '') {
-        return API.graphql(
+      console.log('loading more useeffect is running');
+      const cause_filter_options = create_aws_format_filter(causeRef.current);
+      console.log(cause_filter_options);
+      if (cause_filter_options.or.length !== 0 && categoryRef.current !== '') {
+        let result = API.graphql(
           graphqlOperation(listAllStoresByPrice, {
             nextToken: pageTokenRef.current,
             limit: 15,
             listAll: 'Y',
             sortDirection: sortRef.current,
-            filter: {
-              cause: {
-                eq: causeRef.current,
-              },
-              goodsType: {
-                eq: categoryRef.current,
-              },
-            },
+            filter: cause_filter_options,
           }),
         );
-      } else if (causeRef.current !== '') {
+        return result.filter(
+          (store) => store.goodsType === categoryRef.current,
+        );
+      } else if (cause_filter_options.or.length !== 0) {
         return API.graphql(
           graphqlOperation(listAllStoresByPrice, {
             nextToken: pageTokenRef.current,
             limit: 15,
             listAll: 'Y',
             sortDirection: sortRef.current,
-            filter: {
-              cause: {
-                eq: causeRef.current,
-              },
-            },
+            filter: cause_filter_options,
           }),
         );
       } else if (categoryRef.current !== '') {
-        return API.graphql(
+        let result = API.graphql(
           graphqlOperation(listAllStoresByPrice, {
             nextToken: pageTokenRef.current,
             limit: 15,
             listAll: 'Y',
             sortDirection: sortRef.current,
-            filter: {
-              goodsType: {
-                eq: categoryRef.current,
-              },
-            },
           }),
+        );
+        return result.filter(
+          (store) => store.goodsType === categoryRef.current,
         );
       } else {
         return API.graphql(
@@ -502,52 +616,65 @@ export default function SearchScreen({navigation}) {
         setLoadingMore(false);
       });
     }
-  }, [loadingMore, pageTokenRef]); // Functions called upon by render
+  }, [cause_dictionary, loadingMore, pageTokenRef]); // Functions called upon by render
 
   // useEffect function to do a new query once new options are selected (will run when a menu closes, since refresh will be set to true)
   useEffect(() => {
+    function create_aws_format_filter(obj) {
+      // create an empty array
+      const filter_options = [];
+      const aProps = Object.getOwnPropertyNames(obj);
+      const aPropLen = aProps.length;
+
+      let propName;
+      for (let i = 0; i !== aPropLen; ++i) {
+        propName = aProps[i];
+        if (obj[propName]) {
+          filter_options.push({cause: {eq: cause_dictionary[propName]}});
+        }
+      }
+      return {or: filter_options};
+    }
     async function fetchStores() {
-      if (causeRef.current !== '' && categoryRef.current !== '') {
-        return API.graphql(
+      //first create an object that stores the filter causes that are true
+      console.log('refresh useeffect is running');
+      const cause_filter_options = create_aws_format_filter(causeRef.current);
+      console.log(cause_filter_options);
+      // if the length of the object is 0, then don't feed anything to filter
+      // otherwise, feed the object into the filter
+      if (cause_filter_options.or.length !== 0 && categoryRef.current !== '') {
+        let result = API.graphql(
           graphqlOperation(listAllStoresByPrice, {
             limit: 15,
             listAll: 'Y',
             sortDirection: sortRef.current,
-            filter: {
-              cause: {
-                eq: causeRef.current,
-              },
-              goodsType: {
-                eq: categoryRef.current,
-              },
-            },
+            filter: cause_filter_options,
           }),
         );
-      } else if (causeRef.current !== '') {
+        return result.filter(
+          (store) => store.goodsType === categoryRef.current,
+        );
+      } else if (cause_filter_options.or.length !== 0) {
         return API.graphql(
           graphqlOperation(listAllStoresByPrice, {
             limit: 15,
             listAll: 'Y',
             sortDirection: sortRef.current,
-            filter: {
-              cause: {
-                eq: causeRef.current,
-              },
-            },
+            filter: cause_filter_options,
           }),
         );
       } else if (categoryRef.current !== '') {
-        return API.graphql(
+        console.log('occuring here');
+        let result = API.graphql(
           graphqlOperation(listAllStoresByPrice, {
             limit: 15,
             listAll: 'Y',
             sortDirection: sortRef.current,
-            filter: {
-              goodsType: {
-                eq: categoryRef.current,
-              },
-            },
           }),
+        );
+        console.log(result);
+        return result.filter(
+          (store) => store.goodsType === categoryRef.current,
         );
       } else {
         return API.graphql(
@@ -563,13 +690,16 @@ export default function SearchScreen({navigation}) {
     if (refresh) {
       setLoading(true);
       fetchStores().then((storeData) => {
+        console.log(storeData.data.listAllStoresByPrice.nextToken);
         pageTokenRef.current = storeData.data.listAllStoresByPrice.nextToken;
         setStores(storeData.data.listAllStoresByPrice.items);
         setLoading(false);
         setRefresh(false);
       });
     }
-  }, [refresh, pageTokenRef]);
+  }, [refresh, pageTokenRef, cause_dictionary]);
+
+ */
 
   const _keyExtractor = useCallback((obj) => obj.id.toString(), []);
 
@@ -911,7 +1041,7 @@ const styles = StyleSheet.create({
     height: 35,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
   },
   width_90: {
     width: '90%',
@@ -962,7 +1092,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   storeImage: {width: 100, height: 100, backgroundColor: 'white'},
-  storeText: {justifyContent: 'space-around', width: 170, height: 130,},
+  storeText: {justifyContent: 'space-around', width: 170, height: 130},
   smileContainer: {
     flexDirection: 'row',
     width: '100%',
