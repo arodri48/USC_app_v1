@@ -51,7 +51,7 @@ export default function AppStack() {
     return (
       <SafeAreaView style={styles.MainContainer}>
         <View style={styles.txtContainer}>
-          <ActivityIndicator color="pink" size="large" />
+          <ActivityIndicator color="#AF8DB3" size="large" />
           <Text> Please Wait...</Text>
         </View>
         <View style={styles.imageContainer}>

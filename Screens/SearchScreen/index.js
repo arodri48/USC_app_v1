@@ -492,7 +492,7 @@ export default function SearchScreen({navigation}) {
     }
     return (
       <View style={styles.footerStyle}>
-        <ActivityIndicator size="small" color="pink" />
+        <ActivityIndicator size="small" color="#AF8DB3" />
       </View>
     );
   };
@@ -793,7 +793,7 @@ export default function SearchScreen({navigation}) {
         </View>
       ) : (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator color="pink" size="small" />
+          <ActivityIndicator color="#AF8DB3" size="small" />
           <Text>Loading</Text>
         </View>
       )}
