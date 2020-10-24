@@ -133,8 +133,8 @@ android {
         applicationId "com.usc_app_v1"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 15
-        versionName "1.0.0"
+        versionCode 16
+        versionName "1.0.1"
     }
     splits {
         abi {
