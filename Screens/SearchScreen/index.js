@@ -41,12 +41,6 @@ export default function SearchScreen({navigation}) {
     }
     return true;
   }
-  function objectMap(object, mapFn) {
-    return Object.keys(object).reduce(function (result, key) {
-      result[key] = mapFn(key);
-      return result;
-    }, {});
-  }
   // Hooks for filter values
   const [filterApply, setFilterApply] = useState(false);
   const [filterVisible, setFilterVisible] = useState(false);
@@ -57,8 +51,12 @@ export default function SearchScreen({navigation}) {
     woman_led: false,
     self_care: false,
   });
-  const categoryRef = useRef('');
-  const [currentCategory, setCurrentCategory] = useState('');
+  const categoryRef = useRef({
+    stationary: false,
+    gifts: false,
+    clothing: false,
+    skincare_beauty: false,
+  });
   // Hooks for filter options
   const [filterOption, filterDispatch] = useReducer(
     (prevState, action) => {
@@ -137,22 +135,75 @@ export default function SearchScreen({navigation}) {
       self_care: false,
     },
   );
+  const [filterCategoryOption, filterCategoryDispatch] = useReducer(
+    (prevState, action) => {
+      switch (action.type) {
+        case 'RESET':
+          return action.data;
+        case 'Planners/Notebooks':
+          if (prevState.stationary) {
+            return {
+              ...prevState,
+              stationary: false,
+            };
+          } else {
+            return {
+              ...prevState,
+              stationary: true,
+            };
+          }
+        case 'Gifts':
+          if (prevState.gifts) {
+            return {
+              ...prevState,
+              gifts: false,
+            };
+          } else {
+            return {
+              ...prevState,
+              gifts: true,
+            };
+          }
+        case 'Apparel':
+          if (prevState.clothing) {
+            return {
+              ...prevState,
+              clothing: false,
+            };
+          } else {
+            return {
+              ...prevState,
+              clothing: true,
+            };
+          }
+        case 'Beauty_Wellness':
+          if (prevState.skincare_beauty) {
+            return {
+              ...prevState,
+              skincare_beauty: false,
+            };
+          } else {
+            return {
+              ...prevState,
+              skincare_beauty: true,
+            };
+          }
+        default:
+          return prevState;
+      }
+    },
+    {stationary: false, gifts: false, clothing: false, skincare_beauty: false},
+  );
 
   const toggleFilterOverlay = useCallback(() => {
-    const filter_category_reset_dict = {
-      'Planners/Notebooks': 'CANCEL_RESET_TO_STATIONARY',
-      Gifts: 'CANCEL_RESET_TO_GIFTS',
-      Apparel: 'CANCEL_RESET_TO_APPAREL',
-      'Beauty/Wellness': 'CANCEL_RESET_TO_BEAUTY_WELLNESS',
-    };
     setFilterVisible((s) => !s);
     if (
-      categoryRef.current !== currentCategory ||
+      !isEquivalent(categoryRef.current, filterCategoryOption) ||
       !isEquivalent(causeRef.current, filterOption)
     ) {
       if (filterApply) {
         causeRef.current = filterOption;
-        categoryRef.current = currentCategory;
+        categoryRef.current = filterCategoryOption;
         setFilterApply(false);
         setRefresh(true);
       } else {
@@ -160,103 +211,13 @@ export default function SearchScreen({navigation}) {
           type: 'RESET',
           data: causeRef.current,
         });
-        if (categoryRef.current !== '') {
-          filterCategoryDispatch({
-            type: filter_category_reset_dict[categoryRef.current],
-          });
-        } else {
-          filterCategoryDispatch({type: 'CLEAR_ALL'});
-        }
+        filterCategoryDispatch({
+          type: 'RESET',
+          data: categoryRef.current,
+        });
       }
     }
-  }, [currentCategory, filterApply, filterOption]);
-
-  const [filterCategoryOption, filterCategoryDispatch] = useReducer(
-    (prevState, action) => {
-      switch (action.type) {
-        case 'CANCEL_RESET_TO_STATIONARY':
-          setCurrentCategory('Planners/Notebooks');
-          return objectMap(prevState, function (key) {
-            return key === 'stationary';
-          });
-        case 'CANCEL_RESET_TO_GIFTS':
-          setCurrentCategory('Gifts');
-          return objectMap(prevState, function (key) {
-            return key === 'gifts';
-          });
-        case 'CANCEL_RESET_TO_APPAREL':
-          setCurrentCategory('Apparel');
-          return objectMap(prevState, function (key) {
-            return key === 'clothing';
-          });
-        case 'CANCEL_RESET_TO_BEAUTY_WELLNESS':
-          setCurrentCategory('Beauty/Wellness');
-          return objectMap(prevState, function (key) {
-            return key === 'skincare_beauty';
-          });
-        case 'Planners/Notebooks':
-          if (prevState.stationary) {
-            setCurrentCategory('');
-            return {
-              ...prevState,
-              stationary: false,
-            };
-          } else {
-            setCurrentCategory('Planners/Notebooks');
-            return objectMap(prevState, function (key) {
-              return key === 'stationary';
-            });
-          }
-        case 'Gifts':
-          if (prevState.gifts) {
-            setCurrentCategory('');
-            return {
-              ...prevState,
-              gifts: false,
-            };
-          } else {
-            setCurrentCategory('Gifts');
-            return objectMap(prevState, function (key) {
-              return key === 'gifts';
-            });
-          }
-        case 'Apparel':
-          if (prevState.clothing) {
-            setCurrentCategory('');
-            return {
-              ...prevState,
-              clothing: false,
-            };
-          } else {
-            setCurrentCategory('Apparel');
-            return objectMap(prevState, function (key) {
-              return key === 'clothing';
-            });
-          }
-        case 'Beauty_Wellness':
-          if (prevState.skincare_beauty) {
-            setCurrentCategory('');
-            return {
-              ...prevState,
-              skincare_beauty: false,
-            };
-          } else {
-            setCurrentCategory('Beauty/Wellness');
-            return objectMap(prevState, function (key) {
-              return key === 'skincare_beauty';
-            });
-          }
-        case 'CLEAR_ALL':
-          setCurrentCategory('');
-          return objectMap(prevState, function (key) {
-            return false;
-          });
-        default:
-          return prevState;
-      }
-    },
-    {stationary: false, gifts: false, clothing: false, skincare_beauty: false},
-  );
+  }, [filterApply, filterCategoryOption, filterOption]);
 
   // Hooks for sort values
   const [sortApply, setSortApply] = useState(false);
@@ -351,6 +312,14 @@ export default function SearchScreen({navigation}) {
       self_care: 'Self-Care',
     };
   }, []);
+  const category_dictionary = useMemo(() => {
+    return {
+      stationary: 'Planners/Notebooks',
+      gifts: 'Gifts',
+      clothing: 'Apparel',
+      skincare_beauty: 'Beauty/Wellness',
+    };
+  }, []);
   const [firstRender, setFirstRender] = useState(true);
   useEffect(() => {
     function create_aws_format_filter(obj) {
@@ -371,18 +340,29 @@ export default function SearchScreen({navigation}) {
       if (!loadingMore) {
         // Fresh Inquiry
         if (cause_filter_options.or.length !== 0) {
-          return API.graphql(
-            graphqlOperation(listAllStoresByPrice, {
-              limit: 15,
-              listAll: 'Y',
-              sortDirection: sortRef.current,
-              filter: cause_filter_options,
-            }),
-          );
+          if (cause_filter_options.or.length > 1) {
+            return API.graphql(
+              graphqlOperation(listAllStoresByPrice, {
+                limit: 100,
+                listAll: 'Y',
+                sortDirection: sortRef.current,
+                filter: cause_filter_options,
+              }),
+            );
+          } else {
+            return API.graphql(
+              graphqlOperation(listAllStoresByPrice, {
+                limit: 100,
+                listAll: 'Y',
+                sortDirection: sortRef.current,
+                filter: cause_filter_options.or[0],
+              }),
+            );
+          }
         } else {
           return API.graphql(
             graphqlOperation(listAllStoresByPrice, {
-              limit: 15,
+              limit: 100,
               listAll: 'Y',
               sortDirection: sortRef.current,
             }),
@@ -390,20 +370,32 @@ export default function SearchScreen({navigation}) {
         }
       } else {
         if (cause_filter_options.or.length !== 0) {
-          return API.graphql(
-            graphqlOperation(listAllStoresByPrice, {
-              nextToken: pageTokenRef.current,
-              limit: 15,
-              listAll: 'Y',
-              sortDirection: sortRef.current,
-              filter: cause_filter_options,
-            }),
-          );
+          if (cause_filter_options.or.length > 1) {
+            return API.graphql(
+              graphqlOperation(listAllStoresByPrice, {
+                nextToken: pageTokenRef.current,
+                limit: 100,
+                listAll: 'Y',
+                sortDirection: sortRef.current,
+                filter: cause_filter_options,
+              }),
+            );
+          } else {
+            return API.graphql(
+              graphqlOperation(listAllStoresByPrice, {
+                nextToken: pageTokenRef.current,
+                limit: 100,
+                listAll: 'Y',
+                sortDirection: sortRef.current,
+                filter: cause_filter_options.or[0],
+              }),
+            );
+          }
         } else {
           return API.graphql(
             graphqlOperation(listAllStoresByPrice, {
               nextToken: pageTokenRef.current,
-              limit: 15,
+              limit: 100,
               listAll: 'Y',
               sortDirection: sortRef.current,
             }),
@@ -411,295 +403,86 @@ export default function SearchScreen({navigation}) {
         }
       }
     }
+    function category_filter_stores(category_entries, store_list) {
+      const new_stores_arr = [];
+      for (let i = 0, store_len = store_list.length; i !== store_len; ++i) {
+        for (
+          let j = 0, filter_len = category_entries.length;
+          j !== filter_len;
+          ++j
+        ) {
+          if (category_entries[j][1]) {
+            if (
+              category_dictionary[category_entries[j][0]] ===
+              store_list[i].goodsType
+            ) {
+              new_stores_arr.push(store_list[i]);
+            }
+          }
+        }
+      }
+      return new_stores_arr;
+    }
     if (refresh) {
+      const category_entries = Object.entries(categoryRef.current);
       setLoading(true);
       fetchStores().then((storeData) => {
-        //console.log(storeData.data.listAllStoresByPrice.nextToken);
         pageTokenRef.current = storeData.data.listAllStoresByPrice.nextToken;
-        if (categoryRef.current !== '') {
-          setStores(
-            storeData.data.listAllStoresByPrice.items.filter(
-              (store) => store.goodsType === categoryRef.current,
-            ),
+        const store_entries = storeData.data.listAllStoresByPrice.items;
+        if (category_entries.some((k) => k[1])) {
+          const new_stores_arr = category_filter_stores(
+            category_entries,
+            store_entries,
           );
+          setStores(new_stores_arr);
         } else {
-          setStores(storeData.data.listAllStoresByPrice.items);
+          setStores(store_entries);
         }
         setLoading(false);
         setRefresh(false);
       });
     } else if (loadingMore) {
+      const category_entries = Object.entries(categoryRef.current);
       fetchStores().then((storeData) => {
-        //console.log(storeData);
         pageTokenRef.current = storeData.data.listAllStoresByPrice.nextToken;
-        //console.log(pageTokenRef.current);
-        if (categoryRef.current === '') {
-          const newStores = storeData.data.listAllStoresByPrice.items;
-          setStores((prevStore) => [...prevStore, ...newStores]);
-        } else {
-          const filteredStores = storeData.data.listAllStoresByPrice.items.filter(
-            (store) => store.goodsType === categoryRef.current,
+        const store_entries = storeData.data.listAllStoresByPrice.items;
+        if (category_entries.some((k) => k[1])) {
+          const new_stores_arr = category_filter_stores(
+            category_entries,
+            store_entries,
           );
-          setStores((prevStore) => [...prevStore, ...filteredStores]);
+          setStores((prevStore) => [...prevStore, ...new_stores_arr]);
+        } else {
+          setStores((prevStore) => [...prevStore, ...store_entries]);
         }
         setLoading(false);
         setLoadingMore(false);
       });
     } else if (firstRender) {
+      const category_entries = Object.entries(categoryRef.current);
       fetchStores().then((storeData) => {
         pageTokenRef.current = storeData.data.listAllStoresByPrice.nextToken;
-        if (categoryRef.current !== '') {
-          setStores(
-            storeData.data.listAllStoresByPrice.items.filter(
-              (store) => store.goodsType === categoryRef.current,
-            ),
+        const store_entries = storeData.data.listAllStoresByPrice.items;
+        if (category_entries.some((k) => k[1])) {
+          const new_stores_arr = category_filter_stores(
+            category_entries,
+            store_entries,
           );
+          setStores(new_stores_arr);
         } else {
-          setStores(storeData.data.listAllStoresByPrice.items);
+          setStores(store_entries);
         }
         setLoading(false);
       });
       setFirstRender(false);
     }
-  }, [refresh, loadingMore, firstRender, cause_dictionary]);
-  /*
-  useEffect(() => {
-    function create_aws_format_filter(obj) {
-      // create an empty array
-      const filter_options = [];
-      const aProps = Object.getOwnPropertyNames(obj);
-      const aPropLen = aProps.length;
-
-      let propName;
-      for (let i = 0; i !== aPropLen; ++i) {
-        propName = aProps[i];
-        if (obj[propName]) {
-          filter_options.push({cause: {eq: cause_dictionary[propName]}});
-        }
-      }
-      return {or: filter_options};
-    }
-    async function fetchStores() {
-      //first create an object that stores the filter causes that are true
-      console.log('initial useeffect is running');
-      const cause_filter_options = create_aws_format_filter(causeRef.current);
-      console.log(cause_filter_options);
-      // if the length of the object is 0, then don't feed anything to filter
-      // otherwise, feed the object into the filter
-      if (cause_filter_options.or.length !== 0 && categoryRef.current !== '') {
-        let result = API.graphql(
-          graphqlOperation(listAllStoresByPrice, {
-            limit: 15,
-            listAll: 'Y',
-            sortDirection: sortRef.current,
-            filter: cause_filter_options,
-          }),
-        );
-        return result.filter(
-          (store) => store.goodsType === categoryRef.current,
-        );
-      } else if (cause_filter_options.or.length !== 0) {
-        return API.graphql(
-          graphqlOperation(listAllStoresByPrice, {
-            limit: 15,
-            listAll: 'Y',
-            sortDirection: sortRef.current,
-            filter: cause_filter_options,
-          }),
-        );
-      } else if (categoryRef.current !== '') {
-        let result = API.graphql(
-          graphqlOperation(listAllStoresByPrice, {
-            limit: 15,
-            listAll: 'Y',
-            sortDirection: sortRef.current,
-          }),
-        );
-        return result.filter(
-          (store) => store.goodsType === categoryRef.current,
-        );
-      } else {
-        return API.graphql(
-          graphqlOperation(listAllStoresByPrice, {
-            limit: 15,
-            listAll: 'Y',
-            sortDirection: sortRef.current,
-          }),
-        );
-      }
-    }
-    fetchStores().then((storeData) => {
-      pageTokenRef.current = storeData.data.listAllStoresByPrice.nextToken;
-      setStores(storeData.data.listAllStoresByPrice.items);
-      setLoading(false);
-    });
-  }, [cause_dictionary]);
-
-  // useEffect for loading more
-  useEffect(() => {
-    function create_aws_format_filter(obj) {
-      // create an empty array
-      const filter_options = [];
-      const aProps = Object.getOwnPropertyNames(obj);
-      const aPropLen = aProps.length;
-
-      let propName;
-      for (let i = 0; i !== aPropLen; ++i) {
-        propName = aProps[i];
-        if (obj[propName]) {
-          filter_options.push({cause: {eq: cause_dictionary[propName]}});
-        }
-      }
-      return {or: filter_options};
-    }
-    async function fetchStores() {
-      console.log('loading more useeffect is running');
-      const cause_filter_options = create_aws_format_filter(causeRef.current);
-      console.log(cause_filter_options);
-      if (cause_filter_options.or.length !== 0 && categoryRef.current !== '') {
-        let result = API.graphql(
-          graphqlOperation(listAllStoresByPrice, {
-            nextToken: pageTokenRef.current,
-            limit: 15,
-            listAll: 'Y',
-            sortDirection: sortRef.current,
-            filter: cause_filter_options,
-          }),
-        );
-        return result.filter(
-          (store) => store.goodsType === categoryRef.current,
-        );
-      } else if (cause_filter_options.or.length !== 0) {
-        return API.graphql(
-          graphqlOperation(listAllStoresByPrice, {
-            nextToken: pageTokenRef.current,
-            limit: 15,
-            listAll: 'Y',
-            sortDirection: sortRef.current,
-            filter: cause_filter_options,
-          }),
-        );
-      } else if (categoryRef.current !== '') {
-        let result = API.graphql(
-          graphqlOperation(listAllStoresByPrice, {
-            nextToken: pageTokenRef.current,
-            limit: 15,
-            listAll: 'Y',
-            sortDirection: sortRef.current,
-          }),
-        );
-        return result.filter(
-          (store) => store.goodsType === categoryRef.current,
-        );
-      } else {
-        return API.graphql(
-          graphqlOperation(listAllStoresByPrice, {
-            nextToken: pageTokenRef.current,
-            limit: 15,
-            listAll: 'Y',
-            sortDirection: sortRef.current,
-          }),
-        );
-      }
-    }
-
-    if (loadingMore) {
-      //console.log('this ran');
-      fetchStores().then((storeData) => {
-        //console.log(storeData);
-        pageTokenRef.current = storeData.data.listAllStoresByPrice.nextToken;
-        //console.log(pageTokenRef.current);
-        const newStores = storeData.data.listAllStoresByPrice.items;
-        //console.log(newStores);
-        setStores((prevStore) => [...prevStore, ...newStores]);
-        setLoading(false);
-        setLoadingMore(false);
-      });
-    }
-  }, [cause_dictionary, loadingMore, pageTokenRef]); // Functions called upon by render
-
-  // useEffect function to do a new query once new options are selected (will run when a menu closes, since refresh will be set to true)
-  useEffect(() => {
-    function create_aws_format_filter(obj) {
-      // create an empty array
-      const filter_options = [];
-      const aProps = Object.getOwnPropertyNames(obj);
-      const aPropLen = aProps.length;
-
-      let propName;
-      for (let i = 0; i !== aPropLen; ++i) {
-        propName = aProps[i];
-        if (obj[propName]) {
-          filter_options.push({cause: {eq: cause_dictionary[propName]}});
-        }
-      }
-      return {or: filter_options};
-    }
-    async function fetchStores() {
-      //first create an object that stores the filter causes that are true
-      console.log('refresh useeffect is running');
-      const cause_filter_options = create_aws_format_filter(causeRef.current);
-      console.log(cause_filter_options);
-      // if the length of the object is 0, then don't feed anything to filter
-      // otherwise, feed the object into the filter
-      if (cause_filter_options.or.length !== 0 && categoryRef.current !== '') {
-        let result = API.graphql(
-          graphqlOperation(listAllStoresByPrice, {
-            limit: 15,
-            listAll: 'Y',
-            sortDirection: sortRef.current,
-            filter: cause_filter_options,
-          }),
-        );
-        return result.filter(
-          (store) => store.goodsType === categoryRef.current,
-        );
-      } else if (cause_filter_options.or.length !== 0) {
-        return API.graphql(
-          graphqlOperation(listAllStoresByPrice, {
-            limit: 15,
-            listAll: 'Y',
-            sortDirection: sortRef.current,
-            filter: cause_filter_options,
-          }),
-        );
-      } else if (categoryRef.current !== '') {
-        console.log('occuring here');
-        let result = API.graphql(
-          graphqlOperation(listAllStoresByPrice, {
-            limit: 15,
-            listAll: 'Y',
-            sortDirection: sortRef.current,
-          }),
-        );
-        console.log(result);
-        return result.filter(
-          (store) => store.goodsType === categoryRef.current,
-        );
-      } else {
-        return API.graphql(
-          graphqlOperation(listAllStoresByPrice, {
-            limit: 15,
-            listAll: 'Y',
-            sortDirection: sortRef.current,
-          }),
-        );
-      }
-    }
-
-    if (refresh) {
-      setLoading(true);
-      fetchStores().then((storeData) => {
-        console.log(storeData.data.listAllStoresByPrice.nextToken);
-        pageTokenRef.current = storeData.data.listAllStoresByPrice.nextToken;
-        setStores(storeData.data.listAllStoresByPrice.items);
-        setLoading(false);
-        setRefresh(false);
-      });
-    }
-  }, [refresh, pageTokenRef, cause_dictionary]);
-
- */
+  }, [
+    refresh,
+    loadingMore,
+    firstRender,
+    cause_dictionary,
+    category_dictionary,
+  ]);
 
   const _keyExtractor = useCallback((obj) => obj.id.toString(), []);
 
@@ -716,7 +499,6 @@ export default function SearchScreen({navigation}) {
 
   const _handleLoadMore = () => {
     if (pageTokenRef.current !== null && !loadingMore) {
-      //console.log('Loading more');
       setLoadingMore(true);
     }
   };
@@ -990,20 +772,24 @@ export default function SearchScreen({navigation}) {
       </Overlay>
       {!loading ? (
         <View style={styles.listParentContainer}>
-          <FlatList
-            data={stores}
-            renderItem={_renderItem}
-            onEndReached={_handleLoadMore}
-            onEndReachedThreshold={0.5}
-            keyExtractor={_keyExtractor}
-            initialNumToRender={6}
-            ListFooterComponent={_renderFooter}
-            getItemLayout={(data, index) => ({
-              length: 150,
-              offset: 150 * index,
-              index,
-            })}
-          />
+          {stores.length !== 0 ? (
+            <FlatList
+              data={stores}
+              renderItem={_renderItem}
+              onEndReached={_handleLoadMore}
+              onEndReachedThreshold={0.5}
+              keyExtractor={_keyExtractor}
+              initialNumToRender={6}
+              ListFooterComponent={_renderFooter}
+              getItemLayout={(data, index) => ({
+                length: 150,
+                offset: 150 * index,
+                index,
+              })}
+            />
+          ) : (
+            <Text>No results matching criteria</Text>
+          )}
         </View>
       ) : (
         <View style={styles.loadingContainer}>
