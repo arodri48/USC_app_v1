@@ -596,20 +596,20 @@ export default function SearchScreen({navigation}) {
           </View>
           <View style={styles.width_90}>
             <Text style={styles.whiteText}>
-              - Click our Filter feature on the left
+              - Click the Filter button on the left
             </Text>
-            <Text style={styles.whiteText}>- Select one Product type</Text>
+            <Text style={styles.whiteText}>- Select product categories of interest</Text>
             <Text style={styles.whiteText}>
-              - Select one Cause/Theme of your choosing
-            </Text>
-            <Text style={styles.whiteText}>
-              - Scroll through our list of Businesses
+              - Select the causes and themes you wish to support
             </Text>
             <Text style={styles.whiteText}>
-              - Tap the pink box of the business of your choice
+              - Scroll through our list of online shops
             </Text>
             <Text style={styles.whiteText}>
-              - Follow the link at the top of the business profile
+              - Tap the shop of your choice
+            </Text>
+            <Text style={styles.whiteText}>
+              - Follow the link at the top of the shop's profile
             </Text>
             <Text style={styles.whiteText}>
               - Choose a gift and Send A Smile to someone in your life!
