@@ -25,17 +25,9 @@ import Icon from 'react-native-vector-icons/AntDesign';
 
 export default function SearchScreen({navigation}) {
   function isEquivalent(a, b) {
-    const aProps = Object.getOwnPropertyNames(a);
-    const bProps = Object.getOwnPropertyNames(b);
-    const aPropLen = aProps.length;
-    const bPropLen = bProps.length;
-    if (aPropLen !== bPropLen) {
-      return false;
-    }
-    let propName;
-    for (let i = 0; i !== aPropLen; ++i) {
-      propName = aProps[i];
-      if (a[propName] !== b[propName]) {
+    // We assume the two objects have the same keys
+    for (const property in a) {
+      if (a[property] !== b[property]) {
         return false;
       }
     }
@@ -325,12 +317,9 @@ export default function SearchScreen({navigation}) {
     function create_aws_format_filter(obj) {
       // create an empty array
       const filter_options = [];
-      const aProps = Object.getOwnPropertyNames(obj);
-      let propName;
-      for (let i = 0, aPropLen = aProps.length; i !== aPropLen; ++i) {
-        propName = aProps[i];
-        if (obj[propName]) {
-          filter_options.push({cause: {eq: cause_dictionary[propName]}});
+      for (const property in obj) {
+        if (obj[property]) {
+          filter_options.push({cause: {eq: cause_dictionary[property]}});
         }
       }
       return {or: filter_options};
@@ -405,20 +394,15 @@ export default function SearchScreen({navigation}) {
     }
     function category_filter_stores(category_entries, store_list) {
       const new_stores_arr = [];
-      for (let i = 0, store_len = store_list.length; i !== store_len; ++i) {
-        for (
-          let j = 0, filter_len = category_entries.length;
-          j !== filter_len;
-          ++j
-        ) {
-          if (category_entries[j][1]) {
-            if (
-              category_dictionary[category_entries[j][0]] ===
-              store_list[i].goodsType
-            ) {
-              new_stores_arr.push(store_list[i]);
-            }
-          }
+      const mySet = new Set();
+      for (const category of category_entries) {
+        if (category[1]) {
+          mySet.add(category_dictionary[category[0]]);
+        }
+      }
+      for (const store of store_list) {
+        if (mySet.has(store.goodsType)) {
+          new_stores_arr.push(store);
         }
       }
       return new_stores_arr;
@@ -598,16 +582,16 @@ export default function SearchScreen({navigation}) {
             <Text style={styles.whiteText}>
               - Click the Filter button on the left
             </Text>
-            <Text style={styles.whiteText}>- Select product categories of interest</Text>
+            <Text style={styles.whiteText}>
+              - Select product categories of interest
+            </Text>
             <Text style={styles.whiteText}>
               - Select the causes and themes you wish to support
             </Text>
             <Text style={styles.whiteText}>
               - Scroll through our list of online shops
             </Text>
-            <Text style={styles.whiteText}>
-              - Tap the shop of your choice
-            </Text>
+            <Text style={styles.whiteText}>- Tap the shop of your choice</Text>
             <Text style={styles.whiteText}>
               - Follow the link at the top of the shop's profile
             </Text>
