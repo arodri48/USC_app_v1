@@ -53,6 +53,14 @@ export default function SearchScreen({navigation}) {
   const [filterOption, filterDispatch] = useReducer(
     (prevState, action) => {
       switch (action.type) {
+        case 'CLEAR_ALL':
+          return {
+            BLM: false,
+            mental_health: false,
+            cancer: false,
+            woman_led: false,
+            self_care: false,
+          };
         case 'RESET':
           return action.data;
         case 'Self-Care':
@@ -130,6 +138,13 @@ export default function SearchScreen({navigation}) {
   const [filterCategoryOption, filterCategoryDispatch] = useReducer(
     (prevState, action) => {
       switch (action.type) {
+        case 'CLEAR_ALL':
+          return {
+            stationary: false,
+            gifts: false,
+            clothing: false,
+            skincare_beauty: false,
+          };
         case 'RESET':
           return action.data;
         case 'Planners/Notebooks':
@@ -395,14 +410,14 @@ export default function SearchScreen({navigation}) {
     function category_filter_stores(category_entries, store_list) {
       const new_stores_arr = [];
       const mySet = new Set();
-      for (const category of category_entries) {
-        if (category[1]) {
-          mySet.add(category_dictionary[category[0]]);
+      for (let i = 0, len = category_entries.length; i !== len; ++i) {
+        if (category_entries[i][1]) {
+          mySet.add(category_dictionary[category_entries[i][0]]);
         }
       }
-      for (const store of store_list) {
-        if (mySet.has(store.goodsType)) {
-          new_stores_arr.push(store);
+      for (let i = 0, len = store_list.length; i !== len; ++i) {
+        if (mySet.has(store_list[i].goodsType)) {
+          new_stores_arr.push(store_list[i]);
         }
       }
       return new_stores_arr;
@@ -527,6 +542,10 @@ export default function SearchScreen({navigation}) {
   };
   const onPressSortCancel = () => {
     toggleSortOverlay();
+  };
+  const onPressClearFilter = () => {
+    filterCategoryDispatch({type: 'CLEAR_ALL'});
+    filterDispatch({type: 'CLEAR_ALL'});
   };
   useEffect(() => {
     if (sortApply) {
@@ -703,6 +722,11 @@ export default function SearchScreen({navigation}) {
           </ScrollView>
           <View style={styles.buttonRowContainer}>
             <Button
+              title="Clear"
+              buttonStyle={styles.applyCancelButtonStyle}
+              onPress={onPressClearFilter}
+            />
+            <Button
               title="Cancel"
               buttonStyle={styles.applyCancelButtonStyle}
               onPress={onPressFilterCancel}
@@ -823,7 +847,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   buttonRowContainer: {
-    width: '50%',
+    width: '100%',
     height: 50,
     justifyContent: 'space-around',
     alignItems: 'center',
