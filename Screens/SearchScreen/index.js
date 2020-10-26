@@ -408,19 +408,13 @@ export default function SearchScreen({navigation}) {
       }
     }
     function category_filter_stores(category_entries, store_list) {
-      const new_stores_arr = [];
       const mySet = new Set();
       for (let i = 0, len = category_entries.length; i !== len; ++i) {
         if (category_entries[i][1]) {
           mySet.add(category_dictionary[category_entries[i][0]]);
         }
       }
-      for (let i = 0, len = store_list.length; i !== len; ++i) {
-        if (mySet.has(store_list[i].goodsType)) {
-          new_stores_arr.push(store_list[i]);
-        }
-      }
-      return new_stores_arr;
+      return store_list.filter((store) => mySet.has(store.goodsType));
     }
     if (refresh) {
       const category_entries = Object.entries(categoryRef.current);
