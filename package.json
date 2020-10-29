@@ -30,6 +30,7 @@
     "react-native-screens": "^2.11.0",
     "react-native-share": "^4.0.4",
     "react-native-vector-icons": "^7.1.0",
+    "uri-scheme": "^1.0.42",
     "zen-observable": "^0.8.15"
   },
   "devDependencies": {
