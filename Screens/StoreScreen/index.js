@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -9,9 +9,11 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
+import Ionicon from 'react-native-vector-icons/Ionicons';
 import {Button} from 'react-native-elements';
 import {API, graphqlOperation} from 'aws-amplify';
 import {createUrlClicked} from 'USC_app_v1/src/graphql/mutations';
+import Share from 'react-native-share';
 
 import FastImage from 'react-native-fast-image';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -30,6 +32,23 @@ export default function StoreScreen({route, navigation}) {
     cause,
     discountCode,
   } = route.params;
+
+  //const [shareResult, setShareResult] = useState('');
+
+  const shareStoreURL = async () => {
+    const shareOptions = {
+      title: 'Share Store URL',
+      url: website,
+      failOnCancel: false,
+    };
+
+    try {
+      await Share.open(shareOptions);
+      //setShareResult(JSON.stringify(ShareResponse, null, 2));
+    } catch (err) {
+      console.log('Error =>', err);
+    }
+  };
 
   const URL_Component = ({website_URL, storeID_code}) => {
     async function _handleURL() {
@@ -60,12 +79,22 @@ export default function StoreScreen({route, navigation}) {
   return (
     <SafeAreaView style={styles.MainContainer}>
       <View style={styles.info}>
-        <Button
-          onPress={() => navigation.navigate('SearchScreen')}
-          icon={<Icon name="arrow-left" size={30} color="black" />}
-          buttonStyle={styles.CancelButton}
-          containerStyle={styles.buttonContainer}
-        />
+        <View style={styles.topButtonRow}>
+          <Button
+            onPress={() => navigation.navigate('SearchScreen')}
+            icon={<Icon name="arrow-left" size={30} color="black" />}
+            buttonStyle={styles.CancelButton}
+          />
+          <View style={styles.width_seventy} />
+          <Button
+            icon={
+              <Ionicon name="share-social-outline" size={30} color="black" />
+            }
+            buttonStyle={styles.CancelButton}
+            onPress={shareStoreURL}
+          />
+        </View>
+
         <View style={styles.imageContainer}>
           <FastImage
             style={styles.imageStyle}
@@ -105,6 +134,8 @@ export default function StoreScreen({route, navigation}) {
 }
 
 const styles = StyleSheet.create({
+  topButtonRow: {flexDirection: 'row', justifyContent: 'space-around'},
+  width_seventy: {width: '70%'},
   websiteComponentStyle: {
     flexDirection: 'row',
     marginTop: 5,
@@ -170,7 +201,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     width: 50,
     height: 40,
-    marginLeft: 5,
     alignItems: 'center',
     justifyContent: 'center',
   },
