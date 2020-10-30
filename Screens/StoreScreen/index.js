@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -17,28 +17,32 @@ import Share from 'react-native-share';
 
 import FastImage from 'react-native-fast-image';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {getStore} from '../../src/graphql/queries';
 
 const {width, height} = Dimensions.get('window');
 
 export default function StoreScreen({route, navigation}) {
-  const {
-    storeName,
-    id,
-    bio,
-    PricePoint,
-    website,
-    goodsType,
-    image,
-    cause,
-    discountCode,
-  } = route.params;
-
-  //const [shareResult, setShareResult] = useState('');
+  const [storeInfo, setStoreInfo] = useState({});
+  useEffect(() => {
+    async function fetchStore() {
+      return API.graphql({
+        query: getStore,
+        variables: {id: route.params.id},
+      });
+    }
+    if (route.params?.cause) {
+      setStoreInfo(route.params);
+    } else {
+      fetchStore().then((store) => {
+        setStoreInfo(store.data.getStore);
+      });
+    }
+  }, [route.params]);
 
   const shareStoreURL = async () => {
     const shareOptions = {
-      title: 'Share Store URL',
-      url: website,
+      message: 'Check out this store I found on Send A Smile:',
+      url: storeInfo.website,
       failOnCancel: false,
     };
 
@@ -98,34 +102,37 @@ export default function StoreScreen({route, navigation}) {
         <View style={styles.imageContainer}>
           <FastImage
             style={styles.imageStyle}
-            source={{uri: image}}
+            source={{uri: storeInfo.image}}
             resizeMode={FastImage.resizeMode.contain}
           />
         </View>
-        <Text style={styles.ShopName}>{storeName} </Text>
+        <Text style={styles.ShopName}>{storeInfo.storeName} </Text>
         <View style={styles.websiteComponentStyle}>
           <Text style={styles.boldText}>Category: </Text>
-          <Text>{goodsType}</Text>
+          <Text>{storeInfo.goodsType}</Text>
         </View>
         <View style={styles.websiteComponentStyle}>
           <Text style={styles.boldText}>Cause: </Text>
-          <Text>{cause}</Text>
+          <Text>{storeInfo.cause}</Text>
         </View>
-        {discountCode !== null && (
+        {storeInfo.discountCode !== null && (
           <View style={styles.websiteComponentStyle}>
             <Text style={styles.boldText}>Discount Code: </Text>
-            <Text selectable={true}>{discountCode}</Text>
+            <Text selectable={true}>{storeInfo.discountCode}</Text>
           </View>
         )}
-        <URL_Component website_URL={website} storeID_code={id} />
+        <URL_Component
+          website_URL={storeInfo.website}
+          storeID_code={storeInfo.id}
+        />
         <View style={styles.websiteComponentStyle}>
           <Text style={styles.boldText}>Price: </Text>
-          <Text>{PricePoint}</Text>
+          <Text>{storeInfo.PricePoint}</Text>
         </View>
         <ScrollView style={styles.bioContainer}>
           <Text>
             <Text style={styles.service}>Info: </Text>
-            <Text>{bio}</Text>
+            <Text>{storeInfo.bio}</Text>
           </Text>
         </ScrollView>
       </View>

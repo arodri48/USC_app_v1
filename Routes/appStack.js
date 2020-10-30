@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useEffect} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {NavigationContainer} from '@react-navigation/native';
+import {LinkingOptions, NavigationContainer} from '@react-navigation/native';
 import SearchScreen from 'USC_app_v1/Screens/SearchScreen';
 import StoreScreen from 'USC_app_v1/Screens/StoreScreen';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -30,6 +30,13 @@ function Root() {
     </RootStack.Navigator>
   );
 }
+
+const linking = {
+  prefixes: ['https://sendasmile.uniselfcare.com', 'sendasmile://'],
+
+};
+
+
 export default function AppStack() {
   const [firstLaunch, setFirstLaunch] = useState(null);
   useEffect(() => {
@@ -65,7 +72,7 @@ export default function AppStack() {
     );
   } else if (!firstLaunch) {
     return (
-      <NavigationContainer>
+      <NavigationContainer linking={linking}>
         <MainStack.Navigator>
           <MainStack.Screen
             name="Root"
