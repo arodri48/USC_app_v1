@@ -24,6 +24,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import Share from 'react-native-share';
+import {createAppShared, createStoreShared} from '../../src/graphql/mutations';
 
 export default function SearchScreen({navigation}) {
   function isEquivalent(a, b) {
@@ -565,20 +566,26 @@ export default function SearchScreen({navigation}) {
 
   const [helpVisible, setHelpVisible] = useState(false);
   // Render return
-  const shareURLs = async () => {
+  const shareURLs = () => {
     const shareOptions = {
       message:
         "Cheer up someone's day while supporting small, online businesses with Send A Smile:",
       url: 'https://www.uniselfcare.com/send-a-smile-page/',
       failOnCancel: false,
     };
-
-    try {
-      await Share.open(shareOptions);
-      //setShareResult(JSON.stringify(ShareResponse, null, 2));
-    } catch (err) {
-      console.log('Error =>', err);
-    }
+    Share.open(shareOptions)
+      .then((res) => {
+        if (!res.dismissedAction) {
+          API.graphql(
+            graphqlOperation(createAppShared, {
+              input: {listAll: 'Y'},
+            }),
+          );
+        }
+      })
+      .catch((err) => {
+        err && console.log(err);
+      });
   };
   return (
     <SafeAreaView style={styles.MainContainer}>

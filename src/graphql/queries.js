@@ -109,6 +109,94 @@ export const listUrlClickeds = /* GraphQL */ `
     }
   }
 `;
+export const getStoreShared = /* GraphQL */ `
+  query GetStoreShared($id: ID!) {
+    getStoreShared(id: $id) {
+      id
+      storeID
+      listAll
+      createdAt
+      updatedAt
+      store {
+        id
+        goodsType
+        storeName
+        stateLocation
+        website
+        cause
+        PricePoint
+        bio
+        image
+        featured
+        listAll
+        discountCode
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;
+export const listStoreShareds = /* GraphQL */ `
+  query ListStoreShareds(
+    $filter: ModelstoreSharedFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listStoreShareds(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        storeID
+        listAll
+        createdAt
+        updatedAt
+        store {
+          id
+          goodsType
+          storeName
+          stateLocation
+          website
+          cause
+          PricePoint
+          bio
+          image
+          featured
+          listAll
+          discountCode
+          createdAt
+          updatedAt
+        }
+      }
+      nextToken
+    }
+  }
+`;
+export const getAppShared = /* GraphQL */ `
+  query GetAppShared($id: ID!) {
+    getAppShared(id: $id) {
+      id
+      listAll
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listAppShareds = /* GraphQL */ `
+  query ListAppShareds(
+    $filter: ModelappSharedFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAppShareds(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        listAll
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const storesByCause = /* GraphQL */ `
   query StoresByCause(
     $cause: String
@@ -259,6 +347,77 @@ export const listAllClicksByCreationTime = /* GraphQL */ `
           createdAt
           updatedAt
         }
+      }
+      nextToken
+    }
+  }
+`;
+export const listsStoreSharedCreationTime = /* GraphQL */ `
+  query ListsStoreSharedCreationTime(
+    $listAll: String
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelstoreSharedFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listsStoreSharedCreationTime(
+      listAll: $listAll
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        storeID
+        listAll
+        createdAt
+        updatedAt
+        store {
+          id
+          goodsType
+          storeName
+          stateLocation
+          website
+          cause
+          PricePoint
+          bio
+          image
+          featured
+          listAll
+          discountCode
+          createdAt
+          updatedAt
+        }
+      }
+      nextToken
+    }
+  }
+`;
+export const listAppSharedByCreationTime = /* GraphQL */ `
+  query ListAppSharedByCreationTime(
+    $listAll: String
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelappSharedFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAppSharedByCreationTime(
+      listAll: $listAll
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        listAll
+        createdAt
+        updatedAt
       }
       nextToken
     }

@@ -18,6 +18,7 @@ import Share from 'react-native-share';
 import FastImage from 'react-native-fast-image';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {getStore} from '../../src/graphql/queries';
+import {createStoreShared} from '../../src/graphql/mutations';
 
 const {width, height} = Dimensions.get('window');
 
@@ -39,19 +40,27 @@ export default function StoreScreen({route, navigation}) {
     }
   }, [route.params]);
 
-  const shareStoreURL = async () => {
+  const shareStoreURL = () => {
     const shareOptions = {
       message: 'Check out this store I found on Send A Smile:',
       url: storeInfo.website,
       failOnCancel: false,
     };
-
-    try {
-      await Share.open(shareOptions);
-      //setShareResult(JSON.stringify(ShareResponse, null, 2));
-    } catch (err) {
-      console.log('Error =>', err);
-    }
+    Share.open(shareOptions)
+      .then((res) => {
+        // if person does actually share, make graphql entry
+        // otherwise, don't do anything
+        if (!res.dismissedAction) {
+          API.graphql(
+            graphqlOperation(createStoreShared, {
+              input: {storeID: storeInfo.id, listAll: 'Y'},
+            }),
+          );
+        }
+      })
+      .catch((err) => {
+        err && console.log(err);
+      });
   };
 
   const URL_Component = ({website_URL, storeID_code}) => {

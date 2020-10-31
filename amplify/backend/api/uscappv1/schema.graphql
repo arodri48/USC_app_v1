@@ -43,3 +43,29 @@ type urlClicked @model(subscriptions: null)
   updatedAt: AWSDateTime!
   store: Store @connection(fields: ["storeID"])
 }
+
+type storeShared @model(subscriptions: null)
+  @key(
+    name:  "ListAllByDate"
+    fields: ["listAll", "createdAt"]
+    queryField: "listsStoreSharedCreationTime"
+  ){
+  id: ID!
+  storeID: ID!
+  listAll: String!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  store: Store @connection(fields: ["storeID"])
+}
+
+type appShared @model(subscriptions: null)
+@key(
+  name:  "ListAllByDate"
+  fields: ["listAll", "createdAt"]
+  queryField: "listAppSharedByCreationTime"
+){
+  id: ID!
+  listAll: String!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}

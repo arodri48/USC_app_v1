@@ -160,3 +160,132 @@ export const deleteUrlClicked = /* GraphQL */ `
     }
   }
 `;
+export const createStoreShared = /* GraphQL */ `
+  mutation CreateStoreShared(
+    $input: CreateStoreSharedInput!
+    $condition: ModelstoreSharedConditionInput
+  ) {
+    createStoreShared(input: $input, condition: $condition) {
+      id
+      storeID
+      listAll
+      createdAt
+      updatedAt
+      store {
+        id
+        goodsType
+        storeName
+        stateLocation
+        website
+        cause
+        PricePoint
+        bio
+        image
+        featured
+        listAll
+        discountCode
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;
+export const updateStoreShared = /* GraphQL */ `
+  mutation UpdateStoreShared(
+    $input: UpdateStoreSharedInput!
+    $condition: ModelstoreSharedConditionInput
+  ) {
+    updateStoreShared(input: $input, condition: $condition) {
+      id
+      storeID
+      listAll
+      createdAt
+      updatedAt
+      store {
+        id
+        goodsType
+        storeName
+        stateLocation
+        website
+        cause
+        PricePoint
+        bio
+        image
+        featured
+        listAll
+        discountCode
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;
+export const deleteStoreShared = /* GraphQL */ `
+  mutation DeleteStoreShared(
+    $input: DeleteStoreSharedInput!
+    $condition: ModelstoreSharedConditionInput
+  ) {
+    deleteStoreShared(input: $input, condition: $condition) {
+      id
+      storeID
+      listAll
+      createdAt
+      updatedAt
+      store {
+        id
+        goodsType
+        storeName
+        stateLocation
+        website
+        cause
+        PricePoint
+        bio
+        image
+        featured
+        listAll
+        discountCode
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;
+export const createAppShared = /* GraphQL */ `
+  mutation CreateAppShared(
+    $input: CreateAppSharedInput!
+    $condition: ModelappSharedConditionInput
+  ) {
+    createAppShared(input: $input, condition: $condition) {
+      id
+      listAll
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateAppShared = /* GraphQL */ `
+  mutation UpdateAppShared(
+    $input: UpdateAppSharedInput!
+    $condition: ModelappSharedConditionInput
+  ) {
+    updateAppShared(input: $input, condition: $condition) {
+      id
+      listAll
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAppShared = /* GraphQL */ `
+  mutation DeleteAppShared(
+    $input: DeleteAppSharedInput!
+    $condition: ModelappSharedConditionInput
+  ) {
+    deleteAppShared(input: $input, condition: $condition) {
+      id
+      listAll
+      createdAt
+      updatedAt
+    }
+  }
+`;
