@@ -569,7 +569,7 @@ export default function SearchScreen({navigation}) {
   const shareURLs = () => {
     const shareOptions = {
       message:
-        "Cheer up someone's day while supporting small, online businesses with Send A Smile:",
+        "Cheer up someone's day while supporting online shops with unique themes with the Send A Smile app:",
       url: 'https://www.uniselfcare.com/send-a-smile-page/',
       failOnCancel: false,
     };

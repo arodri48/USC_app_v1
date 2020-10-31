@@ -42,7 +42,7 @@ export default function StoreScreen({route, navigation}) {
 
   const shareStoreURL = () => {
     const shareOptions = {
-      message: 'Check out this store I found on Send A Smile:',
+      message: 'Check out this shop I found on the Send A Smile app:',
       url: storeInfo.website,
       failOnCancel: false,
     };
