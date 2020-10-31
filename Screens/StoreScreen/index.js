@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -40,10 +40,11 @@ export default function StoreScreen({route, navigation}) {
     }
   }, [route.params]);
 
-  const shareStoreURL = () => {
+
+
+  const shareStoreURL = useCallback(() => {
     const shareOptions = {
-      message: 'Check out this shop I found on the Send A Smile app:',
-      url: storeInfo.website,
+      message: `Check out this shop I found on the Send A Smile app: ${storeInfo.website}`,
       failOnCancel: false,
     };
     Share.open(shareOptions)
@@ -61,7 +62,7 @@ export default function StoreScreen({route, navigation}) {
       .catch((err) => {
         err && console.log(err);
       });
-  };
+  }, [storeInfo]);
 
   const URL_Component = ({website_URL, storeID_code}) => {
     async function _handleURL() {
