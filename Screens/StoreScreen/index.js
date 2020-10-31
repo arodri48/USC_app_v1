@@ -150,7 +150,7 @@ export default function StoreScreen({route, navigation}) {
 }
 
 const styles = StyleSheet.create({
-  topButtonRow: {flexDirection: 'row', justifyContent: 'space-around'},
+  topButtonRow: {flexDirection: 'row', justifyContent: 'space-around',},
   width_seventy: {width: '70%'},
   websiteComponentStyle: {
     flexDirection: 'row',
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     backgroundColor: 'transparent',
     width: 50,
-    height: 40,
+    height: 50,
     alignItems: 'center',
     justifyContent: 'center',
   },
